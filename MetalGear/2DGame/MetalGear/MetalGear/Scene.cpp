@@ -14,14 +14,14 @@
 
 Scene::Scene()
 {
-	map = NULL;
+	//map = NULL;
 	player = NULL;
 }
 
 Scene::~Scene()
 {
-	if(map != NULL)
-		delete map;
+	//if(map != NULL)
+		//delete map;
 	if(player != NULL)
 		delete player;
 }
@@ -30,11 +30,13 @@ Scene::~Scene()
 void Scene::init()
 {
 	initShaders();
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	//map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
-	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
-	player->setTileMap(map);
+	//player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+	player->init(texProgram);
+	//player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
+	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES, INIT_PLAYER_Y_TILES));
+	//player->setTileMap(map);
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
 }
@@ -55,7 +57,7 @@ void Scene::render()
 	modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
-	map->render();
+	//map->render();
 	player->render();
 }
 
