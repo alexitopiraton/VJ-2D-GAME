@@ -16,6 +16,7 @@ class Player
 public:
 	//void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void init(ShaderProgram& shaderProgram);
+	bool WASDMovementControl();
 	void update(int deltaTime);
 	void render();
 	
@@ -28,6 +29,8 @@ private:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
+
+	glm::bvec4 movementControl;
 
 };
 
