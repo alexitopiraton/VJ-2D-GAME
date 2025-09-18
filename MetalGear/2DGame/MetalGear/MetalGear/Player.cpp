@@ -39,13 +39,57 @@ void Player::init(ShaderProgram& shaderProgram)
 	//tileMapDispl = tileMapPos;
 	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+
+
 	
 }
+
+/* WASDMovementControl INFO
+* We initialize movementControl vector with all values set to false
+* For each direction, set the corresponding vector position to true.
+* If there is more than one position pressed, return true; otherwise return false.
+*/
+
+bool Player::WASDMovementControl() 
+{
+	movementControl = glm::bvec4(false, false, false, false);
+
+	if (Game::instance().getKey(GLFW_KEY_W))
+		movementControl[0] = true;
+
+	if (Game::instance().getKey(GLFW_KEY_A)) {
+		movementControl[1] = true;
+		if (movementControl[0])
+			return true;
+	}
+
+	if (Game::instance().getKey(GLFW_KEY_S)) {
+		movementControl[2] = true;
+		if (movementControl[0] || movementControl[1])
+			return true;
+
+	}
+	if (Game::instance().getKey(GLFW_KEY_D)) {
+		movementControl[3] = true;
+		if (movementControl[0] || movementControl[1] || movementControl[2])
+			return true;
+	}
+
+	return false;
+}
+
+/* update INFO:
+* bool WASDpressed -> indicates whether a movement key (W, A, S or D) is already pressed. If true and another movement key is pressed, stops moving.
+* movementControl -> (0,1,2,3) = (W,A,S,D)
+*/
 
 void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
-	if(Game::instance().getKey(GLFW_KEY_A))
+
+	bool WASDpressed = WASDMovementControl();
+
+	if(movementControl[1] && !WASDpressed)
 	{
 		if(sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
@@ -55,8 +99,9 @@ void Player::update(int deltaTime)
 			posPlayer.x += 2;
 			sprite->changeAnimation(STAND_LEFT);
 		}*/
+
 	}
-	else if(Game::instance().getKey(GLFW_KEY_D))
+	else if(movementControl[3] && !WASDpressed)
 	{
 		if(sprite->animation() != MOVE_RIGHT)
 			sprite->changeAnimation(MOVE_RIGHT);
@@ -66,12 +111,13 @@ void Player::update(int deltaTime)
 			posPlayer.x -= 2;
 			sprite->changeAnimation(STAND_RIGHT);
 		}*/
+
 	}
-	else if(Game::instance().getKey(GLFW_KEY_W))
+	else if(movementControl[0] && !WASDpressed)
 	{
 		posPlayer.y -= 2;
 	}
-	else if (Game::instance().getKey(GLFW_KEY_S))
+	else if (movementControl[2] && !WASDpressed)
 	{
 		posPlayer.y += 2;
 	}
@@ -81,6 +127,7 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(STAND_LEFT);
 		else if(sprite->animation() == MOVE_RIGHT)
 			sprite->changeAnimation(STAND_RIGHT);
+
 	}
 	
 	
