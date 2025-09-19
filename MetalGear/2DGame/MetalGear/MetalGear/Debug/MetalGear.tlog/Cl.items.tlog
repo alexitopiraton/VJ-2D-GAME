@@ -1,10 +1,12 @@
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Game.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\main.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\main.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Map.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Map.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Player.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Player.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Scene.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Shader.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Shader.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ShaderProgram.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\ShaderProgram.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Sprite.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Sprite.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Texture.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Texture.obj
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp;C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\TileMap.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Game.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ImageRenderer.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\ImageRenderer.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\main.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\main.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Map.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Map.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Menu.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Menu.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Player.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Player.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Scene.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Shader.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Shader.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ShaderProgram.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\ShaderProgram.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Sprite.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Sprite.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Texture.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\Texture.obj
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp;C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Debug\TileMap.obj
