@@ -8,31 +8,34 @@
 
 enum PlayerAnims
 {
-	STAND_LEFT, STAND_RIGHT, STAND_BACK, STAND_FRONT, MOVE_LEFT, MOVE_RIGHT
+	IDLE_LEFT, IDLE_RIGHT, IDLE_BACK, IDLE_FRONT, MOVE_LEFT, MOVE_RIGHT
 };
 
 
 /* init INFO
-* 
+* spritesheet loads the IDLE animations
+* Creates the sprite with 16x31 pixels, scaling x2. The texture coords (UV) are 0.5 both.
+* Sets 4 animations (4 facing directions).
+* STAND_LEFT (0,0.5) 
 */
 
 void Player::init(ShaderProgram& shaderProgram)
 {
 	spritesheet.loadFromFile("images/Solid Snake Idle.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(16*2, 31*2), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(4);
 	
-		sprite->setAnimationSpeed(STAND_LEFT, 8);
-		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.f));
+		sprite->setAnimationSpeed(IDLE_LEFT, 8);
+		sprite->addKeyframe(IDLE_LEFT, glm::vec2(0.f, 0.5f));
 		
-		sprite->setAnimationSpeed(STAND_RIGHT, 8);
-		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.f));
+		sprite->setAnimationSpeed(IDLE_RIGHT, 8);
+		sprite->addKeyframe(IDLE_RIGHT, glm::vec2(0.5f, 0.5f));
 
-		sprite->setAnimationSpeed(STAND_BACK, 8);
-		sprite->addKeyframe(STAND_BACK, glm::vec2(0.25f, 0.f));
+		sprite->setAnimationSpeed(IDLE_BACK, 8);
+		sprite->addKeyframe(IDLE_BACK, glm::vec2(0.5f, 0.f));
 
-		sprite->setAnimationSpeed(STAND_FRONT, 8);
-		sprite->addKeyframe(STAND_FRONT, glm::vec2(0.25f, 0.f));
+		sprite->setAnimationSpeed(IDLE_FRONT, 8);
+		sprite->addKeyframe(IDLE_FRONT, glm::vec2(0.f, 0.f));
 		
 		/*sprite->setAnimationSpeed(MOVE_LEFT, 8);
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.f));
@@ -96,42 +99,46 @@ void Player::update(int deltaTime)
 
 	if (movementControl[1] && !WASDpressed)
 	{
-		if (sprite->animation() != MOVE_LEFT)
-			sprite->changeAnimation(MOVE_LEFT);
+		//if (sprite->animation() != MOVE_LEFT)
+			//sprite->changeAnimation(MOVE_LEFT);
+		sprite->changeAnimation(IDLE_LEFT);
 		posPlayer.x--;
 		/*if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
 		{
 			posPlayer.x += 2;
-			sprite->changeAnimation(STAND_LEFT);
+			sprite->changeAnimation(IDLE_LEFT);
 		}*/
 
 	}
 	else if (movementControl[3] && !WASDpressed)
 	{
-		if (sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
+		//if (sprite->animation() != MOVE_RIGHT)
+			//sprite->changeAnimation(MOVE_RIGHT);
+		sprite->changeAnimation(IDLE_RIGHT);
 		posPlayer.x++;
 		/*if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
 		{
 			posPlayer.x -= 2;
-			sprite->changeAnimation(STAND_RIGHT);
+			sprite->changeAnimation(IDLE_RIGHT);
 		}*/
 
 	}
 	else if (movementControl[0] && !WASDpressed)
 	{
+		sprite->changeAnimation(IDLE_BACK);
 		posPlayer.y--;
 	}
 	else if (movementControl[2] && !WASDpressed)
 	{
+		sprite->changeAnimation(IDLE_FRONT);
 		posPlayer.y++;
 	}
 	else
 	{
 		if (sprite->animation() == MOVE_LEFT)
-			sprite->changeAnimation(STAND_LEFT);
+			sprite->changeAnimation(IDLE_LEFT);
 		else if (sprite->animation() == MOVE_RIGHT)
-			sprite->changeAnimation(STAND_RIGHT);
+			sprite->changeAnimation(IDLE_RIGHT);
 
 	}
 
