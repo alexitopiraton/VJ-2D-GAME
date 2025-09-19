@@ -7,6 +7,10 @@
       "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -17,10 +21,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Scene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -122,7 +122,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "Game.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Game.h",
               "RelativeDocumentMoniker": "MetalGear\\Game.h",
@@ -130,8 +130,7 @@
               "RelativeToolTip": "MetalGear\\Game.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-09-19T10:34:22.302Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-19T10:34:22.302Z"
             },
             {
               "$type": "Document",
@@ -171,7 +170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Scene.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.h",
               "RelativeDocumentMoniker": "MetalGear\\Scene.h",
@@ -179,20 +178,20 @@
               "RelativeToolTip": "MetalGear\\Scene.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-09-16T20:09:34.615Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-16T20:09:34.615Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h",
               "RelativeDocumentMoniker": "MetalGear\\Player.h",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h",
               "RelativeToolTip": "MetalGear\\Player.h",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABQAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-09-16T20:01:27.073Z"
+              "WhenOpened": "2025-09-16T20:01:27.073Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -202,20 +201,20 @@
               "RelativeDocumentMoniker": "MetalGear\\Player.cpp",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp",
               "RelativeToolTip": "MetalGear\\Player.cpp",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAAAIQAAAAkAAAAAAAAAA==",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAADcAAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-09-16T19:52:33.587Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Sprite.cpp",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.cpp",
               "RelativeDocumentMoniker": "MetalGear\\Sprite.cpp",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.cpp",
               "RelativeToolTip": "MetalGear\\Sprite.cpp",
-              "ViewState": "AgIAACUAAAAAAAAAAAAcwGMAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAABAAAAAAAAAAAAAcwB4AAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-09-16T19:52:50.645Z",
               "EditorCaption": ""
