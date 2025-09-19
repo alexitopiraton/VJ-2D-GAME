@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 
+#define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
