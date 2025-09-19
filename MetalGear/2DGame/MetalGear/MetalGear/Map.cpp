@@ -29,20 +29,20 @@ void Map::render(const Texture &tex) const
 
 bool Map::collisionMoveLeft()
 {
-
+	return false;
 }
 
 bool Map::collisionMoveRight()
 {
-
+	return false;
 }
 
 bool Map::collisionMoveDown()
 {
-
+	return false;
 }
 
 bool Map::collisionMoveUp()
 {
-
+	return false;
 }

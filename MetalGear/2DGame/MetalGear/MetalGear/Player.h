@@ -16,18 +16,21 @@ class Player
 public:
 	//void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram);
 	void init(ShaderProgram& shaderProgram);
+	bool WASDMovementControl();
 	void update(int deltaTime);
 	void render();
-	
+
 	//void setTileMap(TileMap *tileMap);
-	void setPosition(const glm::vec2 &pos);
-	
+	void setPosition(const glm::vec2& pos);
+
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
 	int startY;
 	Texture spritesheet;
-	Sprite *sprite;
-	TileMap *map;
+	Sprite* sprite;
+	TileMap* map;
+
+	glm::bvec4 movementControl;
 
 };
 
