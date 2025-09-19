@@ -3,12 +3,44 @@
   "WorkspaceRootPath": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\TileMap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\TileMap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Map.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Texture.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Texture.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Texture.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Texture.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Scene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Sprite.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\TileMap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\TileMap.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Map.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -17,30 +49,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\TileMap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\TileMap.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Sprite.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Scene.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|solutionrelative:MetalGear\\Scene.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}|MetalGear\\MetalGear.vcxproj|C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -54,11 +62,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 9,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 10,
               "Title": "Map.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Map.h",
               "RelativeDocumentMoniker": "MetalGear\\Map.h",
@@ -67,18 +75,17 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-09-16T19:42:25.833Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Map.cpp",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Map.cpp",
               "RelativeDocumentMoniker": "MetalGear\\Map.cpp",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Map.cpp",
               "RelativeToolTip": "MetalGear\\Map.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAC4AAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-09-16T19:53:22.758Z",
               "IsPinned": true,
@@ -86,7 +93,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 9,
               "Title": "TileMap.cpp",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\TileMap.cpp",
               "RelativeDocumentMoniker": "MetalGear\\TileMap.cpp",
@@ -95,12 +102,11 @@
               "ViewState": "AgIAAAwAAAAAAAAAAAAAACEAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-09-18T17:52:30.54Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 11,
               "Title": "TileMap.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\TileMap.h",
               "RelativeDocumentMoniker": "MetalGear\\TileMap.h",
@@ -109,12 +115,47 @@
               "ViewState": "AgIAABgAAAAAAAAAAAAAACsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-09-16T19:53:34.857Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 8,
+              "Title": "Sprite.h",
+              "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.h",
+              "RelativeDocumentMoniker": "MetalGear\\Sprite.h",
+              "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.h",
+              "RelativeToolTip": "MetalGear\\Sprite.h",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-09-18T21:38:55.966Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Texture.h",
+              "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Texture.h",
+              "RelativeDocumentMoniker": "MetalGear\\Texture.h",
+              "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Texture.h",
+              "RelativeToolTip": "MetalGear\\Texture.h",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-09-18T21:33:27.769Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Texture.cpp",
+              "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Texture.cpp",
+              "RelativeDocumentMoniker": "MetalGear\\Texture.cpp",
+              "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Texture.cpp",
+              "RelativeToolTip": "MetalGear\\Texture.cpp",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-18T21:33:19.08Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Scene.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.h",
               "RelativeDocumentMoniker": "MetalGear\\Scene.h",
@@ -126,15 +167,29 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 1,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h",
               "RelativeDocumentMoniker": "MetalGear\\Player.h",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.h",
               "RelativeToolTip": "MetalGear\\Player.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABQAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-09-16T20:01:27.073Z"
+              "WhenOpened": "2025-09-16T20:01:27.073Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp",
+              "RelativeDocumentMoniker": "MetalGear\\Player.cpp",
+              "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp",
+              "RelativeToolTip": "MetalGear\\Player.cpp",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-16T19:52:33.587Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -144,52 +199,26 @@
               "RelativeDocumentMoniker": "MetalGear\\Sprite.cpp",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Sprite.cpp",
               "RelativeToolTip": "MetalGear\\Sprite.cpp",
-              "ViewState": "AgIAAEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAEAAAAAAAAAAAAAcwFEAAAA8AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-16T19:52:50.645Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-16T19:52:50.645Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Player.cpp",
-              "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp",
-              "RelativeDocumentMoniker": "MetalGear\\Player.cpp",
-              "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp",
-              "RelativeToolTip": "MetalGear\\Player.cpp",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAADwAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-16T19:52:33.587Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Scene.cpp",
-              "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.cpp",
-              "RelativeDocumentMoniker": "MetalGear\\Scene.cpp",
-              "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Scene.cpp",
-              "RelativeToolTip": "MetalGear\\Scene.cpp",
-              "ViewState": "AgIAACwAAAAAAAAAAAAWwEUAAAACAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-16T19:27:34.492Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 2,
               "Title": "Game.cpp",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Game.cpp",
               "RelativeDocumentMoniker": "MetalGear\\Game.cpp",
               "ToolTip": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Game.cpp",
               "RelativeToolTip": "MetalGear\\Game.cpp",
-              "ViewState": "AgIAABsAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-09-16T19:25:49.567Z"
+              "WhenOpened": "2025-09-16T19:25:49.567Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\ESTUDIOS\\INGENIERIA INFORMATICA\\OPTATIVAS\\VJ\\VJ-2D-GAME\\MetalGear\\2DGame\\MetalGear\\MetalGear\\main.cpp",
               "RelativeDocumentMoniker": "MetalGear\\main.cpp",
