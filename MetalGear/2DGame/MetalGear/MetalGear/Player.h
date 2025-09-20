@@ -33,8 +33,6 @@ private:
 
 	glm::bvec4 movementControl;
 
-	glm::bvec4 movementControl;
-
 };
 
 
