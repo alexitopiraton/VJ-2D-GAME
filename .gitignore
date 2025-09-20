@@ -1,0 +1,25 @@
+# Visual Studio
+\.vs
+.vs/slnx.sqlite
+*.suo
+*.user
+
+# Build folders
+Debug/
+Release/
+x64/
+x86/
+bin/
+obj/
+out/
+
+# Archivos binarios y temporales
+*.obj
+*.pdb
+*.exe
+*.dll
+*.ilk
+*.idb
+*.log
+*.tlog
+*.lib
