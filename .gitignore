@@ -1,25 +1,38 @@
-# Visual Studio
+# Archivos de Visual Studio
 \.vs
 .vs/slnx.sqlite
 *.suo
 *.user
+*.userosscache
+*.sln.docstates
 
-# Build folders
+# Compilados binarios
+*.exe
+*.dll
+*.pdb
+*.cache
+*.ilk
+*.obj
+*.lib
+*.so
+*.dylib
+
+# Carpetas de compilación
+bin/
+obj/
 Debug/
 Release/
 x64/
 x86/
-bin/
-obj/
-out/
 
-# Archivos binarios y temporales
-*.obj
-*.pdb
-*.exe
-*.dll
-*.ilk
-*.idb
+# Archivos temporales
 *.log
-*.tlog
-*.lib
+*.tmp
+*.bak
+
+# Archivos de configuración locales
+*.vcxproj.user
+*.vscode/
+
+# Archivos generados por dependencias externas
+packages/
