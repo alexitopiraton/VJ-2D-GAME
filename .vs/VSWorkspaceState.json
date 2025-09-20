@@ -3,9 +3,8 @@
     "",
     "\\MetalGear",
     "\\MetalGear\\2DGame",
-    "\\MetalGear\\2DGame\\MetalGear",
-    "\\MetalGear\\2DGame\\MetalGear\\MetalGear"
+    "\\MetalGear\\2DGame\\MetalGear"
   ],
-  "SelectedNode": "\\MetalGear\\2DGame\\MetalGear\\MetalGear\\Player.cpp",
+  "SelectedNode": "\\MetalGear\\2DGame\\MetalGear\\MetalGear.sln",
   "PreviewInSolutionExplorer": false
 }
