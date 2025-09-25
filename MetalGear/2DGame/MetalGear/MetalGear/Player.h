@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 
+#define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
@@ -19,16 +20,16 @@ public:
 	bool WASDMovementControl();
 	void update(int deltaTime);
 	void render();
-	
+
 	//void setTileMap(TileMap *tileMap);
-	void setPosition(const glm::vec2 &pos);
-	
+	void setPosition(const glm::vec2& pos);
+
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
 	int startY;
 	Texture spritesheet;
-	Sprite *sprite;
-	TileMap *map;
+	Sprite* sprite;
+	TileMap* map;
 
 	glm::bvec4 movementControl;
 
