@@ -37,6 +37,7 @@ TARGETS=(
     "MetalGear/2DGame/MetalGear/MetalGear/Debug/vc143.pdb"
 )
 
+echo "********************************"
 echo "--------------------------------"
 echo "Limpiando archivos targets ....."
 echo "--------------------------------"
@@ -45,9 +46,12 @@ for target in "${TARGETS[@]}"; do
     git rm --cached $target 2>/dev/null
 done
 
+echo "--------------------------------"
 echo "Archivos limpiados"
 echo "--------------------------------"
-
 echo "Commit de los nuevos cambios"
-git commit -m "deleted tracked files"
 echo "--------------------------------"
+
+git commit -m "deleted tracked files"
+
+echo "********************************"
