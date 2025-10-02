@@ -8,6 +8,12 @@ TARGETS=(
 
 echo "********************************"
 echo "--------------------------------"
+echo "Commit de todos los archivos ..."
+echo "--------------------------------"
+
+git commit -m "adding changes"
+
+echo "--------------------------------"
 echo "Limpiando archivos targets ....."
 echo "--------------------------------"
 
