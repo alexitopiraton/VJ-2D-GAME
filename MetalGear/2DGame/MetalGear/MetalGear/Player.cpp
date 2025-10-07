@@ -166,10 +166,10 @@ void Player::render()
 	sprite->render();
 }
 
-/*void Player::setTileMap(TileMap* tileMap)
+void Player::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
-}*/
+}
 
 void Player::setPosition(const glm::vec2 &pos)
 {
