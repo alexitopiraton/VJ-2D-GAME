@@ -1,0 +1,9 @@
+﻿  Game.cpp
+  ImageRenderer.cpp
+  Menu.cpp
+  Player.cpp
+  Scene.cpp
+C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(106,32): warning C4018: '>=': no coinciden signed/unsigned
+  main.cpp
+  Generando código...
+  MetalGear.vcxproj -> C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\MetalGear.exe

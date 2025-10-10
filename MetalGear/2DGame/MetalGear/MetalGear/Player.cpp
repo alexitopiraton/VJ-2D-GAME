@@ -23,7 +23,7 @@ enum PlayerAnims
 void Player::init(ShaderProgram& shaderProgram)
 {
 	spritesheet.loadFromFile("images/Solid Snake Sprites/Solid Snake Basic Animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(16*2, 31*2), glm::vec2(SPRITESHEET_OFFSET, 0.5), &spritesheet, &shaderProgram);
+	sprite = Sprite::createSprite(glm::ivec2(SPRITE_WIDTH+10, SPRITE_HEIGHT+10), glm::vec2(SPRITESHEET_OFFSET, 0.5), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
 	
 		sprite->setAnimationSpeed(IDLE_LEFT, 8);
@@ -56,7 +56,7 @@ void Player::init(ShaderProgram& shaderProgram)
 		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 2, 0.f));
 		
 	sprite->changeAnimation(0);
-	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
 	
 }
 
@@ -111,11 +111,12 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(WALK_LEFT);
 
 		posPlayer.x -= 3;
-		/*if (map->collisionMoveLeft(posPlayer, glm::ivec2(32, 32)))
+
+		if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT																																						)))
 		{
-			posPlayer.x += 2;
+			posPlayer.x += 3;
 			sprite->changeAnimation(IDLE_LEFT);
-		}*/
+		}
 
 	}
 	else if (movementControl[3] && !WASDpressed)
@@ -124,11 +125,12 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(WALK_RIGHT);
 
 		posPlayer.x += 3;
-		/*if (map->collisionMoveRight(posPlayer, glm::ivec2(32, 32)))
+
+		if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
 		{
-			posPlayer.x -= 2;
+			posPlayer.x -= 3;
 			sprite->changeAnimation(IDLE_RIGHT);
-		}*/
+		}
 
 	}
 	else if (movementControl[0] && !WASDpressed)
@@ -137,6 +139,12 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(WALK_UP);
 
 		posPlayer.y -= 3;
+
+		if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+		{
+			posPlayer.y += 3;
+			sprite->changeAnimation(IDLE_BACK);
+		}
 	}
 	else if (movementControl[2] && !WASDpressed)
 	{
@@ -144,6 +152,12 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(WALK_DOWN);
 
 		posPlayer.y += 3;
+
+		if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+		{
+			posPlayer.y -= 3;
+			sprite->changeAnimation(IDLE_FRONT);
+		}
 	}
 	else
 	{
@@ -161,6 +175,43 @@ void Player::update(int deltaTime)
 	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
 }
 
+bool Player::changeMap_tile(int &tileType, char &direction)
+{
+	glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
+	tileType = map->whichTile(centerPos, direction);
+	
+
+	// guessing facking direction depending on the animation
+	if (tileType >= 2 && tileType <= 5)
+	{
+		if (direction == 'O')
+		{
+			int currentAnim = sprite->animation();
+
+			if (currentAnim == WALK_LEFT || currentAnim == IDLE_LEFT)
+				direction = 'L';
+			else if (currentAnim == WALK_RIGHT || currentAnim == IDLE_RIGHT)
+				direction = 'R';
+			else if (currentAnim == WALK_UP || currentAnim == IDLE_BACK)
+				direction = 'U';
+			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_FRONT)
+				direction = 'D';
+			else
+				direction = 'D'; // default direction
+		}
+
+		if (direction != 'N')
+			return true;
+	}
+	
+	return false;
+}
+
+glm::ivec2 Player::getPosition()
+{
+	return posPlayer;
+}
+
 void Player::render()
 {
 	sprite->render();
@@ -174,8 +225,7 @@ void Player::setTileMap(TileMap* tileMap)
 void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
-	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 

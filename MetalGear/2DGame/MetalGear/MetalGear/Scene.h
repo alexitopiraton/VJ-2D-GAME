@@ -3,8 +3,11 @@
 
 #include <glm/glm.hpp>
 #include "ShaderProgram.h"
-#include "TileMap.h"
 #include "Player.h"
+#include "Level.h"
+#include <vector>
+
+#define LEVEL_CHANGE_COOLDOWN 500.0f
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -18,6 +21,7 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+	void initialise_levels();
 
 	// Getter para acceder al shader program desde otras clases
 	ShaderProgram& getTexProgram() { return texProgram; }
@@ -26,11 +30,17 @@ private:
 	void initShaders();
 
 private:
-	TileMap* map;
 	Player* player;
 	ShaderProgram texProgram;
 	float currentTime;
 	glm::mat4 projection;
+
+	vector<Level*> levels;
+	int levelNum;
+	Level* activeLevel;
+
+	bool changingLevel;
+	float levelChangeDelay;
 };
 
 #endif // _SCENE_INCLUDE
