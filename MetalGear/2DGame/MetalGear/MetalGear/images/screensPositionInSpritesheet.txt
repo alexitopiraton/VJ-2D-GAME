@@ -1,0 +1,27 @@
+SPRITESHEET POSITION
+levels/level00.txt
+0 0 												-- Outisde screen 1 (level 0)
+levels/level01.txt
+0.5 0 												-- Outisde screen 2 (level 1)
+levels/level02.txt
+0.5 0.33333333333333333333333333333333 								-- Outisde screen 3 (level 2)
+levels/level03.txt
+0.5 0.66666666666666666666666666666667 								-- Outisde screen 4 (level 3)
+levels/level04.txt	
+0 0.33333333333333333333333333333333 	  							-- Outisde screen 5 (level 4)
+levels/level05.txt
+0.66666666666666666666666666666667 0.66666666666666666666666666666667 				-- Indoor screen 1 (level 5)
+levels/level06.txt
+0.66666666666666666666666666666667 0.33333333333333333333333333333333 				-- Indoor screen 2 (level 6)
+levels/level07.txt
+0 0.66666666666666666666666666666667 								-- Indoor screen 3 (level 7)
+levels/level08.txt
+0.33333333333333333333333333333333 0.33333333333333333333333333333333 				-- Indoor screen 4 (level 8)
+levels/level09.txt
+0 0.33333333333333333333333333333333 								-- Indoor screen 5 (level 9)
+levels/level10.txt
+0 0 												-- Indoor screen 6 (level 10)
+levels/level11.txt
+0.33333333333333333333333333333333 0 								-- Indoor screen 7 (level 11)
+levels/level12.txt
+0.66666666666666666666666666666667 0 							-- Indoor screen 8 (level 12)

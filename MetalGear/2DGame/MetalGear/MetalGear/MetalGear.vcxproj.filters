@@ -42,9 +42,6 @@
     <ClInclude Include="TileMap.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="Map.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
     <ClInclude Include="GameState.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
@@ -52,6 +49,12 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="ImageRenderer.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
@@ -83,13 +86,16 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
-    <ClCompile Include="Map.cpp">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
     <ClCompile Include="ImageRenderer.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Archivos de código fuente</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>
