@@ -7,7 +7,7 @@
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 #define SPRITE_WIDTH 16*2
-#define SPRITE_HEIGHT	31*2
+#define SPRITE_HEIGHT 31*2
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
@@ -28,6 +28,8 @@ public:
 
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2& pos);
+	void setPause() { pause = true; }
+	void setStopPause() { pause = false; }
 
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -38,6 +40,7 @@ private:
 
 	glm::bvec4 movementControl;
 
+	bool pause;
 };
 
 

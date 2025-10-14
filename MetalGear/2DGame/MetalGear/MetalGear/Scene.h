@@ -7,7 +7,7 @@
 #include "Level.h"
 #include <vector>
 
-#define LEVEL_CHANGE_COOLDOWN 500.0f
+#define LEVEL_CHANGE_COOLDOWN 2000.0f
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -22,6 +22,8 @@ public:
 	void update(int deltaTime);
 	void render();
 	void initialise_levels();
+	void pause();
+	void stop_pause();
 
 	// Getter para acceder al shader program desde otras clases
 	ShaderProgram& getTexProgram() { return texProgram; }
@@ -41,6 +43,8 @@ private:
 
 	bool changingLevel;
 	float levelChangeDelay;
+	bool pauseGame;
+	float gameTime;
 };
 
 #endif // _SCENE_INCLUDE
