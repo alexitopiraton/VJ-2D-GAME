@@ -29,6 +29,13 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2& pos);
 
+	void takeDamage(int dmg);
+	bool isDead() const { return health <= 0; }
+	int getHealth() const { return health; }
+	void setHealth(int h);
+	void reset();
+
+
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
 	int startY;
@@ -37,6 +44,7 @@ private:
 	TileMap* map;
 
 	glm::bvec4 movementControl;
+	int health = 100;
 
 };
 

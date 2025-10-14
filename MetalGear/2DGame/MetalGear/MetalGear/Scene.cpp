@@ -2,10 +2,12 @@
 #include <cmath>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
+#include <GL/glew.h>
 #include "Game.h"
 #include <fstream>
 #include <sstream>
-
+#include <string>
+#include "Bullet.h"
 
 #define SCREEN_X 32
 #define SCREEN_Y 16
@@ -56,11 +58,31 @@ void Scene::init()
 
 	changingLevel = false;
 	levelChangeDelay = 0.f;
+
+	initGameOver();
 }
 
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
+
+	if (player->isDead())
+	{
+		static float deathTimer = 0.f;
+		deathTimer += deltaTime;
+		if (deathTimer > 3000.f) { // 3 segundos
+			resetBullets();
+			player->reset();
+			resetAll();
+			for (Level* level : levels) {
+				level->resetGuards();
+				level->clearRollers();
+			}
+			Game::instance().returnToMenuFromGame();
+			deathTimer = 0.f;
+		}
+		return;
+	}
 	
 
 	if (changingLevel)
@@ -81,6 +103,7 @@ void Scene::update(int deltaTime)
 	}
 	
 	player->update(deltaTime);
+	activeLevel->update(deltaTime, player);
 
 	int tileType;
 	char direction;
@@ -154,7 +177,98 @@ void Scene::render()
 
 	activeLevel->render();
 	player->render();
+	renderHUD(player);
+
+	if (player->isDead()) {
+		renderGameOver();
+	}
+		
 }
+
+void Scene::initGameOver()
+{
+	// Cargar la textura PNG
+	gameOverTexture.loadFromFile("images/game_over.png", TEXTURE_PIXEL_FORMAT_RGBA);
+
+	// Crear sprite del tamaño de la ventana
+	glm::ivec2 spriteSize(640, 480);
+	gameOverSprite = Sprite::createSprite(spriteSize, glm::vec2(1.0f, 1.0f), &gameOverTexture, &texProgram);
+
+	// Posición (0,0) para que ocupe toda la pantalla
+	gameOverSprite->setPosition(glm::vec2(0.f, 0.f));
+}
+
+// Modificar Scene::renderGameOver
+void Scene::renderGameOver()
+{
+	if (!gameOverSprite) return;
+
+	// Activar shader
+	texProgram.use();
+
+	// Renderizar el sprite del PNG a pantalla completa
+	gameOverSprite->render();
+}
+
+
+
+
+void Scene::renderHUD(Player* player)
+{
+	if (!player) return;
+
+	float maxHP = 100.0f;
+	float hp = static_cast<float>(player->getHealth());
+	float ratio = hp / maxHP;
+
+	float barWidth = 100.0f;
+	float barHeight = 10.0f;
+	float x = 20.0f;  // posición en pantalla
+	float y = 20.0f;
+
+	// ?? Desactivar shaders si los usas
+	glUseProgram(0);
+
+	// ?? Cambiar a modo 2D ortográfico (pantalla)
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, SCREEN_WIDTH, SCREEN_HEIGHT, 0, -1, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	// ?? Dibujar barra
+	glDisable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);
+
+	// Fondo gris
+	glColor3f(0.3f, 0.3f, 0.3f);
+	glVertex2f(x, y);
+	glVertex2f(x + barWidth, y);
+	glVertex2f(x + barWidth, y + barHeight);
+	glVertex2f(x, y + barHeight);
+
+	// Vida verde
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glVertex2f(x, y);
+	glVertex2f(x + barWidth * ratio, y);
+	glVertex2f(x + barWidth * ratio, y + barHeight);
+	glVertex2f(x, y + barHeight);
+
+	glEnd();
+	glEnable(GL_TEXTURE_2D);
+
+	// ?? Restaurar matrices
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+
+}
+
+
 
 /* INITIALISE_LEVELS INFO
 * creates and initialises each level. Stores them in levels vector
@@ -199,7 +313,73 @@ void Scene::initialise_levels()
 	fin.close();
 	levelNum = 0;
 	activeLevel = levels[levelNum];
+
+	if (levels.size() > 2)
+	{
+		TileMap* map = levels[0]->get_tile_map();
+
+		glm::vec2 arnoldPos(5 * map->getTileSize(), 5 * map->getTileSize());
+		levels[0]->addArnoldBoss(arnoldPos, texProgram);
+
+		map = levels[2]->get_tile_map();
+
+
+		// CAMBIA ESTAS COORDENADAS (10, 8) A DONDE QUIERAS EL GUARDIA
+		glm::vec2 guardPos(10 * map->getTileSize(), 8 * map->getTileSize());
+		levels[2]->addGuard(guardPos, texProgram);
+
+		glm::vec2 guardPos2(15 * map->getTileSize(), 20 * map->getTileSize());
+		levels[2]->addGuard(guardPos2, texProgram);
+
+		cout << "Guardia agregado en level02 en posición tile (10, 8)" << endl;
+
+		map = levels[3]->get_tile_map();
+
+		glm::vec2 rollerPos(5 * map->getTileSize(), 22 * map->getTileSize());
+		levels[3]->addRoller(rollerPos, texProgram, true);
+
+
+		// Si quieres más guardias en el mismo nivel:
+		// levels[2]->addGuard(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize()), texProgram);
+
+		// Si quieres guardias en otros niveles:
+		// TileMap* map3 = levels[3]->get_tile_map();
+		// levels[3]->addGuard(glm::vec2(8 * map3->getTileSize(), 10 * map3->getTileSize()), texProgram);
+	}
 }
+
+
+
+void Scene::resetBullets()
+{
+	for (Level* level : levels)  // Recorre todos los niveles de la escena
+	{
+		for (Guard* guard : level->getGuards())  // Recorre todos los guardias del nivel
+		{
+			guard->clearBullets();  // Vacía las balas del guardia
+		}
+	}
+}
+
+void Scene::resetAll()
+{
+	// Reset jugador
+	TileMap* map = levels[0]->get_tile_map();
+	player->reset();
+
+	// Reset guardias y balas en TODOS los niveles
+	for (Level* level : levels)
+	{
+		level->resetGuards();
+	}
+
+	// Reset variables de la escena
+	changingLevel = false;
+	levelChangeDelay = 0.f;
+	currentTime = 0.f;
+}
+
+
 
 void Scene::initShaders()
 {

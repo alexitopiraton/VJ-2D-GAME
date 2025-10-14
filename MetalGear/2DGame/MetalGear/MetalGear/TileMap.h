@@ -36,7 +36,13 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	int whichTile(const glm::ivec2& pos, char &direction);
-	
+	glm::ivec2 worldToTileCoords(const glm::vec2& worldPos) const;
+	glm::vec2 tileToWorldCoords(const glm::ivec2& tileCoords) const;
+
+	int getWidth() const;
+	int getHeight() const;
+	bool isWalkable(int x, int y) const;
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
@@ -53,6 +59,8 @@ private:
 	int *map;
 
 };
+
+
 
 
 #endif // _TILE_MAP_INCLUDE

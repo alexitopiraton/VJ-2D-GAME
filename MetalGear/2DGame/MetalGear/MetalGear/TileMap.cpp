@@ -249,6 +249,43 @@ int TileMap::whichTile(const glm::ivec2 &pos, char &direction)
 	return tile;
 }
 
+glm::ivec2 TileMap::worldToTileCoords(const glm::vec2& worldPos) const
+{
+	int tileX = static_cast<int>(worldPos.x) / tileSize;
+	int tileY = static_cast<int>(worldPos.y) / tileSize;
+	return glm::ivec2(tileX, tileY);
+}
+
+glm::vec2 TileMap::tileToWorldCoords(const glm::ivec2& tileCoords) const
+{
+	float worldX = tileCoords.x * tileSize;
+	float worldY = tileCoords.y * tileSize;
+	return glm::vec2(worldX, worldY);
+}
+
+int TileMap::getWidth() const {
+	return mapSize.x;
+}
+
+int TileMap::getHeight() const {
+	return mapSize.y;
+}
+
+bool TileMap::isWalkable(int x, int y) const
+{
+	// Verifica que esté dentro de los límites del mapa
+	if (x < 0 || y < 0 || x >= mapSize.x || y >= mapSize.y)
+		return false;
+
+	int tile = map[y * mapSize.x + x];
+
+	// 0 = vacío, 2 = puerta ? caminables
+	// 1 = pared ? bloqueado
+	return (tile == 0 || tile == 2);
+}
+
+
+
 
 
 

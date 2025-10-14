@@ -229,5 +229,31 @@ void Player::setPosition(const glm::vec2 &pos)
 }
 
 
+void Player::takeDamage(int dmg)
+{
+	health -= dmg;
+	if (health < 0) health = 0;
+
+	std::cout << "[Player] Recibió daño! Vida actual: " << health << std::endl;
+
+	if (health <= 0)
+	{
+		std::cout << "[Player] Muerto!" << std::endl;
+		// Aquí podrías reiniciar el nivel o mostrar pantalla de "Game Over".
+	}
+}
+
+void Player::setHealth(int h)
+{
+	health = h;
+}
+
+void Player::reset()
+{
+	health = 100;
+}
+
+
+
 
 
