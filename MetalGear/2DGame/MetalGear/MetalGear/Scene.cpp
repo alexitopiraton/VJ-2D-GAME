@@ -56,12 +56,12 @@ void Scene::init()
 
 	changingLevel = false;
 	levelChangeDelay = 0.f;
+	pauseGame = false;
 }
 
 void Scene::update(int deltaTime)
 {
-	currentTime += deltaTime;
-	
+	gameTime += deltaTime;
 
 	if (changingLevel)
 	{
@@ -70,74 +70,76 @@ void Scene::update(int deltaTime)
 		{
 			changingLevel = false;
 			levelChangeDelay = 0.f;
+			stop_pause();
 			cout << "Cooldown terminado" << endl;
 		}
-		else
-		{
-			player->update(deltaTime);
-			return;
-		}
-
 	}
-	
-	player->update(deltaTime);
 
-	int tileType;
-	char direction;
-	if (player->changeMap_tile(tileType, direction))
+	if (!pauseGame)
 	{
-		cout << "TILE TYPE " << tileType << " Direction: " << direction << endl;
-		cout << "levelNum " << levelNum << endl;
+		currentTime += gameTime;
 
-		int levelNumCopy = levelNum;
+		player->update(deltaTime);
 
-		if (tileType == 2)
-			levelNum++;
-
-		else if (tileType == 3)
-			levelNum--;
-
-		else if (tileType == 4)
-			levelNum += 2;
-
-		else if (tileType == 5)
-			levelNum -= 2;
-
-		if (levelNum < 0 || levelNum >= levels.size())
+		int tileType;
+		char direction;
+		if (player->changeMap_tile(tileType, direction) && !changingLevel)
 		{
-			cout << "ERROR: level out of range" << endl;
-			levelNum = levelNumCopy;
-			return;
+
+			cout << "TILE TYPE " << tileType << " Direction: " << direction << endl;
+			cout << "levelNum " << levelNum << endl;
+
+			int previousLevel = levelNum;
+
+			if (tileType == 2)
+				levelNum++;
+
+			else if (tileType == 3)
+				levelNum--;
+
+			else if (tileType == 4)
+				levelNum += 2;
+
+			else if (tileType == 5)
+				levelNum -= 2;
+
+
+			activeLevel = levels[levelNum];
+			TileMap* map = activeLevel->get_tile_map();
+			player->setTileMap(map);
+
+			glm::ivec2 playerPos = player->getPosition();
+
+			// level03 -> level04 
+			/*if (levelNum == 4 && previousLevel == 3 && direction == 'R')
+			{
+
+				player->setPosition(glm::vec2((map->getMapSize() - 2) * map->getTileSize(), map->getMapSize() * map->getTileSize() - int(playerPos.y)));
+			}*/
+			// level04 -> level03
+			//else if (levelNum == 3 && previousLevel == 4 && direction == 'R')
+				//player->setPosition();
+			// LEFT
+			if (direction == 'L')
+				player->setPosition(glm::vec2((map->getMapSize().x - 4) * map->getTileSize(), playerPos.y));
+			// RIGHT
+			else if (direction == 'R')
+				player->setPosition(glm::vec2(map->getTileSize(), playerPos.y));
+			// UP
+			else if (direction == 'U')
+				player->setPosition(glm::vec2(playerPos.x, (map->getMapSize().y - 4) * map->getTileSize()));
+			// DOWN
+			else if (direction == 'D')
+				player->setPosition(glm::vec2(playerPos.x, map->getTileSize()));
+
+
+
+
+			levelChangeDelay = 0.f;
+			changingLevel = true;
+			pause();
+			cout << "Cooldown activado - cambiado a nivel " << levelNum << endl;
 		}
-
-		cout << "levelNum después: " << levelNum << endl;
-
-		
-		activeLevel = levels[levelNum];
-		TileMap* map = activeLevel->get_tile_map();
-		player->setTileMap(map);
-		
-		glm::ivec2 playerPos = player->getPosition();
-
-		// LEFT
-		if (direction == 'L')
-			player->setPosition(glm::vec2((map->getMapSize().x - 2) * map->getTileSize(), playerPos.y));
-		// RIGHT
-		else if (direction == 'R')
-			player->setPosition(glm::vec2(map->getTileSize(), playerPos.y));
-		// UP
-		else if (direction == 'U')
-			player->setPosition(glm::vec2(playerPos.x, (map->getMapSize().y - 2) * map->getTileSize()));
-		// DOWN
-		else if (direction == 'D')
-			player->setPosition(glm::vec2(playerPos.x, map->getTileSize()));
-
-		
-
-
-		levelChangeDelay += deltaTime;
-		changingLevel = true;
-		cout << "Cooldown activado - cambiado a nivel " << levelNum << endl;
 	}
 }
 
@@ -154,6 +156,8 @@ void Scene::render()
 
 	activeLevel->render();
 	player->render();
+	/*if (pauseGame)
+		activeLevel->setBlackScreen();*/
 }
 
 /* INITIALISE_LEVELS INFO
@@ -199,6 +203,22 @@ void Scene::initialise_levels()
 	fin.close();
 	levelNum = 0;
 	activeLevel = levels[levelNum];
+}
+
+void Scene::pause()
+{
+	pauseGame = true;
+	player->setPause();
+	activeLevel->setPause();
+	cout << "PAUSE" << endl;
+}
+
+void Scene::stop_pause()
+{
+	pauseGame = false;
+	player->setStopPause();
+	activeLevel->setStopPause();
+	cout << "CONTINUE" << endl;
 }
 
 void Scene::initShaders()

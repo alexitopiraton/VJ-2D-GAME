@@ -4,6 +4,7 @@ Level::Level()
 {
 	map = NULL;
 	background = NULL;
+	blackScreen = NULL;
 }
 
 Level::~Level()
@@ -12,6 +13,8 @@ Level::~Level()
 		delete map;
 	if (background != NULL)
 		delete background;
+	if (blackScreen != NULL)
+		delete blackScreen;
 }
 
 TileMap* Level::get_tile_map()
@@ -33,10 +36,28 @@ void Level::init(const string& levelFile, const string& backgroundFile, const gl
 	background->setAnimationSpeed(0, 1);
 	background->addKeyframe(0, positionInSpritesheet);
 	background->changeAnimation(0);
+
+	blackScreenImage.loadFromFile("images/black_screen.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	blackScreen = Sprite::createSprite(glm::ivec2(640, 480), glm::vec2(1.f, 1.f), &blackScreenImage, &program);
+	blackScreen->setNumberAnimations(1);
+	blackScreen->setAnimationSpeed(0, 1);
+	blackScreen->addKeyframe(0, glm::vec2(0.f, 0.f));
+	blackScreen->changeAnimation(0);
+
+	pause = false;
 }
 
 void Level::render()
 {
-	map->render();
-	background->render();
+	if (!pause)
+	{
+		map->render();
+		background->render();
+	}
+		
+}
+
+void Level::setBlackScreen()
+{
+	blackScreen->render();
 }

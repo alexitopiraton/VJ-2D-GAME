@@ -17,11 +17,19 @@ public:
 	void init(const string& levelFile, const string& backgroundFile, const glm::vec2& minCoords, ShaderProgram& program, const bool& outside, const glm::vec2& positionInSpritesheet);
 	void render();
 
+	void setPause() { pause = true; }
+	void setStopPause() { pause = false; }
+	void setBlackScreen();
+
 private:
 	TileMap* map;
 	Texture backgroundImage;
+	Texture blackScreenImage;
 	Sprite* background;
+	Sprite* blackScreen;
 	std::vector<Object> objects;
+
+	bool pause;
 };
 
 #endif

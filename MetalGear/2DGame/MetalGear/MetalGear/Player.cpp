@@ -57,6 +57,7 @@ void Player::init(ShaderProgram& shaderProgram)
 		
 	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
+	pause = false;
 	
 }
 
@@ -101,78 +102,81 @@ bool Player::WASDMovementControl()
 
 void Player::update(int deltaTime)
 {
-	sprite->update(deltaTime);
-
-	bool WASDpressed = WASDMovementControl();
-
-	if (movementControl[1] && !WASDpressed)
+	if (!pause)
 	{
-		if (sprite->animation() != WALK_LEFT)
-			sprite->changeAnimation(WALK_LEFT);
+		sprite->update(deltaTime);
 
-		posPlayer.x -= 3;
+		bool WASDpressed = WASDMovementControl();
 
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT																																						)))
+		if (movementControl[1] && !WASDpressed)
 		{
-			posPlayer.x += 3;
-			sprite->changeAnimation(IDLE_LEFT);
-		}
+			if (sprite->animation() != WALK_LEFT)
+				sprite->changeAnimation(WALK_LEFT);
 
-	}
-	else if (movementControl[3] && !WASDpressed)
-	{
-		if (sprite->animation() != WALK_RIGHT)
-			sprite->changeAnimation(WALK_RIGHT);
-
-		posPlayer.x += 3;
-
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
-		{
 			posPlayer.x -= 3;
-			sprite->changeAnimation(IDLE_RIGHT);
+
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT																																						)))
+			{
+				posPlayer.x += 3;
+				sprite->changeAnimation(IDLE_LEFT);
+			}
+
 		}
-
-	}
-	else if (movementControl[0] && !WASDpressed)
-	{
-		if (sprite->animation() != WALK_UP)
-			sprite->changeAnimation(WALK_UP);
-
-		posPlayer.y -= 3;
-
-		if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+		else if (movementControl[3] && !WASDpressed)
 		{
-			posPlayer.y += 3;
-			sprite->changeAnimation(IDLE_BACK);
+			if (sprite->animation() != WALK_RIGHT)
+				sprite->changeAnimation(WALK_RIGHT);
+
+			posPlayer.x += 3;
+
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.x -= 3;
+				sprite->changeAnimation(IDLE_RIGHT);
+			}
+
 		}
-	}
-	else if (movementControl[2] && !WASDpressed)
-	{
-		if (sprite->animation() != WALK_DOWN)
-			sprite->changeAnimation(WALK_DOWN);
-
-		posPlayer.y += 3;
-
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+		else if (movementControl[0] && !WASDpressed)
 		{
+			if (sprite->animation() != WALK_UP)
+				sprite->changeAnimation(WALK_UP);
+
 			posPlayer.y -= 3;
-			sprite->changeAnimation(IDLE_FRONT);
+
+			if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.y += 3;
+				sprite->changeAnimation(IDLE_BACK);
+			}
 		}
-	}
-	else
-	{
-		if (sprite->animation() == WALK_LEFT)
-			sprite->changeAnimation(IDLE_LEFT);
-		else if (sprite->animation() == WALK_RIGHT)
-			sprite->changeAnimation(IDLE_RIGHT);
-		else if (sprite->animation() == WALK_UP)
-			sprite->changeAnimation(IDLE_BACK);
-		else if (sprite->animation() == WALK_DOWN)
-			sprite->changeAnimation(IDLE_FRONT);
+		else if (movementControl[2] && !WASDpressed)
+		{
+			if (sprite->animation() != WALK_DOWN)
+				sprite->changeAnimation(WALK_DOWN);
 
-	}
+			posPlayer.y += 3;
 
-	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.y -= 3;
+				sprite->changeAnimation(IDLE_FRONT);
+			}
+		}
+		else
+		{
+			if (sprite->animation() == WALK_LEFT)
+				sprite->changeAnimation(IDLE_LEFT);
+			else if (sprite->animation() == WALK_RIGHT)
+				sprite->changeAnimation(IDLE_RIGHT);
+			else if (sprite->animation() == WALK_UP)
+				sprite->changeAnimation(IDLE_BACK);
+			else if (sprite->animation() == WALK_DOWN)
+				sprite->changeAnimation(IDLE_FRONT);
+
+		}
+
+		sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+		}
 }
 
 bool Player::changeMap_tile(int &tileType, char &direction)
