@@ -109,31 +109,67 @@ void Scene::update(int deltaTime)
 			player->setTileMap(map);
 
 			glm::ivec2 playerPos = player->getPosition();
+			int posX, posY;
 
-			// level03 -> level04 
-			/*if (levelNum == 4 && previousLevel == 3 && direction == 'R')
+			// Types of transitions
+			// level03 -> level04 PATH
+			if (levelNum == 4 && previousLevel == 3)
 			{
+				posX = playerPos.x - map->getTileSize();
+				posY = playerPos.y - 14 * map->getTileSize();
 
-				player->setPosition(glm::vec2((map->getMapSize() - 2) * map->getTileSize(), map->getMapSize() * map->getTileSize() - int(playerPos.y)));
-			}*/
-			// level04 -> level03
-			//else if (levelNum == 3 && previousLevel == 4 && direction == 'R')
-				//player->setPosition();
+				player->setPosition(glm::vec2(posX, posY));
+				player->lookLeft();
+			}
+			// level04 -> level03 PATH
+			else if (levelNum == 3 && previousLevel == 4)
+			{
+				posX = playerPos.x - map->getTileSize();
+				posY = playerPos.y + 14 * map->getTileSize();
+
+				player->setPosition(glm::vec2(posX,posY));
+				player->lookLeft();
+			}
+			// level04 -> level05 DOOR
+			else if (levelNum == 5 && previousLevel == 4)
+			{
+				posX = playerPos.x;
+				posY = 18 * map->getTileSize();
+
+				player->setPosition(glm::vec2(posX, posY));
+				player->lookUp();
+			}
+			// level05 -> level04 DOOR
+			else if (levelNum == 4 && previousLevel == 5)
+			{
+				player->lookDown();
+			}
 			// LEFT
-			if (direction == 'L')
+			else if (direction == 'L')
+			{
 				player->setPosition(glm::vec2((map->getMapSize().x - 4) * map->getTileSize(), playerPos.y));
+				player->lookLeft();
+			}
 			// RIGHT
 			else if (direction == 'R')
+			{
 				player->setPosition(glm::vec2(map->getTileSize(), playerPos.y));
+				player->lookRight();
+			}
 			// UP
 			else if (direction == 'U')
-				player->setPosition(glm::vec2(playerPos.x, (map->getMapSize().y - 4) * map->getTileSize()));
+			{
+				posY = 19 * map->getTileSize();
+
+				player->setPosition(glm::vec2(playerPos.x, posY));
+				player->lookUp();
+			}
 			// DOWN
 			else if (direction == 'D')
+			{
 				player->setPosition(glm::vec2(playerPos.x, map->getTileSize()));
-
-
-
+				player->lookDown();
+			}
 
 			levelChangeDelay = 0.f;
 			changingLevel = true;
@@ -201,7 +237,7 @@ void Scene::initialise_levels()
 	}
 
 	fin.close();
-	levelNum = 0;
+	levelNum = 3;
 	activeLevel = levels[levelNum];
 }
 
@@ -218,6 +254,8 @@ void Scene::stop_pause()
 	pauseGame = false;
 	player->setStopPause();
 	activeLevel->setStopPause();
+	glm::ivec2 playerPos = player->getPosition();
+	cout << "PLAYER POS X Y --> " << playerPos.x / 20 << " " << playerPos.y / 20 << endl;
 	cout << "CONTINUE" << endl;
 }
 

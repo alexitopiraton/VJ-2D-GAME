@@ -52,7 +52,7 @@ void Level::render()
 	if (!pause)
 	{
 		map->render();
-		background->render();
+		//background->render();
 	}
 		
 }

@@ -61,15 +61,12 @@ bool TileMap::loadLevel(const string &levelFile)
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> mapSize.x >> mapSize.y;
-	cout << "mapSize.x : " << mapSize.x << " mapSize.y : " << mapSize.y << endl;
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tileSize >> blockSize;
-	cout << "tileSize : " << tileSize << " blockSize : " << blockSize << endl;
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetFile;
-	cout << "tilesheetFile : " << tilesheetFile << endl;
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
 	tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
@@ -78,7 +75,6 @@ bool TileMap::loadLevel(const string &levelFile)
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
-	cout << "tilesheetSize.x : " << tilesheetSize.x << " tilesheetSize.y : " << tilesheetSize.y << endl;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
 	map = new int[mapSize.x * mapSize.y];

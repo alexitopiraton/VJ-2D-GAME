@@ -25,6 +25,10 @@ public:
 
 	bool changeMap_tile(int &tileType, char &direction);
 	glm::ivec2 getPosition();
+	void lookLeft();
+	void lookRight();
+	void lookDown();
+	void lookUp();
 
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2& pos);
