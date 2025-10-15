@@ -232,6 +232,22 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+void Player::lookLeft()
+{
+	sprite->changeAnimation(IDLE_LEFT);
+}
 
+void Player::lookRight()
+{
+	sprite->changeAnimation(IDLE_RIGHT);
+}
 
+void Player::lookUp()
+{
+	sprite->changeAnimation(IDLE_BACK);
+}
 
+void Player::lookDown()
+{
+	sprite->changeAnimation(IDLE_FRONT);
+}
