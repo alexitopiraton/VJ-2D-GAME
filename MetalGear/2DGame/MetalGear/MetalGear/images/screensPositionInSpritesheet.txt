@@ -24,4 +24,4 @@ levels/level10.txt
 levels/level11.txt
 0.33333333333333333333333333333333 0 								-- Indoor screen 7 (level 11)
 levels/level12.txt
-0.66666666666666666666666666666667 0 							-- Indoor screen 8 (level 12)
+0.66666666666666666666666666666667 0 								-- Indoor screen 8 (level 12)
