@@ -142,6 +142,25 @@ void Scene::update(int deltaTime)
 			// level05 -> level04 DOOR
 			else if (levelNum == 4 && previousLevel == 5)
 			{
+				player->setPosition(glm::vec2(playerPos.x, 4 * map->getTileSize()));
+				player->lookDown();
+			}
+			// level05 -> level06 DOOR
+			else if (levelNum == 6 && previousLevel == 5)
+			{
+				posX = playerPos.x;
+				posY = playerPos.y;
+
+				player->setPosition(glm::vec2(posX, posY));
+				player->lookUp();
+			}
+			// level06 -> level05 DOOR
+			else if (levelNum == 5 && previousLevel == 6)
+			{
+				posX = playerPos.x;
+				posY = playerPos.y;
+
+				player->setPosition(glm::vec2(posX, posY));
 				player->lookDown();
 			}
 			// LEFT
@@ -237,7 +256,7 @@ void Scene::initialise_levels()
 	}
 
 	fin.close();
-	levelNum = 3;
+	levelNum = 5;
 	activeLevel = levels[levelNum];
 }
 
