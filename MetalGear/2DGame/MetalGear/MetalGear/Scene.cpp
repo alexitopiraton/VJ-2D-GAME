@@ -86,9 +86,6 @@ void Scene::update(int deltaTime)
 		if (player->changeMap_tile(tileType, direction) && !changingLevel)
 		{
 
-			cout << "TILE TYPE " << tileType << " Direction: " << direction << endl;
-			cout << "levelNum " << levelNum << endl;
-
 			int previousLevel = levelNum;
 
 			if (tileType == 2)
@@ -120,6 +117,7 @@ void Scene::update(int deltaTime)
 
 				player->setPosition(glm::vec2(posX, posY));
 				player->lookLeft();
+				cout << "level03 -> level04 PATH" << endl;
 			}
 			// level04 -> level03 PATH
 			else if (levelNum == 3 && previousLevel == 4)
@@ -129,6 +127,7 @@ void Scene::update(int deltaTime)
 
 				player->setPosition(glm::vec2(posX,posY));
 				player->lookLeft();
+				cout << "level04 -> level03 PATH" << endl;
 			}
 			// level04 -> level05 DOOR
 			else if (levelNum == 5 && previousLevel == 4)
@@ -138,42 +137,67 @@ void Scene::update(int deltaTime)
 
 				player->setPosition(glm::vec2(posX, posY));
 				player->lookUp();
+				cout << "level04 -> level05 DOOR" << endl;
 			}
 			// level05 -> level04 DOOR
 			else if (levelNum == 4 && previousLevel == 5)
 			{
 				player->setPosition(glm::vec2(playerPos.x, 4 * map->getTileSize()));
 				player->lookDown();
+				cout << "level05 -> level04 DOOR" << endl;
 			}
-			// level05 -> level06 DOOR
-			else if (levelNum == 6 && previousLevel == 5)
+			// level06 -> level07 DOOR
+			else if (levelNum == 7 && previousLevel == 6)
 			{
-				posX = playerPos.x;
-				posY = playerPos.y;
+				posX = playerPos.x - 13 * map->getTileSize();
+				posY = 19 * map->getTileSize();
 
 				player->setPosition(glm::vec2(posX, posY));
 				player->lookUp();
+				cout << "level05 -> level06 DOOR" << endl;
 			}
-			// level06 -> level05 DOOR
-			else if (levelNum == 5 && previousLevel == 6)
+			// level07 -> level06 DOOR
+			else if (levelNum == 6 && previousLevel == 7)
 			{
-				posX = playerPos.x;
-				posY = playerPos.y;
+				posX = playerPos.x + 13 * map->getTileSize();
+				posY = 7 * map->getTileSize();
 
 				player->setPosition(glm::vec2(posX, posY));
 				player->lookDown();
+				cout << "level06 -> level05 DOOR" << endl;
+			}
+			// level11 -> level12 DOOR
+			else if (levelNum == 12 && previousLevel == 11)
+			{
+				posX = 2 * map->getTileSize();
+				posY = playerPos.y - 4 * map->getTileSize();
+
+				player->setPosition(glm::vec2(posX, posY));
+				player->lookRight();
+				cout << "level11 -> level12 DOOR" << endl;
+			}
+			// level12 -> level11 DOOR
+			else if (levelNum == 11 && previousLevel == 12)
+			{
+				posX = (map->getMapSize().x - 4) * map->getTileSize();
+				posY = playerPos.y + 4 * map->getTileSize();
+
+				player->setPosition(glm::vec2(posX, posY));
+				player->lookLeft();
 			}
 			// LEFT
 			else if (direction == 'L')
 			{
 				player->setPosition(glm::vec2((map->getMapSize().x - 4) * map->getTileSize(), playerPos.y));
 				player->lookLeft();
+				cout << "LEFT" << endl;
 			}
 			// RIGHT
 			else if (direction == 'R')
 			{
 				player->setPosition(glm::vec2(map->getTileSize(), playerPos.y));
 				player->lookRight();
+				cout << "RIGHT" << endl;
 			}
 			// UP
 			else if (direction == 'U')
@@ -182,18 +206,21 @@ void Scene::update(int deltaTime)
 
 				player->setPosition(glm::vec2(playerPos.x, posY));
 				player->lookUp();
+				cout << "UP" << endl;
 			}
 			// DOWN
 			else if (direction == 'D')
 			{
 				player->setPosition(glm::vec2(playerPos.x, map->getTileSize()));
 				player->lookDown();
+				cout << "DOWN" << endl;
 			}
 
 			levelChangeDelay = 0.f;
 			changingLevel = true;
 			pause();
-			cout << "Cooldown activado - cambiado a nivel " << levelNum << endl;
+			cout << "TILE TYPE " << tileType << " Direction: " << direction << endl;
+			cout << "Cooldown activado - cambiando a nivel " << levelNum << endl;
 		}
 	}
 }
@@ -235,7 +262,7 @@ void Scene::initialise_levels()
 	if (line.compare(0, 21, "SPRITESHEET POSITION") != 0)
 		return;
 
-	for (int i = 0; i < NUM_LEVELS-1; i++)
+	for (int i = 0; i < NUM_LEVELS; i++)
 	{
 		Level* level = new Level();
 
@@ -256,7 +283,7 @@ void Scene::initialise_levels()
 	}
 
 	fin.close();
-	levelNum = 5;
+	levelNum = 11;
 	activeLevel = levels[levelNum];
 }
 

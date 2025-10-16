@@ -4,6 +4,7 @@
 #include "TileMap.h"
 #include "Object.h"
 #include <vector>
+#include <iostream>
 
 #define IMAGE_OFFSET 0.33333333333333333333333333333333
 
