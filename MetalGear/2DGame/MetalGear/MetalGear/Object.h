@@ -6,6 +6,14 @@
 
 class Object
 {
+public:
+	Object();
+	~Object();
+
+	void init();
+
+private:
+	Sprite* sprite;
 };
 
 #endif
