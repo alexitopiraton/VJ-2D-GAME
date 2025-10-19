@@ -185,7 +185,7 @@ bool Player::changeMap_tile(int &tileType, char &direction)
 	tileType = map->whichTile(centerPos, direction);
 	
 
-	// guessing facking direction depending on the animation
+	// guessing facing direction depending on the animation
 	if (tileType >= 2 && tileType <= 5)
 	{
 		if (direction == 'O')

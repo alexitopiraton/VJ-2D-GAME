@@ -3,7 +3,7 @@ TILEMAP
 20 16							-- Tile size & block size
 images/blocks.png	-- Tilesheet
 2 2
-12222222222222222222222222222221
+11222222222222222222222222222221
 1                              1
 1                              1
 1                              1
