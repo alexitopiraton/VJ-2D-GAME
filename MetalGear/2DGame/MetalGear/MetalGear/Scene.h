@@ -5,7 +5,6 @@
 #include "ShaderProgram.h"
 #include "Player.h"
 #include "Level.h"
-#include <vector>
 
 #define LEVEL_CHANGE_COOLDOWN 2000.0f
 
@@ -21,7 +20,9 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+
 	void initialise_levels();
+
 	void pause();
 	void stop_pause();
 

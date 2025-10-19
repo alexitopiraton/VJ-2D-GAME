@@ -112,17 +112,17 @@ void Scene::update(int deltaTime)
 			// level03 -> level04 PATH
 			if (levelNum == 4 && previousLevel == 3)
 			{
-				posX = playerPos.x - map->getTileSize();
+				posX = map->getTileSize();
 				posY = playerPos.y - 14 * map->getTileSize();
 
 				player->setPosition(glm::vec2(posX, posY));
-				player->lookLeft();
+				player->lookRight();
 				cout << "level03 -> level04 PATH" << endl;
 			}
 			// level04 -> level03 PATH
 			else if (levelNum == 3 && previousLevel == 4)
 			{
-				posX = playerPos.x - map->getTileSize();
+				posX = 30 * map->getTileSize();
 				posY = playerPos.y + 14 * map->getTileSize();
 
 				player->setPosition(glm::vec2(posX,posY));
@@ -238,8 +238,8 @@ void Scene::render()
 
 	activeLevel->render();
 	player->render();
-	/*if (pauseGame)
-		activeLevel->setBlackScreen();*/
+	if (pauseGame)
+		activeLevel->setBlackScreen();
 }
 
 /* INITIALISE_LEVELS INFO
@@ -253,6 +253,7 @@ void Scene::initialise_levels()
 	string screensPositionFile = "images/screensPositionInSpritesheet.txt";
 	string screenLevel;
 	
+	int numObjects;
 	glm::vec2 screensPosition;
 
 	fin.open(screensPositionFile.c_str());
@@ -264,6 +265,30 @@ void Scene::initialise_levels()
 
 	for (int i = 0; i < NUM_LEVELS; i++)
 	{
+		std::vector<string> objectTypes;
+		std::vector<std::pair<int, int>> objectPositions;
+
+		getline(fin, line);
+		stringstream ss(line);
+		ss >> numObjects;
+
+		for (int j = 0; j < numObjects; j++)
+		{
+			string type; 
+			getline(fin, line);
+			stringstream ss00(line);
+			ss00 >> type;
+
+			std::pair<int, int> position;
+			getline(fin, line);
+			stringstream ss01(line);
+			ss01 >> position.first >> position.second;
+
+			cout << "level -> " << i << " | type -> " << type << " | position x -> " << position.first / 20 << " | position y -> " << position.second / 20 << endl;
+			objectTypes.push_back(type);
+			objectPositions.push_back(position);
+		}
+
 		Level* level = new Level();
 
 		getline(fin, line);
@@ -275,15 +300,15 @@ void Scene::initialise_levels()
 		ss2 >> screensPosition[0] >> screensPosition[1];
 
 		if (i < 5)
-			level->init(screenLevel, "images/Outside_Screens/outsideScreens.png", glm::vec2(0, 0), texProgram, true, screensPosition);
+			level->init(screenLevel, "images/Outside_Screens/outsideScreens.png", glm::vec2(0, 0), texProgram, true, screensPosition, objectTypes, objectPositions);
 		else
-			level->init(screenLevel, "images/Indoor_Screens/indoorScreens.png", glm::vec2(0, 0), texProgram, false, screensPosition);
+			level->init(screenLevel, "images/Indoor_Screens/indoorScreens.png", glm::vec2(0, 0), texProgram, false, screensPosition, objectTypes, objectPositions);
 
 		levels.push_back(level);
 	}
 
 	fin.close();
-	levelNum = 11;
+	levelNum = 7;
 	activeLevel = levels[levelNum];
 }
 

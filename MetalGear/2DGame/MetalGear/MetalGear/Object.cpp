@@ -11,7 +11,18 @@ Object::~Object()
 		delete sprite;
 }
 
-void Object::init()
+void Object::render()
 {
+	sprite->render();
+}
 
+void Object::setPosition(glm::ivec2 newPos)
+{
+	posObject = newPos;
+	sprite->setPosition(glm::vec2(posObject.x, posObject.y));
+}
+
+glm::ivec2 Object::getPosition() const
+{
+	return posObject;
 }
