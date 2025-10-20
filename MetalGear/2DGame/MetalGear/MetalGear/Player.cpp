@@ -58,7 +58,7 @@ void Player::init(ShaderProgram& shaderProgram)
 	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
 	pause = false;
-	
+	direction = 'R';
 }
 
 /* WASDMovementControl INFO
@@ -115,11 +115,12 @@ void Player::update(int deltaTime)
 
 			posPlayer.x -= 3;
 
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT																																						)))
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
 			{
 				posPlayer.x += 3;
 				sprite->changeAnimation(IDLE_LEFT);
 			}
+			direction = 'L';
 
 		}
 		else if (movementControl[3] && !WASDpressed)
@@ -134,7 +135,7 @@ void Player::update(int deltaTime)
 				posPlayer.x -= 3;
 				sprite->changeAnimation(IDLE_RIGHT);
 			}
-
+			direction = 'R';
 		}
 		else if (movementControl[0] && !WASDpressed)
 		{
@@ -148,6 +149,7 @@ void Player::update(int deltaTime)
 				posPlayer.y += 3;
 				sprite->changeAnimation(IDLE_BACK);
 			}
+			direction = 'U';
 		}
 		else if (movementControl[2] && !WASDpressed)
 		{
@@ -161,6 +163,7 @@ void Player::update(int deltaTime)
 				posPlayer.y -= 3;
 				sprite->changeAnimation(IDLE_FRONT);
 			}
+			direction = 'D';
 		}
 		else
 		{
@@ -176,36 +179,67 @@ void Player::update(int deltaTime)
 		}
 
 		sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+
+		if (Game::instance().getKey(GLFW_KEY_E))
+		{
+			cout << "TECLA E DETECTADA" << endl;
+			cout << "DIRECCION -> " << direction << endl;
+			glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
+			int tile = map->whichFacingTile(centerPos, direction);
+			cout << "TILE -> " << tile << endl;
+			string hide;
+
+			if (tile == 6)
+			{
+				weapons.push_back(level->getWeapon());
+				hide = "WEAPON";
+			}
+			else if (tile == 7)
+			{
+				accessCards.push_back(level->getAccessCard());
+				hide = "ACCESS_CARD";
+			}
+			else if (tile == 8)
+			{
+				meals.push_back(level->getMeal());
+				hide = "MEAL";
+			}
+
+			cout << "VARIABLE HIDE -> " << hide << endl;
+			level->spriteToHide(hide);
+			map = level->get_tile_map();
 		}
+	}
 }
 
-bool Player::changeMap_tile(int &tileType, char &direction)
+bool Player::changeMap_tile(int &tileType, char &dir)
 {
 	glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
-	tileType = map->whichTile(centerPos, direction);
+	tileType = map->whichTile(centerPos, dir);
 	
 
 	// guessing facing direction depending on the animation
 	if (tileType >= 2 && tileType <= 5)
 	{
-		if (direction == 'O')
+		if (dir == 'O')
 		{
 			int currentAnim = sprite->animation();
 
 			if (currentAnim == WALK_LEFT || currentAnim == IDLE_LEFT)
-				direction = 'L';
+				dir = 'L';
 			else if (currentAnim == WALK_RIGHT || currentAnim == IDLE_RIGHT)
-				direction = 'R';
+				dir = 'R';
 			else if (currentAnim == WALK_UP || currentAnim == IDLE_BACK)
-				direction = 'U';
+				dir = 'U';
 			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_FRONT)
-				direction = 'D';
+				dir = 'D';
 			else
-				direction = 'D'; // default direction
+				dir = 'D'; // default direction
 		}
 
-		if (direction != 'N')
+		if (dir != 'N')
 			return true;
+		direction = dir;
 	}
 	
 	return false;
@@ -224,6 +258,11 @@ void Player::render()
 void Player::setTileMap(TileMap* tileMap)
 {
 	map = tileMap;
+}
+
+void Player::setLevel(Level* lvl)
+{
+	level = lvl;
 }
 
 void Player::setPosition(const glm::vec2 &pos)

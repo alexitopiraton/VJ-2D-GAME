@@ -5,6 +5,7 @@
 #include "ShaderProgram.h"
 #include "Player.h"
 #include "Level.h"
+#include "Characters.h"
 
 #define LEVEL_CHANGE_COOLDOWN 2000.0f
 
@@ -41,6 +42,8 @@ private:
 	vector<Level*> levels;
 	int levelNum;
 	Level* activeLevel;
+
+	Characters* characters;
 
 	bool changingLevel;
 	float levelChangeDelay;

@@ -247,6 +247,24 @@ int TileMap::whichTile(const glm::ivec2 &pos, char &direction)
 	return tile;
 }
 
+int TileMap::whichFacingTile(const glm::ivec2& pos, const char& direction)
+{
+	int tile = 0;
+	int posx = pos.x / tileSize;
+	int posy = pos.y / tileSize;
+
+	if (direction == 'L')
+		tile = map[posy * mapSize.x + posx - 1];
+	else if (direction == 'R')
+		tile = map[posy * mapSize.x + posx + 1];
+	else if (direction == 'U')
+		tile = map[(posy - 1) * mapSize.x + posx];
+	else if (direction == 'D')
+		tile = map[(posy + 1) * mapSize.x + posx];
+	
+	return tile;
+}
+
 
 
 

@@ -36,6 +36,7 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	int whichTile(const glm::ivec2& pos, char &direction);
+	int whichFacingTile(const glm::ivec2& pos, const char& direction);
 	
 private:
 	bool loadLevel(const string &levelFile);

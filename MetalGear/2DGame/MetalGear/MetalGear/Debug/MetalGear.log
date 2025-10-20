@@ -1,0 +1,6 @@
+﻿  Characters.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Characters.cpp(24,20): warning C4018: '<': no coinciden signed/unsigned
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Characters.cpp(47,20): warning C4018: '<': no coinciden signed/unsigned
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Characters.cpp(70,20): warning C4018: '<': no coinciden signed/unsigned
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Characters.cpp(94,21): warning C4018: '<': no coinciden signed/unsigned
+  MetalGear.vcxproj -> C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\MetalGear.exe
