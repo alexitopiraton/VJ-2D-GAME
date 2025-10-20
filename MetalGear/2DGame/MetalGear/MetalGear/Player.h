@@ -4,6 +4,7 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Level.h"
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 #define SPRITE_WIDTH 16*2
@@ -23,7 +24,7 @@ public:
 	void update(int deltaTime);
 	void render();
 
-	bool changeMap_tile(int &tileType, char &direction);
+	bool changeMap_tile(int &tileType, char &dir);
 	glm::ivec2 getPosition();
 	void lookLeft();
 	void lookRight();
@@ -34,6 +35,8 @@ public:
 	void setPosition(const glm::vec2& pos);
 	void setPause() { pause = true; }
 	void setStopPause() { pause = false; }
+	void setDirection(const char& dir) { direction = dir; }
+	void setLevel(Level *level);
 
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -43,6 +46,12 @@ private:
 	TileMap* map;
 
 	glm::bvec4 movementControl;
+
+	char direction;
+	std::vector<Weapon*> weapons;
+	std::vector<AccessCard*> accessCards;
+	std::vector<Meal*> meals;
+	Level* level;
 
 	bool pause;
 };

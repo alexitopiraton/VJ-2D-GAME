@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClInclude Include="AccessCard.h" />
     <ClInclude Include="AnimKeyframes.h" />
+    <ClInclude Include="Characters.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Gui.h" />
@@ -32,6 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccessCard.cpp" />
+    <ClCompile Include="Characters.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="Weapon.cpp" />

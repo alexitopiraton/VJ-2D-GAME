@@ -82,6 +82,9 @@ void Level::init(const string& levelFile, const string& backgroundFile, const gl
 
 	// Other attributes
 	pause = false;
+	hideWeapon = false;
+	hideAccessCard = false;
+	hideMeal = false;
 }
 
 void Level::render()
@@ -89,18 +92,34 @@ void Level::render()
 	if (!pause)
 	{
 		map->render();
-		//background->render();
+		background->render();
 
-		if (meal != NULL)
+		if (meal != NULL && !hideMeal)
 			meal->render();
 
-		if (accessCard != NULL)
+		if (accessCard != NULL && !hideAccessCard)
 			accessCard->render();
 
-		if (weapon != NULL)
+		if (weapon != NULL && !hideWeapon)
 			weapon->render();
 	}
 		
+}
+
+void Level::spriteToHide(const string& hide)
+{
+	if (hide == "MEAL")
+	{
+		hideMeal = true;
+	}
+	else if (hide == "ACCESS_CARD")
+	{
+		hideAccessCard = true;
+	}
+	else if (hide == "WEAPON")
+	{
+		hideWeapon = true;
+	}
 }
 
 void Level::setBlackScreen()

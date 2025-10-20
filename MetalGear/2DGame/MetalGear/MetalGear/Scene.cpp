@@ -47,9 +47,13 @@ void Scene::init()
 
 	initialise_levels();
 
+	characters = new Characters();
+	characters->init(texProgram);
+
 	TileMap* map = activeLevel->get_tile_map();
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	player->setLevel(activeLevel);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	currentTime = 0.0f;
@@ -84,8 +88,7 @@ void Scene::update(int deltaTime)
 		int tileType;
 		char direction;
 		if (player->changeMap_tile(tileType, direction) && !changingLevel)
-		{
-
+		{			
 			int previousLevel = levelNum;
 
 			if (tileType == 2)
@@ -104,6 +107,7 @@ void Scene::update(int deltaTime)
 			activeLevel = levels[levelNum];
 			TileMap* map = activeLevel->get_tile_map();
 			player->setTileMap(map);
+			player->setLevel(activeLevel);
 
 			glm::ivec2 playerPos = player->getPosition();
 			int posX, posY;
@@ -240,6 +244,7 @@ void Scene::render()
 	player->render();
 	if (pauseGame)
 		activeLevel->setBlackScreen();
+	characters->render();
 }
 
 /* INITIALISE_LEVELS INFO
@@ -308,7 +313,7 @@ void Scene::initialise_levels()
 	}
 
 	fin.close();
-	levelNum = 7;
+	levelNum = 11;
 	activeLevel = levels[levelNum];
 }
 
@@ -317,6 +322,7 @@ void Scene::pause()
 	pauseGame = true;
 	player->setPause();
 	activeLevel->setPause();
+	characters->setCharacters("loading...");
 	cout << "PAUSE" << endl;
 }
 
@@ -326,6 +332,7 @@ void Scene::stop_pause()
 	player->setStopPause();
 	activeLevel->setStopPause();
 	glm::ivec2 playerPos = player->getPosition();
+	characters->stopDisplay();
 	cout << "PLAYER POS X Y --> " << playerPos.x / 20 << " " << playerPos.y / 20 << endl;
 	cout << "CONTINUE" << endl;
 }
@@ -359,6 +366,3 @@ void Scene::initShaders()
 	vShader.free();
 	fShader.free();
 }
-
-
-
