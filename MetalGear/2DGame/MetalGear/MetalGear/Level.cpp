@@ -106,7 +106,7 @@ void Level::render()
 		
 }
 
-void Level::spriteToHide(const string& hide)
+void Level::spriteToHide(const string& hide, const glm::vec2 &tileCoords, const int& tile)
 {
 	if (hide == "MEAL")
 	{
@@ -120,6 +120,8 @@ void Level::spriteToHide(const string& hide)
 	{
 		hideWeapon = true;
 	}
+
+	map->changeTile(tileCoords, tile);
 }
 
 void Level::setBlackScreen()

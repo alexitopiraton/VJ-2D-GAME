@@ -7,7 +7,9 @@
 
 enum PlayerAnims
 {
-	IDLE_LEFT, IDLE_RIGHT, IDLE_FRONT, IDLE_BACK, WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN, PUNCH
+	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN, 
+	WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN, 
+	ARMED_IDLE_LEFT, ARMED_IDLE_RIGHT, ARMED_IDLE_UP, ARMED_IDLE_DOWN,
 };
 
 
@@ -32,11 +34,11 @@ void Player::init(ShaderProgram& shaderProgram)
 		sprite->setAnimationSpeed(IDLE_RIGHT, 8);
 		sprite->addKeyframe(IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 5, 0.5f));
 
-		sprite->setAnimationSpeed(IDLE_BACK, 8);
-		sprite->addKeyframe(IDLE_BACK, glm::vec2(SPRITESHEET_OFFSET * 5, 0.f));
+		sprite->setAnimationSpeed(IDLE_UP, 8);
+		sprite->addKeyframe(IDLE_UP, glm::vec2(SPRITESHEET_OFFSET * 5, 0.f));
 
-		sprite->setAnimationSpeed(IDLE_FRONT, 8);
-		sprite->addKeyframe(IDLE_FRONT, glm::vec2(SPRITESHEET_OFFSET * 4, 0.f));
+		sprite->setAnimationSpeed(IDLE_DOWN, 8);
+		sprite->addKeyframe(IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET * 4, 0.f));
 		
 		sprite->setAnimationSpeed(WALK_LEFT, 5);
 		sprite->addKeyframe(WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET * 0, 0.5f));
@@ -54,9 +56,22 @@ void Player::init(ShaderProgram& shaderProgram)
 		sprite->setAnimationSpeed(WALK_DOWN, 5);
 		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 0, 0.f));
 		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 2, 0.f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_LEFT, 5);
+		//sprite->addKeyframe(ARMED_IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 6, 0.5f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_RIGHT, 5);
+		//sprite->addKeyframe(ARMED_IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 7, 0.5f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_UP, 5);
+		//sprite->addKeyframe(ARMED_IDLE_UP, glm::vec2(SPRITESHEET_OFFSET * 6, 0.f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_DOWN, 5);
+		//sprite->addKeyframe(ARMED_IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET * 7, 0.f));
 		
 	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
+	punch = new Weapon();
 	pause = false;
 	direction = 'R';
 }
@@ -147,7 +162,7 @@ void Player::update(int deltaTime)
 			if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
 			{
 				posPlayer.y += 3;
-				sprite->changeAnimation(IDLE_BACK);
+				sprite->changeAnimation(IDLE_UP);
 			}
 			direction = 'U';
 		}
@@ -161,7 +176,7 @@ void Player::update(int deltaTime)
 			if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
 			{
 				posPlayer.y -= 3;
-				sprite->changeAnimation(IDLE_FRONT);
+				sprite->changeAnimation(IDLE_DOWN);
 			}
 			direction = 'D';
 		}
@@ -172,9 +187,9 @@ void Player::update(int deltaTime)
 			else if (sprite->animation() == WALK_RIGHT)
 				sprite->changeAnimation(IDLE_RIGHT);
 			else if (sprite->animation() == WALK_UP)
-				sprite->changeAnimation(IDLE_BACK);
+				sprite->changeAnimation(IDLE_UP);
 			else if (sprite->animation() == WALK_DOWN)
-				sprite->changeAnimation(IDLE_FRONT);
+				sprite->changeAnimation(IDLE_DOWN);
 
 		}
 
@@ -185,7 +200,8 @@ void Player::update(int deltaTime)
 			cout << "TECLA E DETECTADA" << endl;
 			cout << "DIRECCION -> " << direction << endl;
 			glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
-			int tile = map->whichFacingTile(centerPos, direction);
+			glm::vec2 tileCoords;
+			int tile = map->whichFacingTile(centerPos, direction, tileCoords);
 			cout << "TILE -> " << tile << endl;
 			string hide;
 
@@ -206,8 +222,11 @@ void Player::update(int deltaTime)
 			}
 
 			cout << "VARIABLE HIDE -> " << hide << endl;
-			level->spriteToHide(hide);
-			map = level->get_tile_map();
+			if (!hide.empty())
+			{
+				level->spriteToHide(hide, tileCoords, tile);
+				map = level->get_tile_map();
+			}
 		}
 	}
 }
@@ -229,9 +248,9 @@ bool Player::changeMap_tile(int &tileType, char &dir)
 				dir = 'L';
 			else if (currentAnim == WALK_RIGHT || currentAnim == IDLE_RIGHT)
 				dir = 'R';
-			else if (currentAnim == WALK_UP || currentAnim == IDLE_BACK)
+			else if (currentAnim == WALK_UP || currentAnim == IDLE_UP)
 				dir = 'U';
-			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_FRONT)
+			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_DOWN)
 				dir = 'D';
 			else
 				dir = 'D'; // default direction
@@ -283,10 +302,10 @@ void Player::lookRight()
 
 void Player::lookUp()
 {
-	sprite->changeAnimation(IDLE_BACK);
+	sprite->changeAnimation(IDLE_UP);
 }
 
 void Player::lookDown()
 {
-	sprite->changeAnimation(IDLE_FRONT);
+	sprite->changeAnimation(IDLE_DOWN);
 }

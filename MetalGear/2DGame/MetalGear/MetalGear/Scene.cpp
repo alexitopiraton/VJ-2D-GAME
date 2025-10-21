@@ -313,7 +313,7 @@ void Scene::initialise_levels()
 	}
 
 	fin.close();
-	levelNum = 11;
+	levelNum = 7;
 	activeLevel = levels[levelNum];
 }
 

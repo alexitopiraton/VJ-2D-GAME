@@ -100,6 +100,7 @@ void Characters::render()
 			if (c == ' ')
 			{
 				actualPos.x += spacing;
+				continue;
 			}
 			else if (c >= 'A' && c <= 'Z')
 			{
