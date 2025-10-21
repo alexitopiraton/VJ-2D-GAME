@@ -51,6 +51,8 @@ private:
 	std::vector<Weapon*> weapons;
 	std::vector<AccessCard*> accessCards;
 	std::vector<Meal*> meals;
+	Weapon* punch;
+
 	Level* level;
 
 	bool pause;

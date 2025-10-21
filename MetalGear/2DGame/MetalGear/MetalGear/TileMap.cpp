@@ -247,22 +247,70 @@ int TileMap::whichTile(const glm::ivec2 &pos, char &direction)
 	return tile;
 }
 
-int TileMap::whichFacingTile(const glm::ivec2& pos, const char& direction)
+int TileMap::whichFacingTile(const glm::ivec2& pos, const char& direction, glm::vec2 &tileCoords)
 {
 	int tile = 0;
 	int posx = pos.x / tileSize;
 	int posy = pos.y / tileSize;
 
 	if (direction == 'L')
+	{
 		tile = map[posy * mapSize.x + posx - 1];
+		tileCoords = glm::vec2(posx-1, posy);
+	}
 	else if (direction == 'R')
+	{
 		tile = map[posy * mapSize.x + posx + 1];
+		tileCoords = glm::vec2(posx+1, posy);
+	}
 	else if (direction == 'U')
+	{
 		tile = map[(posy - 1) * mapSize.x + posx];
+		tileCoords = glm::vec2(posx, posy-1);
+	}
 	else if (direction == 'D')
+	{
 		tile = map[(posy + 1) * mapSize.x + posx];
+		tileCoords = glm::vec2(posx, posy+1);
+	}
 	
 	return tile;
+}
+
+
+/* changeTile 
+* Deletes the associated tiles to objects collected by the Player previously.
+* For instance, if the map has this tileMap
+* 1 1 1 1 1
+* 1 7 7 7 1
+* 1 7 0 7 1
+* 2 0 0 0 1
+* 1 1 1 1 1
+* This function will delete al adjacent 7's, starting in the 7 collected. These 7's represent the collisions with the object, so each 7 does not represnt an object.
+*/
+std::vector<glm::vec2> adjacents{ {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1} };
+
+void TileMap::changeTile(const glm::vec2& tileCoords, const int& tile)
+{
+	int y = tileCoords.y;
+	int x = tileCoords.x;
+	int adjacentTiles = 8;
+
+	if (map[y * mapSize.x + x] == tile)
+		map[y * mapSize.x + x] = 0;
+
+	for (int i = 0; i < adjacentTiles; i++)
+	{
+		int newX = x + adjacents[i].x;
+		int newY = y + adjacents[i].y;
+
+		if (newX < 0 || newX >= mapSize.x || newY < 0 || newY >= mapSize.y)
+			return;
+
+
+		if (map[newY * mapSize.x + newX] == tile)
+			changeTile(glm::vec2(newX, newY), tile);
+	}
 }
 
 
