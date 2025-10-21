@@ -1,0 +1,17 @@
+﻿  ArnoldBoss.cpp
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ArnoldBoss.cpp(105,65): warning C4018: '>=': no coinciden signed/unsigned
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ArnoldBoss.cpp(135,50): warning C4018: '<': no coinciden signed/unsigned
+  Game.cpp
+  Guard.cpp
+  Level.cpp
+  Menu.cpp
+  Player.cpp
+  Scene.cpp
+C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(130,32): warning C4018: '>=': no coinciden signed/unsigned
+  Twin.cpp
+  main.cpp
+  Generando código...
+SOIL.lib(image_DXT.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_DXT.obj)' o en 'C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(image_helper.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(image_helper.obj)' o en 'C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+SOIL.lib(stb_image_aug.obj) : warning LNK4099: no se encontró PDB 'vc100.pdb' con 'SOIL.lib(stb_image_aug.obj)' o en 'C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\vc100.pdb'; se vinculará el objeto sin tener en cuenta información de depuración
+  MetalGear.vcxproj -> C:\Users\User\Desktop\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\MetalGear.exe

@@ -17,7 +17,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Guard.h" />
-    <ClInclude Include="ImageRenderer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Object.h" />
@@ -30,13 +29,13 @@
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="Twin.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArnoldBoss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Guard.cpp" />
-    <ClCompile Include="ImageRenderer.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -50,6 +49,7 @@
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="Twin.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5BE6CA2A-E5A8-40CC-9015-047CE0C78036}</ProjectGuid>

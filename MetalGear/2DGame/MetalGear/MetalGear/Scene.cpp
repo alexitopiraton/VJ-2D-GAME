@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include "Bullet.h"
+#include "Twin.h"
 
 #define SCREEN_X 32
 #define SCREEN_Y 16
@@ -318,7 +319,7 @@ void Scene::initialise_levels()
 	{
 		TileMap* map = levels[0]->get_tile_map();
 
-		glm::vec2 arnoldPos(5 * map->getTileSize(), 5 * map->getTileSize());
+		glm::vec2 arnoldPos((map->getMapSize().x - 3) * map->getTileSize(), (map->getMapSize().y - 8) * map->getTileSize());
 		levels[0]->addArnoldBoss(arnoldPos, texProgram);
 
 		map = levels[2]->get_tile_map();
@@ -335,8 +336,15 @@ void Scene::initialise_levels()
 
 		map = levels[3]->get_tile_map();
 
-		glm::vec2 rollerPos(5 * map->getTileSize(), 22 * map->getTileSize());
+		glm::vec2 rollerPos((map->getMapSize().x - 1)*map->getTileSize(), (map->getMapSize().y - 6) * map->getTileSize());
 		levels[3]->addRoller(rollerPos, texProgram, true);
+
+		map = levels[4]->get_tile_map();
+
+		glm::vec2 twinPos((map->getMapSize().x - 2.5) * map->getTileSize(), (map->getMapSize().y - 8) * map->getTileSize());
+		levels[4]->addTwin(twinPos, texProgram);
+
+
 
 
 		// Si quieres más guardias en el mismo nivel:

@@ -16,6 +16,7 @@ public:
     void takeDamage(int dmg);
     bool isAlive() const { return health > 0; }
     void setShaderProgram(ShaderProgram* program);
+    glm::ivec2 findClosestWalkableTile(TileMap& tilemap, const glm::ivec2& tile);
 
 
 private:
@@ -31,7 +32,7 @@ private:
     int timeSinceLastPath = 0;
     const int pathRecalcCooldown = 100; // recalcula más rápido que los guardias
     int health = 300; // mucha vida
-    float speed = 60.f; // más lento pero constante
+    float speed = 120.f; // más lento pero constante
     ShaderProgram* shaderProgram;
 };
 #endif

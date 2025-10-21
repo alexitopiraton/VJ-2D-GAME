@@ -11,7 +11,7 @@ public:
     Roller();
     ~Roller();
 
-    void init(const glm::vec2& mapDispl, ShaderProgram& shaderProgram, bool moveRight);
+    void init(const glm::vec2& mapDispl, ShaderProgram& shaderProgram, bool moveRight, const int& tileSize);
     void update(int deltaTime, TileMap* map, Player* player);
     void render();
 

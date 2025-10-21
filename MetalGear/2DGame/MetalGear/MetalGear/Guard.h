@@ -10,8 +10,8 @@
 #include <list>
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
-#define SPRITE_WIDTH 16*2
-#define SPRITE_HEIGHT	31*2
+#define SPRITE_WIDTH 16*2 
+#define SPRITE_HEIGHT	31*2 
 
 
 
@@ -68,6 +68,17 @@ private:
 
 	int health = 50;
 	bool alive = true;
+
+	Sprite* spriteZZZ = nullptr;
+	bool showZZZ = false;
+	Texture spritesheetZZZ;
+
+	// --- Icono de alerta ---
+	Texture alertTexture;
+	Sprite* spriteAlert = nullptr;
+	bool showAlert = false;
+	float alertTimer = 0.0f;
+	const float ALERT_DURATION = 1000.0f;
 };
 
 

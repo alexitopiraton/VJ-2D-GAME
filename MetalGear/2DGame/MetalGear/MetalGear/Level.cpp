@@ -1,5 +1,6 @@
 #include "Level.h"
 #include <iostream>
+#include "Twin.h"
 
 Level::Level()
 {
@@ -53,43 +54,19 @@ void Level::addGuard(const glm::vec2& position, ShaderProgram& program)
 void Level::update(int deltaTime, Player* player)
 {
 	updateRollers(deltaTime, player);
-	cout << "[Level] Updating level with ArnoldBoss: " << (arnoldBoss ? "Yes" : "No") << endl;
+
 	if(arnoldBoss)
 		arnoldBoss->update(deltaTime, *map, *player);
 
-	cout << "[Level] ArnoldBoss updated." << endl;
 
-	// Actualizar todos los guardias
-	for (Guard* guard : guards)
-	{
-		cout << "Updating guard at position: " << endl;
-		guard->AIControl(*map, *player, deltaTime);
-		guard->update(deltaTime);
-
-		// --- Comprobar colisiones de balas del guardia con el jugador ---
-		const std::list<Bullet*>& bullets = guard->getBullets();
-
-
+	if (twin) {
+		twin->AIControl(*map, *player, deltaTime);
+		twin->update(deltaTime);
+		const std::list<Bullet*>& bullets = twin->getBullets();
 
 		for (Bullet* b : bullets)
 		{
-			std::cout << "[Level] :" << b->isAlive()<< std::endl;
-			std::cout << "[Level] :" << b->isAlive() << std::endl;
-			std::cout << "[Level] :" << b->isAlive() << std::endl;
-			std::cout << "[Level] :" << b->isAlive() << std::endl;
-			std::cout << "[Level] :" << b->isAlive() << std::endl;
-			std::cout << "[Level] :" << b->isAlive() << std::endl;
-			std::cout << "[Level] :" << b->isAlive() << std::endl;
-			// Si la bala está viva
 			if (b->isAlive()) {
-
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
-				std::cout << "[Level] ¡Tratando bala!" << std::endl;
 				glm::vec2 bulletPos = b->getPosition();
 				glm::ivec2 bulletSize(16, 16);
 				glm::ivec2 playerSize(SPRITE_WIDTH + 10, SPRITE_HEIGHT + 10);
@@ -101,14 +78,40 @@ void Level::update(int deltaTime, Player* player)
 
 				if (collisionX && collisionY) // radio de colisión
 				{
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
-					std::cout << "[Level] ¡Bala impactó al jugador!" << std::endl;
+					player->takeDamage(20);
+					b->setAlive(false);
+				}
+			}
+		}
+
+
+	}
+
+	// Actualizar todos los guardias
+	for (Guard* guard : guards)
+	{
+		guard->AIControl(*map, *player, deltaTime);
+		guard->update(deltaTime);
+
+		// --- Comprobar colisiones de balas del guardia con el jugador ---
+		const std::list<Bullet*>& bullets = guard->getBullets();
+
+
+
+		for (Bullet* b : bullets)
+		{
+			if (b->isAlive()) {
+				glm::vec2 bulletPos = b->getPosition();
+				glm::ivec2 bulletSize(16, 16);
+				glm::ivec2 playerSize(SPRITE_WIDTH + 10, SPRITE_HEIGHT + 10);
+
+				bool collisionX = bulletPos.x + bulletSize.x >= player->getPosition().x &&
+					player->getPosition().x + playerSize.x >= bulletPos.x;
+				bool collisionY = bulletPos.y + bulletSize.y >= player->getPosition().y &&
+					player->getPosition().y + playerSize.y >= bulletPos.y;
+
+				if (collisionX && collisionY) // radio de colisión
+				{
 					player->takeDamage(20);
 					b->setAlive(false);
 				}
@@ -129,6 +132,10 @@ void Level::render()
 	renderRollers();
 	if(arnoldBoss)
 		arnoldBoss->render();
+
+	if (twin) {
+		twin->render();
+	}
 }
 
 void Level::resetGuards()
@@ -145,7 +152,7 @@ void Level::resetGuards()
 void Level::addRoller(const glm::vec2& pos, ShaderProgram& shaderProgram, bool moveRight)
 {
 	Roller* roller = new Roller();
-	roller->init(glm::vec2(0, 0), shaderProgram, moveRight); // sin desplazamiento
+	roller->init(glm::vec2(0, 0), shaderProgram, moveRight, map->getTileSize()); // sin desplazamiento
 	roller->setPosition(pos);
 	rollers.push_back(roller);
 }
@@ -179,6 +186,23 @@ void Level::addArnoldBoss(const glm::vec2& pos, ShaderProgram& shaderProgram)
 		<< pos.x << ", " << pos.y << std::endl;
 }
 
+
+void Level::addTwin(const glm::vec2& position, ShaderProgram& program)
+{
+	twin = new Twin();
+	twin->init(program);
+	twin->setShaderProgram(&program);
+	twin->setPosition(position);
+}
+
+
+void Level::resetTwin()
+{
+	twin->clearBullets();
+	twin->reset();
+	delete twin;
+	twin = nullptr;
+}
 
 
 

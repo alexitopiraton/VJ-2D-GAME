@@ -8,6 +8,7 @@
 #include "Guard.h"
 #include "Roller.h"
 #include "ArnoldBoss.h"
+#include "Twin.h"
 
 #define IMAGE_OFFSET 0.33333333333333333333333333333333
 
@@ -33,6 +34,9 @@ public:
 
 	void addArnoldBoss(const glm::vec2& pos, ShaderProgram& shaderProgram);
 
+	void addTwin(const glm::vec2& position, ShaderProgram& program);
+	void resetTwin();
+
 
 private:
 	TileMap* map;
@@ -42,6 +46,7 @@ private:
 	std::vector<Guard*> guards;
 	std::vector<Roller*> rollers;
 	ArnoldBoss* arnoldBoss = nullptr;
+	Twin* twin = nullptr;
 };
 
 #endif

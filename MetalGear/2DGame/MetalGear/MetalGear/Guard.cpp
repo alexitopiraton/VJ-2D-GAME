@@ -6,6 +6,8 @@
 #include "Pathfinder.h"
 #include "Bullet.h"
 
+
+
 enum GuardAnims
 {
     STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT
@@ -19,14 +21,14 @@ void Guard::init(ShaderProgram& shaderProgram)
     spritesheet.loadFromFile("images/enemies/guard.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
     // Usar las mismas dimensiones y animaciones que el jugador por ahora
-    sprite = Sprite::createSprite(glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), glm::vec2(0.2f, 0.5f), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(glm::ivec2(SPRITE_WIDTH+10, SPRITE_HEIGHT+10), glm::vec2(0.25f, 0.5f), &spritesheet, &shaderProgram);
     sprite->setNumberAnimations(4);
 
     sprite->setAnimationSpeed(STAND_LEFT, 8);
-    sprite->addKeyframe(STAND_LEFT, glm::vec2(SPRITESHEET_OFFSET * 4, 0.5f));
+    sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
 
     sprite->setAnimationSpeed(STAND_RIGHT, 8);
-    sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.5, 0.5f));
+    sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.5f));
 
     sprite->setAnimationSpeed(MOVE_LEFT, 5);
     sprite->addKeyframe(MOVE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 0, 0.5f));
@@ -38,6 +40,23 @@ void Guard::init(ShaderProgram& shaderProgram)
 
     sprite->changeAnimation(STAND_RIGHT);
     sprite->setPosition(glm::vec2(float(posGuard.x), float(posGuard.y)));
+
+    spritesheetZZZ.loadFromFile("images/zzz.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    spriteZZZ = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &spritesheetZZZ, &shaderProgram);
+    spriteZZZ->setNumberAnimations(1);
+    spriteZZZ->setAnimationSpeed(0, 1);
+    spriteZZZ->addKeyframe(0, glm::vec2(0.f, 0.f));
+    spriteZZZ->changeAnimation(0);
+    spriteZZZ->setPosition(posGuard + glm::vec2(64, -64)); // encima de la cabeza
+
+    alertTexture.loadFromFile("images/alert.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    spriteAlert = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &alertTexture, &shaderProgram);
+    spriteAlert->setNumberAnimations(1);
+    spriteAlert->setAnimationSpeed(0, 1);
+    spriteAlert->addKeyframe(0, glm::vec2(0.f, 0.f));
+    spriteAlert->changeAnimation(0);
+    spriteAlert->setPosition(posGuard + glm::vec2(8, -32));
+
 
     // Inicializar variables de pathfinding
     currentPathIndex = 0;
@@ -53,11 +72,16 @@ void Guard::shootAtPlayer(Player& player)
 
     timeSinceLastShot = 0; // reinicia cooldown
 
+    // === ACTIVAR ALERTA ===
+    showAlert = true;
+    alertTimer = 0.0f;
+    showZZZ = false;
+
     glm::vec2 playerPos = player.getPosition();
     glm::vec2 direction = glm::normalize(playerPos - posGuard);
 
     // Crear la bala
-    Bullet* bullet = new Bullet(posGuard + glm::vec2(16, 16), direction, shaderProgram);
+    Bullet* bullet = new Bullet(posGuard + glm::vec2(16, 16), direction, shaderProgram, BulletType::GUARD);
     bullet->setAlive(true);
     bullets.push_back(bullet);
 
@@ -93,11 +117,11 @@ void Guard::AIControl(TileMap& tilemap, Player& player, int deltaTime)
     {
 		cout << "[Guard] Jugador en rango de ataque (" << attackRadiusPixels << " tiles). Disparando!" << endl;
         shootAtPlayer(player);
+        showZZZ = false;
     }
     else
     {
-        // fuera del rango: idle (no hace nada)
-        // podrías poner una animación o mirar hacia el jugador
+        showZZZ = true;
     }
 }
 
@@ -161,6 +185,29 @@ bool Guard::moveTowardsTile(const glm::ivec2& nextTile, TileMap& tilemap, int de
 void Guard::update(int deltaTime)
 {
     sprite->update(deltaTime);
+
+    static float t = 0.f;
+    t += deltaTime / 1000.f;
+    if (spriteZZZ && showZZZ) {
+        float offsetY = sin(t * 2.f) * 2.f; 
+        spriteZZZ->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 16 + offsetY));
+    }
+
+    // === ALERTA ===
+    if (spriteAlert && showAlert)
+    {
+        alertTimer += deltaTime;
+
+        // Pequeño rebote visual
+        float bounce = sin(t * 10.f) * 3.f;
+        spriteAlert->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 32 + bounce));
+
+        // Si pasa 1 segundo, desaparece el icono
+        if (alertTimer >= ALERT_DURATION)
+            showAlert = false;
+    }
+
+
     // Actualizar balas
     for (auto it = bullets.begin(); it != bullets.end(); )
     {
@@ -176,6 +223,13 @@ void Guard::update(int deltaTime)
 void Guard::render()
 {
     sprite->render();
+
+    if (showZZZ && spriteZZZ)
+        spriteZZZ->render();
+
+    if (showAlert && spriteAlert)
+        spriteAlert->render();
+
     for (Bullet* b : bullets)
         b->render();
 }

@@ -5,10 +5,15 @@
 #include "TileMap.h"
 #include <glm/glm.hpp>
 
+enum class BulletType {
+    GUARD,
+    TWIN
+};
+
 class Bullet
 {
 public:
-    Bullet(const glm::vec2& pos, const glm::vec2& dir, ShaderProgram* shaderProgram);
+    Bullet(const glm::vec2& pos, const glm::vec2& dir, ShaderProgram* shaderProgram, BulletType type = BulletType::GUARD);
 
     void update(int deltaTime, TileMap* tilemap);
     void render();
@@ -25,6 +30,7 @@ private:
     glm::vec2 direction;
     float speed = 200.0f; // píxeles por segundo
     bool alive;
+    BulletType bulletType;
 };
 
 #endif // _BULLET_INCLUDE
