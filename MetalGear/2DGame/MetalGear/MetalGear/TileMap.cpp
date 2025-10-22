@@ -61,15 +61,12 @@ bool TileMap::loadLevel(const string &levelFile)
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> mapSize.x >> mapSize.y;
-	cout << "mapSize.x : " << mapSize.x << " mapSize.y : " << mapSize.y << endl;
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tileSize >> blockSize;
-	cout << "tileSize : " << tileSize << " blockSize : " << blockSize << endl;
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetFile;
-	cout << "tilesheetFile : " << tilesheetFile << endl;
 	tilesheet.loadFromFile(tilesheetFile, TEXTURE_PIXEL_FORMAT_RGBA);
 	tilesheet.setWrapS(GL_CLAMP_TO_EDGE);
 	tilesheet.setWrapT(GL_CLAMP_TO_EDGE);
@@ -78,7 +75,6 @@ bool TileMap::loadLevel(const string &levelFile)
 	getline(fin, line);
 	sstream.str(line);
 	sstream >> tilesheetSize.x >> tilesheetSize.y;
-	cout << "tilesheetSize.x : " << tilesheetSize.x << " tilesheetSize.y : " << tilesheetSize.y << endl;
 	tileTexSize = glm::vec2(1.f / tilesheetSize.x, 1.f / tilesheetSize.y);
 	
 	map = new int[mapSize.x * mapSize.y];
@@ -165,8 +161,8 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 		if(map[y*mapSize.x+x] == 1)
 			return true;
 	}*/
-
-	if (map[y1 * mapSize.x + x] == 1)
+	int tile = map[y1 * mapSize.x + x];
+	if (tile == 1 || tile == 6 || tile == 7 || tile == 8)
 		return true;
 	
 	return false;
@@ -184,8 +180,8 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 		if(map[y*mapSize.x+x] == 1)
 			return true;
 	}*/
-
-	if (map[y1 * mapSize.x + x] == 1)
+	int tile = map[y1 * mapSize.x + x];
+	if (tile == 1 || tile == 6 || tile == 7 || tile == 8)
 		return true;
 	
 	return false;
@@ -200,7 +196,8 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y = (pos.y + size.y - 1) / tileSize;
 	for(int x=x0; x<=x1; x++)
 	{
-		if(map[y*mapSize.x+x] == 1)
+		int tile = map[y * mapSize.x + x];
+		if(tile == 1 || tile == 6 || tile == 7 || tile == 8)
 			return true;
 	}
 	
@@ -217,7 +214,8 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) con
 
 	for (int x = x0; x <= x1; x++)
 	{
-		if (map[y * mapSize.x + x] == 1)
+		int tile = map[y * mapSize.x + x];
+		if (tile == 1 || tile == 6 || tile == 7 || tile == 8)
 			return true;
 	}
 
@@ -249,6 +247,71 @@ int TileMap::whichTile(const glm::ivec2 &pos, char &direction)
 	return tile;
 }
 
+int TileMap::whichFacingTile(const glm::ivec2& pos, const char& direction, glm::vec2 &tileCoords)
+{
+	int tile = 0;
+	int posx = pos.x / tileSize;
+	int posy = pos.y / tileSize;
+
+	if (direction == 'L')
+	{
+		tile = map[posy * mapSize.x + posx - 1];
+		tileCoords = glm::vec2(posx-1, posy);
+	}
+	else if (direction == 'R')
+	{
+		tile = map[posy * mapSize.x + posx + 1];
+		tileCoords = glm::vec2(posx+1, posy);
+	}
+	else if (direction == 'U')
+	{
+		tile = map[(posy - 1) * mapSize.x + posx];
+		tileCoords = glm::vec2(posx, posy-1);
+	}
+	else if (direction == 'D')
+	{
+		tile = map[(posy + 1) * mapSize.x + posx];
+		tileCoords = glm::vec2(posx, posy+1);
+	}
+	
+	return tile;
+}
+
+
+/* changeTile 
+* Deletes the associated tiles to objects collected by the Player previously.
+* For instance, if the map has this tileMap
+* 1 1 1 1 1
+* 1 7 7 7 1
+* 1 7 0 7 1
+* 2 0 0 0 1
+* 1 1 1 1 1
+* This function will delete al adjacent 7's, starting in the 7 collected. These 7's represent the collisions with the object, so each 7 does not represnt an object.
+*/
+std::vector<glm::vec2> adjacents{ {-1, -1}, {0, -1}, {1, -1}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1} };
+
+void TileMap::changeTile(const glm::vec2& tileCoords, const int& tile)
+{
+	int y = tileCoords.y;
+	int x = tileCoords.x;
+	int adjacentTiles = 8;
+
+	if (map[y * mapSize.x + x] == tile)
+		map[y * mapSize.x + x] = 0;
+
+	for (int i = 0; i < adjacentTiles; i++)
+	{
+		int newX = x + adjacents[i].x;
+		int newY = y + adjacents[i].y;
+
+		if (newX < 0 || newX >= mapSize.x || newY < 0 || newY >= mapSize.y)
+			return;
+
+
+		if (map[newY * mapSize.x + newX] == tile)
+			changeTile(glm::vec2(newX, newY), tile);
+	}
+}
 glm::ivec2 TileMap::worldToTileCoords(const glm::vec2& worldPos) const
 {
 	int tileX = static_cast<int>(worldPos.x) / tileSize;
@@ -273,13 +336,13 @@ int TileMap::getHeight() const {
 
 bool TileMap::isWalkable(int x, int y) const
 {
-	// Verifica que esté dentro de los límites del mapa
+	// Verifica que estÃ© dentro de los lÃ­mites del mapa
 	if (x < 0 || y < 0 || x >= mapSize.x || y >= mapSize.y)
 		return false;
 
 	int tile = map[y * mapSize.x + x];
 
-	// 0 = vacío, 2 = puerta ? caminables
+	// 0 = vacÃ­o, 2 = puerta ? caminables
 	// 1 = pared ? bloqueado
 	return (tile == 0 || tile == 2);
 }

@@ -2,8 +2,12 @@
 #define _LEVEL_INCLUDE
 
 #include "TileMap.h"
-#include "Object.h"
+#include "Weapon.h"
+#include "Meal.h"
+#include "AccessCard.h"
 #include <vector>
+#include <utility>
+#include <iostream>
 #include "Player.h"
 #include "Guard.h"
 #include "Roller.h"
@@ -19,8 +23,18 @@ public:
 	~Level();
 
 	TileMap* get_tile_map();
-	void init(const string& levelFile, const string& backgroundFile, const glm::vec2& minCoords, ShaderProgram& program, const bool& outside, const glm::vec2& positionInSpritesheet);
+	void init(const string& levelFile, const string& backgroundFile, const glm::vec2& minCoords, ShaderProgram& program, const bool& outside, const glm::vec2& positionInSpritesheet, const std::vector<string>& objectTypes, const std::vector<std::pair<int, int>>& objectPositions);
+	void render();
+	void spriteToHide(const string& hide, const glm::vec2 &tileCoords, const int &tile);
 
+	void setPause() { pause = true; }
+	void setStopPause() { pause = false; }
+	void setBlackScreen();
+
+	Weapon* getWeapon() { return weapon; }
+	AccessCard* getAccessCard() { return accessCard; }
+	Meal* getMeal() { return meal; }
+  
 	void addGuard(const glm::vec2& position, ShaderProgram& program);
 	void render();
 	void update(int deltaTime, Player* player);
@@ -41,7 +55,18 @@ public:
 private:
 	TileMap* map;
 	Texture backgroundImage;
+	Texture blackScreenImage;
 	Sprite* background;
+	Sprite* blackScreen;
+
+	Weapon* weapon;
+	Meal* meal;
+	AccessCard* accessCard;
+
+	bool pause;
+	bool hideWeapon;
+	bool hideAccessCard;
+	bool hideMeal;
 	std::vector<Object> objects;
 	std::vector<Guard*> guards;
 	std::vector<Roller*> rollers;

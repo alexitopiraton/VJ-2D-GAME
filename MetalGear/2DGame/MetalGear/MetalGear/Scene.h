@@ -5,9 +5,9 @@
 #include "ShaderProgram.h"
 #include "Player.h"
 #include "Level.h"
-#include <vector>
+#include "Characters.h"
 
-#define LEVEL_CHANGE_COOLDOWN 500.0f
+#define LEVEL_CHANGE_COOLDOWN 2000.0f
 
 // Scene contains all the entities of our game.
 // It is responsible for updating and render them.
@@ -21,7 +21,11 @@ public:
 	void init();
 	void update(int deltaTime);
 	void render();
+
 	void initialise_levels();
+
+	void pause();
+	void stop_pause();
 
 	// Getter para acceder al shader program desde otras clases
 	ShaderProgram& getTexProgram() { return texProgram; }
@@ -45,8 +49,12 @@ private:
 	int levelNum;
 	Level* activeLevel;
 
+	Characters* characters;
+
 	bool changingLevel;
 	float levelChangeDelay;
+	bool pauseGame;
+	float gameTime;
 	float deathTimer = 0.f;
 
 	Sprite* gameOverSprite = nullptr;

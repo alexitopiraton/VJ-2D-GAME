@@ -7,7 +7,9 @@
 
 enum PlayerAnims
 {
-	IDLE_LEFT, IDLE_RIGHT, IDLE_FRONT, IDLE_BACK, WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN, PUNCH
+	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN, 
+	WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN, 
+	ARMED_IDLE_LEFT, ARMED_IDLE_RIGHT, ARMED_IDLE_UP, ARMED_IDLE_DOWN,
 };
 
 
@@ -32,11 +34,11 @@ void Player::init(ShaderProgram& shaderProgram)
 		sprite->setAnimationSpeed(IDLE_RIGHT, 8);
 		sprite->addKeyframe(IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 5, 0.5f));
 
-		sprite->setAnimationSpeed(IDLE_BACK, 8);
-		sprite->addKeyframe(IDLE_BACK, glm::vec2(SPRITESHEET_OFFSET * 5, 0.f));
+		sprite->setAnimationSpeed(IDLE_UP, 8);
+		sprite->addKeyframe(IDLE_UP, glm::vec2(SPRITESHEET_OFFSET * 5, 0.f));
 
-		sprite->setAnimationSpeed(IDLE_FRONT, 8);
-		sprite->addKeyframe(IDLE_FRONT, glm::vec2(SPRITESHEET_OFFSET * 4, 0.f));
+		sprite->setAnimationSpeed(IDLE_DOWN, 8);
+		sprite->addKeyframe(IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET * 4, 0.f));
 		
 		sprite->setAnimationSpeed(WALK_LEFT, 5);
 		sprite->addKeyframe(WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET * 0, 0.5f));
@@ -54,10 +56,24 @@ void Player::init(ShaderProgram& shaderProgram)
 		sprite->setAnimationSpeed(WALK_DOWN, 5);
 		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 0, 0.f));
 		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 2, 0.f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_LEFT, 5);
+		//sprite->addKeyframe(ARMED_IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 6, 0.5f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_RIGHT, 5);
+		//sprite->addKeyframe(ARMED_IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 7, 0.5f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_UP, 5);
+		//sprite->addKeyframe(ARMED_IDLE_UP, glm::vec2(SPRITESHEET_OFFSET * 6, 0.f));
+
+		//sprite->setAnimationSpeed(ARMED_IDLE_DOWN, 5);
+		//sprite->addKeyframe(ARMED_IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET * 7, 0.f));
 		
 	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
-	
+	punch = new Weapon();
+	pause = false;
+	direction = 'R';
 }
 
 /* WASDMovementControl INFO
@@ -101,107 +117,148 @@ bool Player::WASDMovementControl()
 
 void Player::update(int deltaTime)
 {
-	sprite->update(deltaTime);
-
-	bool WASDpressed = WASDMovementControl();
-
-	if (movementControl[1] && !WASDpressed)
+	if (!pause)
 	{
-		if (sprite->animation() != WALK_LEFT)
-			sprite->changeAnimation(WALK_LEFT);
+		sprite->update(deltaTime);
 
-		posPlayer.x -= 3;
+		bool WASDpressed = WASDMovementControl();
 
-		if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT																																						)))
+		if (movementControl[1] && !WASDpressed)
 		{
-			posPlayer.x += 3;
-			sprite->changeAnimation(IDLE_LEFT);
-		}
+			if (sprite->animation() != WALK_LEFT)
+				sprite->changeAnimation(WALK_LEFT);
 
-	}
-	else if (movementControl[3] && !WASDpressed)
-	{
-		if (sprite->animation() != WALK_RIGHT)
-			sprite->changeAnimation(WALK_RIGHT);
-
-		posPlayer.x += 3;
-
-		if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
-		{
 			posPlayer.x -= 3;
-			sprite->changeAnimation(IDLE_RIGHT);
+
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.x += 3;
+				sprite->changeAnimation(IDLE_LEFT);
+			}
+			direction = 'L';
+
 		}
-
-	}
-	else if (movementControl[0] && !WASDpressed)
-	{
-		if (sprite->animation() != WALK_UP)
-			sprite->changeAnimation(WALK_UP);
-
-		posPlayer.y -= 3;
-
-		if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+		else if (movementControl[3] && !WASDpressed)
 		{
-			posPlayer.y += 3;
-			sprite->changeAnimation(IDLE_BACK);
+			if (sprite->animation() != WALK_RIGHT)
+				sprite->changeAnimation(WALK_RIGHT);
+
+			posPlayer.x += 3;
+
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.x -= 3;
+				sprite->changeAnimation(IDLE_RIGHT);
+			}
+			direction = 'R';
 		}
-	}
-	else if (movementControl[2] && !WASDpressed)
-	{
-		if (sprite->animation() != WALK_DOWN)
-			sprite->changeAnimation(WALK_DOWN);
-
-		posPlayer.y += 3;
-
-		if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+		else if (movementControl[0] && !WASDpressed)
 		{
+			if (sprite->animation() != WALK_UP)
+				sprite->changeAnimation(WALK_UP);
+
 			posPlayer.y -= 3;
-			sprite->changeAnimation(IDLE_FRONT);
+
+			if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.y += 3;
+				sprite->changeAnimation(IDLE_UP);
+			}
+			direction = 'U';
+		}
+		else if (movementControl[2] && !WASDpressed)
+		{
+			if (sprite->animation() != WALK_DOWN)
+				sprite->changeAnimation(WALK_DOWN);
+
+			posPlayer.y += 3;
+
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			{
+				posPlayer.y -= 3;
+				sprite->changeAnimation(IDLE_DOWN);
+			}
+			direction = 'D';
+		}
+		else
+		{
+			if (sprite->animation() == WALK_LEFT)
+				sprite->changeAnimation(IDLE_LEFT);
+			else if (sprite->animation() == WALK_RIGHT)
+				sprite->changeAnimation(IDLE_RIGHT);
+			else if (sprite->animation() == WALK_UP)
+				sprite->changeAnimation(IDLE_UP);
+			else if (sprite->animation() == WALK_DOWN)
+				sprite->changeAnimation(IDLE_DOWN);
+
+		}
+
+		sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+
+		if (Game::instance().getKey(GLFW_KEY_E))
+		{
+			cout << "TECLA E DETECTADA" << endl;
+			cout << "DIRECCION -> " << direction << endl;
+			glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
+			glm::vec2 tileCoords;
+			int tile = map->whichFacingTile(centerPos, direction, tileCoords);
+			cout << "TILE -> " << tile << endl;
+			string hide;
+
+			if (tile == 6)
+			{
+				weapons.push_back(level->getWeapon());
+				hide = "WEAPON";
+			}
+			else if (tile == 7)
+			{
+				accessCards.push_back(level->getAccessCard());
+				hide = "ACCESS_CARD";
+			}
+			else if (tile == 8)
+			{
+				meals.push_back(level->getMeal());
+				hide = "MEAL";
+			}
+
+			cout << "VARIABLE HIDE -> " << hide << endl;
+			if (!hide.empty())
+			{
+				level->spriteToHide(hide, tileCoords, tile);
+				map = level->get_tile_map();
+			}
 		}
 	}
-	else
-	{
-		if (sprite->animation() == WALK_LEFT)
-			sprite->changeAnimation(IDLE_LEFT);
-		else if (sprite->animation() == WALK_RIGHT)
-			sprite->changeAnimation(IDLE_RIGHT);
-		else if (sprite->animation() == WALK_UP)
-			sprite->changeAnimation(IDLE_BACK);
-		else if (sprite->animation() == WALK_DOWN)
-			sprite->changeAnimation(IDLE_FRONT);
-
-	}
-
-	sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
 }
 
-bool Player::changeMap_tile(int &tileType, char &direction)
+bool Player::changeMap_tile(int &tileType, char &dir)
 {
 	glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
-	tileType = map->whichTile(centerPos, direction);
+	tileType = map->whichTile(centerPos, dir);
 	
 
-	// guessing facking direction depending on the animation
+	// guessing facing direction depending on the animation
 	if (tileType >= 2 && tileType <= 5)
 	{
-		if (direction == 'O')
+		if (dir == 'O')
 		{
 			int currentAnim = sprite->animation();
 
 			if (currentAnim == WALK_LEFT || currentAnim == IDLE_LEFT)
-				direction = 'L';
+				dir = 'L';
 			else if (currentAnim == WALK_RIGHT || currentAnim == IDLE_RIGHT)
-				direction = 'R';
-			else if (currentAnim == WALK_UP || currentAnim == IDLE_BACK)
-				direction = 'U';
-			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_FRONT)
-				direction = 'D';
+				dir = 'R';
+			else if (currentAnim == WALK_UP || currentAnim == IDLE_UP)
+				dir = 'U';
+			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_DOWN)
+				dir = 'D';
 			else
-				direction = 'D'; // default direction
+				dir = 'D'; // default direction
 		}
 
-		if (direction != 'N')
+		if (dir != 'N')
 			return true;
+		direction = dir;
 	}
 	
 	return false;
@@ -222,24 +279,38 @@ void Player::setTileMap(TileMap* tileMap)
 	map = tileMap;
 }
 
+void Player::setLevel(Level* lvl)
+{
+	level = lvl;
+}
+
 void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+void Player::lookLeft()
+{
+	sprite->changeAnimation(IDLE_LEFT);
+}
+
+void Player::lookRight()
+{
+	sprite->changeAnimation(IDLE_RIGHT);
+}
 
 void Player::takeDamage(int dmg)
 {
 	health -= dmg;
 	if (health < 0) health = 0;
 
-	std::cout << "[Player] Recibió daño! Vida actual: " << health << std::endl;
+	std::cout << "[Player] RecibiÃ³ daÃ±o! Vida actual: " << health << std::endl;
 
 	if (health <= 0)
 	{
 		std::cout << "[Player] Muerto!" << std::endl;
-		// Aquí podrías reiniciar el nivel o mostrar pantalla de "Game Over".
+		// AquÃ­ podrÃ­as reiniciar el nivel o mostrar pantalla de "Game Over".
 	}
 }
 
@@ -256,4 +327,12 @@ void Player::reset()
 
 
 
+void Player::lookUp()
+{
+	sprite->changeAnimation(IDLE_UP);
+}
 
+void Player::lookDown()
+{
+	sprite->changeAnimation(IDLE_DOWN);
+}

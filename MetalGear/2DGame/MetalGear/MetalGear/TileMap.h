@@ -36,6 +36,9 @@ public:
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
 	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
 	int whichTile(const glm::ivec2& pos, char &direction);
+	int whichFacingTile(const glm::ivec2& pos, const char& direction, glm::vec2 &tileCoords);
+	void changeTile(const glm::vec2& tileCoords, const int& tile);
+	
 	glm::ivec2 worldToTileCoords(const glm::vec2& worldPos) const;
 	glm::vec2 tileToWorldCoords(const glm::ivec2& tileCoords) const;
 

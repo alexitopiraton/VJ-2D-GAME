@@ -4,10 +4,11 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Level.h"
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 #define SPRITE_WIDTH 16*2
-#define SPRITE_HEIGHT	31*2
+#define SPRITE_HEIGHT 31*2
 
 // Player is basically a Sprite that represents the player. As such it has
 // all properties it needs to track its movement, jumping, and collisions.
@@ -23,11 +24,19 @@ public:
 	void update(int deltaTime);
 	void render();
 
-	bool changeMap_tile(int &tileType, char &direction);
+	bool changeMap_tile(int &tileType, char &dir);
 	glm::ivec2 getPosition();
+	void lookLeft();
+	void lookRight();
+	void lookDown();
+	void lookUp();
 
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2& pos);
+	void setPause() { pause = true; }
+	void setStopPause() { pause = false; }
+	void setDirection(const char& dir) { direction = dir; }
+	void setLevel(Level *level);
 
 	void takeDamage(int dmg);
 	bool isDead() const { return health <= 0; }
@@ -46,6 +55,15 @@ private:
 	glm::bvec4 movementControl;
 	int health = 100;
 
+	char direction;
+	std::vector<Weapon*> weapons;
+	std::vector<AccessCard*> accessCards;
+	std::vector<Meal*> meals;
+	Weapon* punch;
+
+	Level* level;
+
+	bool pause;
 };
 
 
