@@ -8,6 +8,11 @@
 #include <vector>
 #include <utility>
 #include <iostream>
+#include "Player.h"
+#include "Guard.h"
+#include "Roller.h"
+#include "ArnoldBoss.h"
+#include "Twin.h"
 
 #define IMAGE_OFFSET 0.33333333333333333333333333333333
 
@@ -29,6 +34,23 @@ public:
 	Weapon* getWeapon() { return weapon; }
 	AccessCard* getAccessCard() { return accessCard; }
 	Meal* getMeal() { return meal; }
+  
+	void addGuard(const glm::vec2& position, ShaderProgram& program);
+	void render();
+	void update(int deltaTime, Player* player);
+	const vector<Guard*>& getGuards() const { return guards; }
+	void resetGuards();
+
+	void addRoller(const glm::vec2& pos, ShaderProgram& shaderProgram, bool moveRight);
+	void updateRollers(int deltaTime, Player* player);
+	void renderRollers();
+	void clearRollers();
+
+	void addArnoldBoss(const glm::vec2& pos, ShaderProgram& shaderProgram);
+
+	void addTwin(const glm::vec2& position, ShaderProgram& program);
+	void resetTwin();
+
 
 private:
 	TileMap* map;
@@ -45,6 +67,11 @@ private:
 	bool hideWeapon;
 	bool hideAccessCard;
 	bool hideMeal;
+	std::vector<Object> objects;
+	std::vector<Guard*> guards;
+	std::vector<Roller*> rollers;
+	ArnoldBoss* arnoldBoss = nullptr;
+	Twin* twin = nullptr;
 };
 
 #endif

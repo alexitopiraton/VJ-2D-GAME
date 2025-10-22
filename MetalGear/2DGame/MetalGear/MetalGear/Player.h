@@ -38,6 +38,13 @@ public:
 	void setDirection(const char& dir) { direction = dir; }
 	void setLevel(Level *level);
 
+	void takeDamage(int dmg);
+	bool isDead() const { return health <= 0; }
+	int getHealth() const { return health; }
+	void setHealth(int h);
+	void reset();
+
+
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
 	int startY;
@@ -46,6 +53,7 @@ private:
 	TileMap* map;
 
 	glm::bvec4 movementControl;
+	int health = 100;
 
 	char direction;
 	std::vector<Weapon*> weapons;

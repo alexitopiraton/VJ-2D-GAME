@@ -39,6 +39,13 @@ public:
 	int whichFacingTile(const glm::ivec2& pos, const char& direction, glm::vec2 &tileCoords);
 	void changeTile(const glm::vec2& tileCoords, const int& tile);
 	
+	glm::ivec2 worldToTileCoords(const glm::vec2& worldPos) const;
+	glm::vec2 tileToWorldCoords(const glm::ivec2& tileCoords) const;
+
+	int getWidth() const;
+	int getHeight() const;
+	bool isWalkable(int x, int y) const;
+
 private:
 	bool loadLevel(const string &levelFile);
 	void prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program);
@@ -55,6 +62,8 @@ private:
 	int *map;
 
 };
+
+
 
 
 #endif // _TILE_MAP_INCLUDE

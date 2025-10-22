@@ -75,6 +75,14 @@ void Game::keyPressed(int key)
 	keys[key] = true;
 }
 
+void Game::returnToMenuFromGame()
+{
+	init(); // Reiniciar el juego
+	//currentState = MENU;
+	//menu.resetStartPressed();  // para evitar reinicios automáticos
+}
+
+
 void Game::keyReleased(int key)
 {
 	keys[key] = false;

@@ -34,6 +34,7 @@ public:
 	int animation() const;
 	
 	void setPosition(const glm::vec2 &pos);
+	ShaderProgram* getShaderProgram() { return shaderProgram;}
 
 private:
 	Texture *texture;

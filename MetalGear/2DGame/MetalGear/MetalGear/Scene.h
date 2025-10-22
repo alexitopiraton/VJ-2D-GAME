@@ -29,6 +29,12 @@ public:
 
 	// Getter para acceder al shader program desde otras clases
 	ShaderProgram& getTexProgram() { return texProgram; }
+	void renderHUD(Player* player);
+	void renderGameOver();
+	void initGameOver();
+	void resetBullets();
+	void resetAll();
+
 
 private:
 	void initShaders();
@@ -49,6 +55,10 @@ private:
 	float levelChangeDelay;
 	bool pauseGame;
 	float gameTime;
+	float deathTimer = 0.f;
+
+	Sprite* gameOverSprite = nullptr;
+	Texture gameOverTexture;
 };
 
 #endif // _SCENE_INCLUDE
