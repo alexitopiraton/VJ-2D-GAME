@@ -1,6 +1,0 @@
-﻿  Scene.cpp
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(59,40): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(59,28): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(342,2): warning C4102: 'std': etiqueta sin referencia
-C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(487,20): warning C4018: '<': no coinciden signed/unsigned
-  MetalGear.vcxproj -> C:\ESTUDIOS\INGENIERIA INFORMATICA\OPTATIVAS\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\MetalGear.exe
