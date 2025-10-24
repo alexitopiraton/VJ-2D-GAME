@@ -73,7 +73,11 @@ void Player::init(ShaderProgram& shaderProgram)
 	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
 	punch = new Weapon();
 	pause = false;
+	erased = false;
 	direction = 'R';
+	activeObject = -1;
+	cooldownKey = 0.f;
+	collectAllItems = false;
 }
 
 /* WASDMovementControl INFO
@@ -110,6 +114,55 @@ bool Player::WASDMovementControl()
 	return false;
 }
 
+std::vector<string> Player::getActiveObjectName() const
+{
+	std::vector<string> properties;
+
+	if (activeObject == -1 || objects.empty())
+	{
+		properties.push_back(" ");
+		properties.push_back(" ");
+		return properties;
+	}
+
+	if (dynamic_cast<Weapon*>(objects[activeObject]) != NULL)
+	{
+		properties.push_back("GUN");
+		properties.push_back(" ");
+	}
+	else if (dynamic_cast<AccessCard*>(objects[activeObject]) != NULL)
+	{
+		properties.push_back("ACCESS CARD");
+
+		AccessCard* card = dynamic_cast<AccessCard*>(objects[activeObject]);
+		string num = to_string(card->getNum());
+		properties.push_back(num);
+
+		string id = to_string(card->getId());
+		id = "OPENS LEVEL " + id + " DOOR";
+		properties.push_back(id);
+	}
+	else if (dynamic_cast<Meal*>(objects[activeObject]) != NULL)
+	{
+		properties.push_back("MEAL");
+
+		Meal* meal = dynamic_cast<Meal*>(objects[activeObject]);
+		properties.push_back(" ");
+
+		string healthRestored = to_string(meal->getHealthRestored());
+		healthRestored = "RESTORES " + healthRestored + " HEALTH WHEN USED";
+		properties.push_back(healthRestored);
+
+	}
+	else
+	{
+		properties.push_back(" ");
+		properties.push_back(" ");
+	}
+
+	return properties;
+}
+
 /* update INFO:
 * bool WASDpressed -> indicates whether a movement key (W, A, S or D) is already pressed. If true and another movement key is pressed, stops moving.
 * movementControl -> (0,1,2,3) = (W,A,S,D)
@@ -120,6 +173,10 @@ void Player::update(int deltaTime)
 	if (!pause)
 	{
 		sprite->update(deltaTime);
+		int lvl = level->getId();
+
+		if (cooldownKey > 0)
+			cooldownKey -= deltaTime;
 
 		bool WASDpressed = WASDMovementControl();
 
@@ -130,7 +187,7 @@ void Player::update(int deltaTime)
 
 			posPlayer.x -= 3;
 
-			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.x += 3;
 				sprite->changeAnimation(IDLE_LEFT);
@@ -145,7 +202,7 @@ void Player::update(int deltaTime)
 
 			posPlayer.x += 3;
 
-			if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.x -= 3;
 				sprite->changeAnimation(IDLE_RIGHT);
@@ -159,7 +216,7 @@ void Player::update(int deltaTime)
 
 			posPlayer.y -= 3;
 
-			if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.y += 3;
 				sprite->changeAnimation(IDLE_UP);
@@ -173,7 +230,7 @@ void Player::update(int deltaTime)
 
 			posPlayer.y += 3;
 
-			if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT)))
+			if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.y -= 3;
 				sprite->changeAnimation(IDLE_DOWN);
@@ -195,7 +252,9 @@ void Player::update(int deltaTime)
 
 		sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
 
-		if (Game::instance().getKey(GLFW_KEY_E))
+
+		// KEY E -> GRABS ITMES
+		if (Game::instance().getKey(GLFW_KEY_E) && cooldownKey <= 0)
 		{
 			cout << "TECLA E DETECTADA" << endl;
 			cout << "DIRECCION -> " << direction << endl;
@@ -207,18 +266,23 @@ void Player::update(int deltaTime)
 
 			if (tile == 6)
 			{
-				weapons.push_back(level->getWeapon());
-				hide = "WEAPON";
+				Weapon* weapon = level->getWeapon();
+				objects.push_back(weapon);
+				hide = "GUN";
+
 			}
 			else if (tile == 7)
 			{
-				accessCards.push_back(level->getAccessCard());
-				hide = "ACCESS_CARD";
+				AccessCard* card = level->getAccessCard();
+				objects.push_back(card);
+				hide = "ACCESS CARD";
 			}
 			else if (tile == 8)
 			{
-				meals.push_back(level->getMeal());
+				Meal* meal = level->getMeal();
+				objects.push_back(meal);
 				hide = "MEAL";
+
 			}
 
 			cout << "VARIABLE HIDE -> " << hide << endl;
@@ -226,8 +290,113 @@ void Player::update(int deltaTime)
 			{
 				level->spriteToHide(hide, tileCoords, tile);
 				map = level->get_tile_map();
+
+				if (activeObject == -1)
+				{
+					activeObject = 0;
+					std::vector<string> properties = getActiveObjectName();
+					gui->setActiveObjectName(properties[0], properties[1]);
+					gui->setActiveObjectProperties(properties, properties[0]);
+				}
+				cooldownKey = 300.f;
 			}
 		}
+
+		// KEY C -> CHANGES BETWEEN OBJECTS
+		if (Game::instance().getKey(GLFW_KEY_C) && cooldownKey <= 0.f)
+		{
+			if (!objects.empty())
+			{
+				activeObject = (activeObject + 1) % objects.size();
+				std::vector<string> properties = getActiveObjectName();
+				gui->setActiveObjectName(properties[0], properties[1]);
+				gui->setActiveObjectProperties(properties, properties[0]);
+				cooldownKey = 300.f;
+			}
+		}
+
+		// KEY X -> USE OBJECT
+		if (Game::instance().getKey(GLFW_KEY_X) && cooldownKey <= 0.f && objects.size() > 0)
+		{
+			// ACCESS CARD USE
+			if (dynamic_cast<AccessCard*>(objects[activeObject]) != NULL) {
+				AccessCard* card = dynamic_cast<AccessCard*>(objects[activeObject]);
+				glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
+				glm::vec2 tileCoords;
+
+				if (level->getId() == card->getId() && map->whichFacingTile(centerPos, direction, tileCoords) == 2)
+					level->setDoorOpen(true);
+			}
+			// MEAL USE
+			else if (dynamic_cast<Meal*>(objects[activeObject]) != NULL) {
+				Meal* meal = dynamic_cast<Meal*>(objects[activeObject]);
+
+				gui->updateHealth(meal->getHealthRestored());
+				health += meal->getHealthRestored();
+				erased = true;
+			}
+
+			if (erased)
+			{
+				objects.erase(objects.begin() + activeObject);
+
+				if (objects.empty())
+					activeObject = -1;
+				else if (activeObject >= objects.size())
+					activeObject = 0;
+
+				std::vector<string> properties = getActiveObjectName();
+				gui->setActiveObjectName(properties[0], properties[1]);
+				gui->setActiveObjectProperties(properties, properties[0]);
+				erased = false;
+			}
+
+			cooldownKey = 300.f;
+		}
+
+		// KEY H -> RESTORES ALL HEALTH
+		if (Game::instance().getKey(GLFW_KEY_H) && cooldownKey <= 0.f)
+		{
+			health = gui->getMaxHealth();
+			gui->updateHealth(health);
+			cooldownKey = 300.f;
+		}
+
+		// KEY I -> PLAYER AUTOMATICALLY GETS ALL OBJECTS
+		if (Game::instance().getKey(GLFW_KEY_I) && cooldownKey <= 0.f)
+		{
+			collectAllItems = true;
+			cooldownKey = 300.f;
+		}
+
+		// KEY K -> TELEPORT TO FIRST INDOOR SCREEN
+		if (Game::instance().getKey(GLFW_KEY_K) && cooldownKey <= 0.f)
+		{
+			changeMap = true;
+			mapToChange = 5;
+			cooldownKey = 300.f;
+		}
+
+		// KEY B -> TELEPORT TO BOSS SCREEN
+		if (Game::instance().getKey(GLFW_KEY_B) && cooldownKey <= 0.f)
+		{
+			changeMap = true;
+			mapToChange = 12;
+			cooldownKey = 300.f;
+		}
+
+		// KEY G -> GOD MODE | PLAYER IS INVULNERABLE | TOGGLE TO EXIT GOD MODE
+		if (Game::instance().getKey(GLFW_KEY_G) && cooldownKey <= 0.f)
+		{
+			cooldownKey = 300.f;
+		}
+
+		// KEY Z -> PUNCH
+		if (Game::instance().getKey(GLFW_KEY_Z) && cooldownKey <= 0.f)
+		{
+			cooldownKey = 300.f;
+		}
+
 	}
 }
 
@@ -290,6 +459,21 @@ void Player::setPosition(const glm::vec2 &pos)
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
+void Player::setGui(Gui* g)
+{
+	gui = g;
+}
+
+void Player::setLevelToGUI()
+{
+	int id = level->getId();
+	string text = "LEVEL ";
+	string idString = std::to_string(id);
+	text = text + idString;
+
+	gui->setActiveLevelName(text);
+}
+
 void Player::lookLeft()
 {
 	sprite->changeAnimation(IDLE_LEFT);
@@ -308,4 +492,48 @@ void Player::lookUp()
 void Player::lookDown()
 {
 	sprite->changeAnimation(IDLE_DOWN);
+}
+
+bool Player::hasObject(Object* object) const
+{
+	for (int i = 0; i < objects.size(); i++)
+	{
+		if (objects[i] == object)
+			return true;
+	}
+	return false;
+}
+
+void Player::addObject(Object* obj)
+{
+	objects.push_back(obj);
+}
+
+void Player::setActiveObject()
+{
+	if (activeObject == -1 && !objects.empty())
+	{
+		activeObject = 0;
+		std::vector<string> properties = getActiveObjectName();
+		gui->setActiveObjectName(properties[0], properties[1]);
+		gui->setActiveObjectProperties(properties, properties[0]);
+	}
+}
+
+void Player::clearAllObjects()
+{
+	objects.clear();
+	activeObject = -1;
+
+	// Limpia la GUI
+	std::vector<string> properties;
+	properties.push_back(" ");
+	properties.push_back(" ");
+	gui->setActiveObjectName(properties[0], properties[1]);
+	gui->setActiveObjectProperties(properties, properties[0]);
+}
+
+int Player::getObjectCount() const
+{
+	return objects.size();
 }

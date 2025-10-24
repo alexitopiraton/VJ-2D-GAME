@@ -2,7 +2,7 @@
 
 Characters::Characters()
 {
-	characters = "";
+
 }
 
 void Characters::init(ShaderProgram& program)
@@ -11,10 +11,7 @@ void Characters::init(ShaderProgram& program)
 	initialise_numbers_characters(program);
 	initialise_punctuation_characters(program);
 
-	display = false;
 	spacing = 20.f;
-	initialPos = glm::vec2(20, 440);
-	actualPos = initialPos;
 }
 
 void Characters::initialise_latin_characters(ShaderProgram& program)
@@ -88,55 +85,85 @@ void Characters::initialise_punctuation_characters(ShaderProgram& program)
 
 void Characters::render()
 {
-	if (display)
+	for (auto& pair : texts)
 	{
-		actualPos = initialPos;
-		for (int i = 0; i < characters.size(); i++)
+		if (pair.second.display)
 		{
-			char c = characters[i];
-			int positionInVector;
-			Sprite* sprite;
-
-			if (c == ' ')
-			{
-				actualPos.x += spacing;
-				continue;
-			}
-			else if (c >= 'A' && c <= 'Z')
-			{
-				positionInVector = c - 'A';
-				sprite = latin[positionInVector];
-			}
-			else if (c >= 'a' && c <= 'z')
-			{
-				positionInVector = c - 'a';
-				sprite = latin[positionInVector];
-			}
-			else if (c >= '0' && c <= '9')
-			{
-				positionInVector = c - '0';
-				sprite = numbers[positionInVector];
-			}
-			else
-			{
-				positionInVector = 0;
-				sprite = punctuation[positionInVector];
-			}
-
-			sprite->setPosition(actualPos);
-			sprite->render();
-			actualPos.x += spacing;
+			renderText(pair.second.text, pair.second.position);
 		}
 	}
 }
 
-void Characters::setCharacters(const string& newCharacters)
+void Characters::renderText(const string& text, const glm::vec2& position)
 {
-	characters = newCharacters;
-	display = true;
+	glm::vec2 currentPos = position;
+    
+    for (int i = 0; i < text.size(); i++)
+    {
+        char c = text[i];
+        int positionInVector;
+        Sprite* sprite;
+
+        if (c == ' ')
+        {
+            currentPos.x += spacing;
+            continue;
+        }
+        else if (c >= 'A' && c <= 'Z')
+        {
+            positionInVector = c - 'A';
+            sprite = latin[positionInVector];
+        }
+        else if (c >= 'a' && c <= 'z')
+        {
+            positionInVector = c - 'a';
+            sprite = latin[positionInVector];
+        }
+        else if (c >= '0' && c <= '9')
+        {
+            positionInVector = c - '0';
+            sprite = numbers[positionInVector];
+        }
+        else
+        {
+            positionInVector = 0;
+            sprite = punctuation[positionInVector];
+        }
+
+        sprite->setPosition(currentPos);
+        sprite->render();
+        currentPos.x += spacing;
+    }
 }
 
-void Characters::stopDisplay()
+void Characters::addText(const string& id, const string& text, const glm::vec2& pos)
 {
-	display = false;
+	CharactersInText characters;
+	characters.text = text;
+	characters.position = pos;
+	characters.display = true;
+	texts[id] = characters;
+}
+
+void Characters::updateText(const string& id, const string& newText)
+{
+	if (texts.find(id) != texts.end())
+		texts[id].text = newText;
+}
+
+void Characters::updatePosition(const string& id, const glm::vec2& newPos)
+{
+	if (texts.find(id) != texts.end())
+		texts[id].position = newPos;
+}
+
+void Characters::showText(const string& id)
+{
+	if (texts.find(id) != texts.end())
+		texts[id].display = true;
+}
+void Characters::hideText(const string& id) 
+{
+	if (texts.find(id) != texts.end())
+		texts[id].display = false;
 }

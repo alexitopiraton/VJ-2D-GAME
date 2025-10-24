@@ -12,6 +12,7 @@ levels/level02.txt										-- level 2 tileMap
 0.5 0.33333333333333333333333333333333 								-- Outisde screen 3 (level 2)
 1												-- Number of objects in level 3
 ACCESS_CARD
+4
 20 430
 levels/level03.txt										-- level 3 tileMap
 0.5 0.66666666666666666666666666666667 								-- Outisde screen 4 (level 3)
@@ -28,6 +29,7 @@ levels/level06.txt										-- level 6 tileMap
 0.66666666666666666666666666666667 0.33333333333333333333333333333333 				-- Indoor screen 2 (level 6)
 1												-- Number of objects in level 7
 ACCESS_CARD
+11
 180 80
 levels/level07.txt										-- level 7 tileMap
 0 0.66666666666666666666666666666667 								-- Indoor screen 3 (level 7)
@@ -42,6 +44,7 @@ levels/level10.txt										-- level 10 tileMap
 0 0 												-- Indoor screen 6 (level 10)
 1												-- Number of objects in level 11
 ACCESS_CARD
+6
 160 320
 levels/level11.txt										-- level 11 tileMap
 0.33333333333333333333333333333333 0 								-- Indoor screen 7 (level 11)

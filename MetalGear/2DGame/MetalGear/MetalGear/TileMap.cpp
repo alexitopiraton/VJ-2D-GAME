@@ -149,45 +149,47 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 
 // Collision tests for axis aligned bounding boxes.
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, const int& levelNum) const
 {
 	int x, y0, y1;
 	
 	x = pos.x / tileSize;
-	//y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
-	/*for (int y = y0; y <= y1; y++)
-	{
-		if(map[y*mapSize.x+x] == 1)
-			return true;
-	}*/
+
 	int tile = map[y1 * mapSize.x + x];
 	if (tile == 1 || tile == 6 || tile == 7 || tile == 8)
 		return true;
 	
+	if (tile == 2)
+	{
+		if ((levelNum == 4 || levelNum == 6 || levelNum == 11) && !doorOpen)
+			return true;
+	}
+
 	return false;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, const int& levelNum) const
 {
 	int x, y0, y1;
 	
 	x = (pos.x + size.x - 1) / tileSize;
-	//y0 = pos.y / tileSize;
 	y1 = (pos.y + size.y - 1) / tileSize;
-	/*for (int y = y0; y <= y1; y++)
-	{
-		if(map[y*mapSize.x+x] == 1)
-			return true;
-	}*/
+
 	int tile = map[y1 * mapSize.x + x];
 	if (tile == 1 || tile == 6 || tile == 7 || tile == 8)
 		return true;
+
+	if (tile == 2)
+	{
+		if ((levelNum == 4 || levelNum == 6 || levelNum == 11) && !doorOpen)
+			return true;
+	}
 	
 	return false;
 }
 
-bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, const int& levelNum) const
 {
 	int x0, x1, y;
 	
@@ -199,12 +201,18 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) c
 		int tile = map[y * mapSize.x + x];
 		if(tile == 1 || tile == 6 || tile == 7 || tile == 8)
 			return true;
+
+		if (tile == 2)
+		{
+			if ((levelNum == 4 || levelNum == 6 || levelNum == 11) && !doorOpen)
+				return true;
+		}
 	}
 	
 	return false;
 }
 
-bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const
+bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int& levelNum) const
 {
 	int x0, x1, y;
 
@@ -217,6 +225,12 @@ bool TileMap::collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) con
 		int tile = map[y * mapSize.x + x];
 		if (tile == 1 || tile == 6 || tile == 7 || tile == 8)
 			return true;
+
+		if (tile == 2)
+		{
+			if ((levelNum == 4 || levelNum == 6 || levelNum == 11) && !doorOpen)
+				return true;
+		}
 	}
 
 	return false;
@@ -232,13 +246,13 @@ int TileMap::whichTile(const glm::ivec2 &pos, char &direction)
 
 	if (tile >= 2 && tile <= 5)
 	{
-		if (x <= 1)
+		if (x <= 0)
 			direction = 'L';
-		else if (x >= mapSize.x - 2)
+		else if (x >= mapSize.x - 1)
 			direction = 'R';
-		else if (y <= 1)
+		else if (y <= 0)
 			direction = 'U';
-		else if (y >= mapSize.y - 2)
+		else if (y >= mapSize.y - 1)
 			direction = 'D';
 		else
 			direction = 'O';
@@ -313,31 +327,39 @@ void TileMap::changeTile(const glm::vec2& tileCoords, const int& tile)
 	}
 }
 
+void TileMap::printMap()
+{
+	cout << "=== TILEMAP DEBUG ===" << endl;
+	cout << "Map Size: " << mapSize.x << "x" << mapSize.y << endl;
+	cout << "Tile Size: " << tileSize << endl;
+	cout << endl;
 
+	for (int j = 0; j < mapSize.y; j++)
+	{
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			int tile = map[j * mapSize.x + i];
+			cout << tile << " ";
+		}
+		cout << endl;
+	}
+	cout << "====================" << endl;
+}
 
+void TileMap::setDoorOpen(const bool& open)
+{
+	doorOpen = open;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void TileMap::removeObjectTiles()
+{
+	for (int j = 0; j < mapSize.y; j++)
+	{
+		for (int i = 0; i < mapSize.x; i++)
+		{
+			int tile = map[j * mapSize.x + i];
+			if (tile == 6 || tile == 7 || tile == 8)
+				map[j * mapSize.x + i] = 0;
+		}
+	}
+}

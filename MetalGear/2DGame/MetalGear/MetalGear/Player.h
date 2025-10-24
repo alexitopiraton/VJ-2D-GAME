@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Level.h"
+#include "Gui.h"
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 #define SPRITE_WIDTH 16*2
@@ -31,12 +32,28 @@ public:
 	void lookDown();
 	void lookUp();
 
+	bool getChangeMap() const { return changeMap; }
+	int getMapToChange() const { return mapToChange; }
+	void setChangeMap() { changeMap = false; }
+
+	void resetCollectAllItems() { collectAllItems = false; }
+	bool hasObject(Object* object) const;
+	void setActiveObject();
+	void addObject(Object* obj);
+	void clearAllObjects();
+	int getObjectCount() const;
+	std::vector<string> getActiveObjectName() const;
+	bool getCollectAllItems() const { return collectAllItems; }
+
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2& pos);
 	void setPause() { pause = true; }
 	void setStopPause() { pause = false; }
 	void setDirection(const char& dir) { direction = dir; }
 	void setLevel(Level *level);
+	void setGui(Gui* g);
+	void setLevelToGUI();
+	void setHealth(const int& value) { health = value; }
 
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -44,18 +61,22 @@ private:
 	Texture spritesheet;
 	Sprite* sprite;
 	TileMap* map;
+	Gui* gui;
 
 	glm::bvec4 movementControl;
 
 	char direction;
-	std::vector<Weapon*> weapons;
-	std::vector<AccessCard*> accessCards;
-	std::vector<Meal*> meals;
+	std::vector<Object*> objects;
+	int activeObject;
+	float cooldownKey;
 	Weapon* punch;
 
 	Level* level;
+	bool pause, erased, collectAllItems;
+	int health;
 
-	bool pause;
+	bool changeMap;
+	int mapToChange;
 };
 
 

@@ -6,12 +6,16 @@
 class AccessCard : public Object
 {
 public:
-	AccessCard();
+	AccessCard(int id, int level);
 
 	void init(ShaderProgram& program) override;
 
-private:
+	int getId() { return accessLevelId; }
+	int getNum() { return num; }
 
+private:
+	int num;
+	int accessLevelId;
 };
 
 #endif

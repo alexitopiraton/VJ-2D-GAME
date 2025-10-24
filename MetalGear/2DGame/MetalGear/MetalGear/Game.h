@@ -5,9 +5,26 @@
 #include "Scene.h"
 #include "Menu.h"
 #include "GameState.h"
+#include "Gui.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+
+// SCALED SCREEN RESOLUTION (4:3). GAME RESOLUTION
+#define SCALE 1.5
+#define GAME_WIDTH (SCREEN_WIDTH * SCALE)
+#define GAME_HEIGHT (SCREEN_HEIGHT * SCALE)
+
+// GUI RESOLUTION
+#define GUI_WIDTH GAME_WIDTH
+#define GUI_HEIGHT 40 * 3
+
+// TOTAL SCREEN DIMENSIONS
+#define SCREEN_FINAL_WIDTH GAME_WIDTH
+//#define SCREEN_FINAL_HEIGHT GAME_HEIGHT
+#define SCREEN_FINAL_HEIGHT (GAME_HEIGHT + GUI_HEIGHT)
+
+
 
 // Game is a singleton (a class with a single instance) that represents our whole application
 
@@ -43,6 +60,7 @@ private:
 	GameState currentState;
 	Scene scene;
 	Menu menu;
+	Gui gui;
 };
 
 #endif // _GAME_INCLUDE

@@ -11,6 +11,12 @@ void Game::init()
 	// Inicializar el menú y la escena del juego
 	scene.init();
 	menu.init(scene.getTexProgram()); // Necesitaremos modificar Scene para obtener el shader program
+	gui.init(scene.getTexProgram());
+	
+	scene.getPlayer()->setGui(&gui);
+	gui.setMaxHealth(100);
+	gui.updateHealth(75);
+	scene.getPlayer()->setHealth(75);
 }
 
 bool Game::update(int deltaTime)
@@ -28,12 +34,10 @@ bool Game::update(int deltaTime)
 
 	case PLAYING:
 		scene.update(deltaTime);
+		gui.update(deltaTime);
 		// Puedes agregar lógica para volver al menú si se presiona ESC
 		break;
 
-	case PAUSED:
-		// Lógica para el estado de pausa si la necesitas
-		break;
 	}
 
 	return bPlay;
@@ -46,16 +50,27 @@ void Game::render()
 	switch (currentState)
 	{
 	case MENU:
+		glViewport(0, 0, SCREEN_FINAL_WIDTH, SCREEN_FINAL_HEIGHT);
 		menu.render();
 		break;
 
 	case PLAYING:
-		scene.render();
+		if (!scene.isPaused())
+		{
+			glViewport(0, GUI_HEIGHT, GAME_WIDTH, GAME_HEIGHT);
+			scene.render();
+			scene.setLevelToGUI();
+			glViewport(0, 0, GUI_WIDTH, GUI_HEIGHT);
+			gui.render();
+		}
+		else
+		{
+			glViewport(0, 0, SCREEN_FINAL_WIDTH, SCREEN_FINAL_HEIGHT);
+			scene.render();
+		}
+
 		break;
 
-	case PAUSED:
-		// Renderizar pantalla de pausa
-		break;
 	}
 }
 

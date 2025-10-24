@@ -28,16 +28,21 @@ public:
 	void render() const;
 	void free();
 	
+	void setDoorOpen(const bool& open);
+
 	int getTileSize() const { return tileSize; }
 	glm::ivec2 getMapSize() const { return mapSize; }
+	void printMap();
 
-	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size) const;
-	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size) const;
+	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, const int& levelNum) const;
+	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, const int& levelNum) const;
+	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, const int& levelNum) const;
+	bool collisionMoveUp(const glm::ivec2& pos, const glm::ivec2& size, const int& levelNum) const;
 	int whichTile(const glm::ivec2& pos, char &direction);
 	int whichFacingTile(const glm::ivec2& pos, const char& direction, glm::vec2 &tileCoords);
 	void changeTile(const glm::vec2& tileCoords, const int& tile);
+	bool isDoorOpen() { return doorOpen; }
+	void removeObjectTiles();
 	
 private:
 	bool loadLevel(const string &levelFile);
@@ -53,7 +58,7 @@ private:
 	Texture tilesheet;
 	glm::vec2 tileTexSize;
 	int *map;
-
+	bool doorOpen;
 };
 
 

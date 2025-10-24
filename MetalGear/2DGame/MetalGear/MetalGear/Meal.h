@@ -9,8 +9,10 @@ public:
 	Meal();
 	void init(ShaderProgram& program) override;
 
+	int getHealthRestored() { return healthRestored; }
+
 private:
-	int lifeRestored;
+	int healthRestored;
 };
 
 #endif

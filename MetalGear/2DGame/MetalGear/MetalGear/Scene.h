@@ -26,6 +26,12 @@ public:
 
 	void pause();
 	void stop_pause();
+	bool isPaused();
+	void collectAllObjects();
+
+	void setLevelToGUI();
+
+	Player* getPlayer() { return player; }
 
 	// Getter para acceder al shader program desde otras clases
 	ShaderProgram& getTexProgram() { return texProgram; }
@@ -49,6 +55,7 @@ private:
 	float levelChangeDelay;
 	bool pauseGame;
 	float gameTime;
+	bool doorOpen;
 };
 
 #endif // _SCENE_INCLUDE

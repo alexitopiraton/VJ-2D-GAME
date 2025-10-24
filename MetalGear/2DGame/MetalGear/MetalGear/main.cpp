@@ -38,7 +38,8 @@ int main(void)
 		return -1;
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
+	//window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(SCREEN_FINAL_WIDTH, SCREEN_FINAL_HEIGHT, "Solid Snake", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -46,7 +47,13 @@ int main(void)
 	}
 
 	/* Set window initial position */
-	glfwSetWindowPos(window, 100, 100);
+	GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	int xpos = (mode->width - SCREEN_FINAL_WIDTH) / 2;
+	int ypos = (mode->height - SCREEN_FINAL_HEIGHT) / 2;
+	glfwSetWindowPos(window, xpos, ypos);
+	//glfwSetWindowPos(window, 100, 100);
+
 	/* Make the window's context current */
 	glfwMakeContextCurrent(window);
 

@@ -16,5 +16,5 @@ void Meal::init(ShaderProgram& program)
 	sprite->addKeyframe(0, glm::vec2(0.f, 0.f));
 	sprite->changeAnimation(0);
 
-	lifeRestored = 25;
+	healthRestored = 25;
 }

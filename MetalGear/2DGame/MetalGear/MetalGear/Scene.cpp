@@ -7,12 +7,8 @@
 #include <sstream>
 
 
-#define SCREEN_X 32
-#define SCREEN_Y 16
-
 #define INIT_PLAYER_X_TILES 15
 #define INIT_PLAYER_Y_TILES 16
-
 #define NUM_LEVELS 13
 
 
@@ -49,13 +45,18 @@ void Scene::init()
 
 	characters = new Characters();
 	characters->init(texProgram);
+	characters->addText("transition", "LOADING...", glm::vec2(20, 440));
+	characters->hideText("transition");
 
 	TileMap* map = activeLevel->get_tile_map();
+	doorOpen = map->isDoorOpen();
+
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
 	player->setLevel(activeLevel);
 
 	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+	glViewport(0, GUI_HEIGHT, GAME_WIDTH, GAME_HEIGHT);
 	currentTime = 0.0f;
 
 	changingLevel = false;
@@ -85,6 +86,34 @@ void Scene::update(int deltaTime)
 
 		player->update(deltaTime);
 
+		if (player->getCollectAllItems())
+		{
+			collectAllObjects();
+			player->resetCollectAllItems();
+		}
+
+		if (player->getChangeMap())
+		{
+			levelNum = player->getMapToChange();
+			activeLevel = levels[levelNum];
+			TileMap* map = activeLevel->get_tile_map();
+			player->setTileMap(map);
+			player->setLevel(activeLevel);
+
+			if (levelNum == 5)
+			{
+				player->setPosition(glm::vec2(19 * map->getTileSize(), 18 * map->getTileSize()));
+				player->lookUp();
+			}
+			else if (levelNum == 12)
+			{
+				player->setPosition(glm::vec2(2 * map->getTileSize(), 12 * map->getTileSize()));
+				player->lookRight();
+			}
+
+			player->setChangeMap();
+		}
+
 		int tileType;
 		char direction;
 		if (player->changeMap_tile(tileType, direction) && !changingLevel)
@@ -103,14 +132,14 @@ void Scene::update(int deltaTime)
 			else if (tileType == 5)
 				levelNum -= 2;
 
-
-			activeLevel = levels[levelNum];
-			TileMap* map = activeLevel->get_tile_map();
-			player->setTileMap(map);
-			player->setLevel(activeLevel);
+			TileMap* currentMap = activeLevel->get_tile_map();
+			doorOpen = currentMap->isDoorOpen();
 
 			glm::ivec2 playerPos = player->getPosition();
 			int posX, posY;
+			activeLevel = levels[levelNum];
+			TileMap* map = activeLevel->get_tile_map();
+			
 
 			// Types of transitions
 			// level03 -> level04 PATH
@@ -136,12 +165,25 @@ void Scene::update(int deltaTime)
 			// level04 -> level05 DOOR
 			else if (levelNum == 5 && previousLevel == 4)
 			{
-				posX = playerPos.x;
-				posY = 18 * map->getTileSize();
+				if (doorOpen)
+				{
+					posX = playerPos.x;
+					posY = 18 * map->getTileSize();
 
-				player->setPosition(glm::vec2(posX, posY));
-				player->lookUp();
-				cout << "level04 -> level05 DOOR" << endl;
+					player->setPosition(glm::vec2(posX, posY));
+					player->lookUp();
+					cout << "level04 -> level05 DOOR ABIERTA - CAMBIANDO" << endl;
+
+					levels[4]->setDoorOpen(false);
+				}
+				else
+				{
+					levelNum = previousLevel;
+					activeLevel = levels[levelNum];
+					map = activeLevel->get_tile_map();
+					cout << "level04 -> level05 DOOR CERRADA - NO CAMBIO" << endl;
+					return;
+				}
 			}
 			// level05 -> level04 DOOR
 			else if (levelNum == 4 && previousLevel == 5)
@@ -153,12 +195,26 @@ void Scene::update(int deltaTime)
 			// level06 -> level07 DOOR
 			else if (levelNum == 7 && previousLevel == 6)
 			{
-				posX = playerPos.x - 13 * map->getTileSize();
-				posY = 19 * map->getTileSize();
+				if (doorOpen)
+				{
+					posX = playerPos.x - 13 * map->getTileSize();
+					posY = 19 * map->getTileSize();
 
-				player->setPosition(glm::vec2(posX, posY));
-				player->lookUp();
-				cout << "level05 -> level06 DOOR" << endl;
+					player->setPosition(glm::vec2(posX, posY));
+					player->lookUp();
+					cout << "level06 -> level07 DOOR ABIERTA - CAMBIANDO" << endl;
+
+					levels[6]->setDoorOpen(false);
+				}
+				else
+				{
+					levelNum = previousLevel;
+					activeLevel = levels[levelNum];
+					map = activeLevel->get_tile_map();
+					cout << "level06 -> level07 DOOR CERRADA - NO CAMBIO" << endl;
+					return;
+				}
+
 			}
 			// level07 -> level06 DOOR
 			else if (levelNum == 6 && previousLevel == 7)
@@ -169,16 +225,31 @@ void Scene::update(int deltaTime)
 				player->setPosition(glm::vec2(posX, posY));
 				player->lookDown();
 				cout << "level06 -> level05 DOOR" << endl;
+
 			}
 			// level11 -> level12 DOOR
 			else if (levelNum == 12 && previousLevel == 11)
 			{
-				posX = 2 * map->getTileSize();
-				posY = playerPos.y - 4 * map->getTileSize();
+				if (doorOpen)
+				{
+					posX = 2 * map->getTileSize();
+					posY = playerPos.y - 4 * map->getTileSize();
 
-				player->setPosition(glm::vec2(posX, posY));
-				player->lookRight();
-				cout << "level11 -> level12 DOOR" << endl;
+					player->setPosition(glm::vec2(posX, posY));
+					player->lookRight();
+					cout << "level11 -> level12 DOOR ABIERTA - CAMBIANDO" << endl;
+
+					levels[11]->setDoorOpen(false);
+				}
+				else
+				{
+					levelNum = previousLevel;
+					activeLevel = levels[levelNum];
+					map = activeLevel->get_tile_map();
+					cout << "level11 -> level12 DOOR CERRADA - NO CAMBIO" << endl;
+					return;
+				}
+
 			}
 			// level12 -> level11 DOOR
 			else if (levelNum == 11 && previousLevel == 12)
@@ -220,8 +291,14 @@ void Scene::update(int deltaTime)
 				cout << "DOWN" << endl;
 			}
 
+			activeLevel = levels[levelNum];
+			map = activeLevel->get_tile_map();
+			player->setTileMap(map);
+			player->setLevel(activeLevel);
+
 			levelChangeDelay = 0.f;
 			changingLevel = true;
+
 			pause();
 			cout << "TILE TYPE " << tileType << " Direction: " << direction << endl;
 			cout << "Cooldown activado - cambiando a nivel " << levelNum << endl;
@@ -244,6 +321,7 @@ void Scene::render()
 	player->render();
 	if (pauseGame)
 		activeLevel->setBlackScreen();
+
 	characters->render();
 }
 
@@ -259,7 +337,9 @@ void Scene::initialise_levels()
 	string screenLevel;
 	
 	int numObjects;
+	int iterator = 0;
 	glm::vec2 screensPosition;
+	std:vector<int> accessCardNumbers;
 
 	fin.open(screensPositionFile.c_str());
 	if (!fin.is_open())
@@ -284,6 +364,15 @@ void Scene::initialise_levels()
 			stringstream ss00(line);
 			ss00 >> type;
 
+			if (type == "ACCESS_CARD")
+			{
+				int num;
+				getline(fin, line);
+				stringstream ss001(line);
+				ss001 >> num;
+				accessCardNumbers.push_back(num);
+			}
+
 			std::pair<int, int> position;
 			getline(fin, line);
 			stringstream ss01(line);
@@ -305,15 +394,29 @@ void Scene::initialise_levels()
 		ss2 >> screensPosition[0] >> screensPosition[1];
 
 		if (i < 5)
-			level->init(screenLevel, "images/Outside_Screens/outsideScreens.png", glm::vec2(0, 0), texProgram, true, screensPosition, objectTypes, objectPositions);
+		{
+			level->init(screenLevel, "images/Outside_Screens/outsideScreens.png", glm::vec2(0, 0), texProgram, true, screensPosition, objectTypes, objectPositions, i, accessCardNumbers, iterator);
+			
+			if (i == 4)
+				level->setDoorOpen(false);
+			else
+				level->setDoorOpen(true);
+		}
 		else
-			level->init(screenLevel, "images/Indoor_Screens/indoorScreens.png", glm::vec2(0, 0), texProgram, false, screensPosition, objectTypes, objectPositions);
+		{
+			level->init(screenLevel, "images/Indoor_Screens/indoorScreens.png", glm::vec2(0, 0), texProgram, false, screensPosition, objectTypes, objectPositions, i, accessCardNumbers, iterator);
+		
+			if(i == 6 || i == 11)
+				level->setDoorOpen(false);
+			else
+				level->setDoorOpen(true);
+		}
 
 		levels.push_back(level);
 	}
 
 	fin.close();
-	levelNum = 7;
+	levelNum = 3;
 	activeLevel = levels[levelNum];
 }
 
@@ -322,7 +425,7 @@ void Scene::pause()
 	pauseGame = true;
 	player->setPause();
 	activeLevel->setPause();
-	characters->setCharacters("loading...");
+	characters->showText("transition");
 	cout << "PAUSE" << endl;
 }
 
@@ -332,7 +435,7 @@ void Scene::stop_pause()
 	player->setStopPause();
 	activeLevel->setStopPause();
 	glm::ivec2 playerPos = player->getPosition();
-	characters->stopDisplay();
+	characters->hideText("transition");
 	cout << "PLAYER POS X Y --> " << playerPos.x / 20 << " " << playerPos.y / 20 << endl;
 	cout << "CONTINUE" << endl;
 }
@@ -365,4 +468,53 @@ void Scene::initShaders()
 	texProgram.bindFragmentOutput("outColor");
 	vShader.free();
 	fShader.free();
+}
+
+bool Scene::isPaused() {
+	return pauseGame;
+}
+
+void Scene::setLevelToGUI() {
+	player->setLevelToGUI();
+}
+
+void Scene::collectAllObjects()
+{
+	// Primero, limpia el inventario del jugador
+	player->clearAllObjects();
+
+	// Regenera y recoge todos los objetos de todos los niveles
+	for (int i = 0; i < levels.size(); i++)
+	{
+		Level* level = levels[i];
+
+		// Regenera objetos (crea nuevos si fueron eliminados)
+		level->regenerateWeapon(texProgram);
+		level->regenerateAccessCard(texProgram);
+		level->regenerateMeal(texProgram);
+
+		// Añade al inventario
+		if (level->hasWeapon())
+		{
+			player->addObject(level->getWeapon());
+			level->hideObjectWeapon();
+		}
+
+		if (level->hasAccessCard())
+		{
+			player->addObject(level->getAccessCard());
+			level->hideObjectAccessCard();
+		}
+
+		if (level->hasMeal())
+		{
+			player->addObject(level->getMeal());
+			level->hideObjectMeal();
+		}
+	}
+
+	// Actualiza el objeto activo
+	player->setActiveObject();
+
+	cout << "Todos los objetos recogidos. Total: " << player->getObjectCount() << endl;
 }
