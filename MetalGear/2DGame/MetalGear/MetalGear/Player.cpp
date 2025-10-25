@@ -537,3 +537,24 @@ int Player::getObjectCount() const
 {
 	return objects.size();
 }
+
+void Player::takeDamage(int dmg)
+{
+	health -= dmg;
+	gui->updateHealth(-dmg);
+	if (health < 0) health = 0;
+
+	std::cout << "[Player] Recibió daño! Vida actual: " << health << std::endl;
+
+	if (health <= 0)
+	{
+		std::cout << "[Player] Muerto!" << std::endl;
+		// Aquí podrías reiniciar el nivel o mostrar pantalla de "Game Over".
+	}
+}
+
+void Player::reset()
+{
+	health = gui->getMaxHealth();
+	gui->updateHealth(health);
+}

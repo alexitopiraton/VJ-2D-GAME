@@ -43,6 +43,13 @@ public:
 	void changeTile(const glm::vec2& tileCoords, const int& tile);
 	bool isDoorOpen() { return doorOpen; }
 	void removeObjectTiles();
+
+	glm::ivec2 worldToTileCoords(const glm::vec2& worldPos) const;
+	glm::vec2 tileToWorldCoords(const glm::ivec2& tileCoords) const;
+
+	int getWidth() const;
+	int getHeight() const;
+	bool isWalkable(int x, int y) const;
 	
 private:
 	bool loadLevel(const string &levelFile);

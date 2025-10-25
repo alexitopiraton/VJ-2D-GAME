@@ -13,10 +13,16 @@
   <ItemGroup>
     <ClInclude Include="AccessCard.h" />
     <ClInclude Include="AnimKeyframes.h" />
+    <ClInclude Include="ArnoldBoss.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Characters.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="Guard.h" />
     <ClInclude Include="Gui.h" />
+    <ClInclude Include="Pathfinder.h" />
+    <ClInclude Include="Roller.h" />
+    <ClInclude Include="Twin.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="ImageRenderer.h" />
     <ClInclude Include="Level.h" />
@@ -33,9 +39,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AccessCard.cpp" />
+    <ClCompile Include="ArnoldBoss.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Characters.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Guard.cpp" />
     <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="Pathfinder.cpp" />
+    <ClCompile Include="Roller.cpp" />
+    <ClCompile Include="Twin.cpp" />
     <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="ImageRenderer.cpp" />
     <ClCompile Include="Level.cpp" />

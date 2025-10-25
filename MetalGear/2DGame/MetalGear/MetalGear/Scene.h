@@ -6,6 +6,11 @@
 #include "Player.h"
 #include "Level.h"
 #include "Characters.h"
+#include "Bullet.h"
+#include "Twin.h"
+#include "Guard.h"
+
+class Game;
 
 #define LEVEL_CHANGE_COOLDOWN 2000.0f
 
@@ -36,6 +41,11 @@ public:
 	// Getter para acceder al shader program desde otras clases
 	ShaderProgram& getTexProgram() { return texProgram; }
 
+	void renderGameOver();
+	void initGameOver();
+	void resetBullets();
+	void resetAll();
+
 private:
 	void initShaders();
 
@@ -56,6 +66,10 @@ private:
 	bool pauseGame;
 	float gameTime;
 	bool doorOpen;
+
+	float deathTimer = 0.f;
+	Sprite* gameOverSprite = nullptr;
+	Texture gameOverTexture;
 };
 
 #endif // _SCENE_INCLUDE

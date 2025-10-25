@@ -11,6 +11,13 @@
 
 #define IMAGE_OFFSET 0.33333333333333333333333333333333
 
+class Guard;
+class Player;
+class Roller;
+class ArnoldBoss;
+class Twin;
+class Player;
+
 class Level
 {
 public:
@@ -45,6 +52,21 @@ public:
 	void regenerateAccessCard(ShaderProgram& program);
 	void regenerateMeal(ShaderProgram& program);
 
+	void addGuard(const glm::vec2& position, ShaderProgram& program);
+	void update(int deltaTime, Player* player);
+	const vector<Guard*>& getGuards() const { return guards; }
+	void resetGuards();
+
+	void addRoller(const glm::vec2& pos, ShaderProgram& shaderProgram, bool moveRight);
+	void updateRollers(int deltaTime, Player* player);
+	void renderRollers();
+	void clearRollers();
+
+	void addArnoldBoss(const glm::vec2& pos, ShaderProgram& shaderProgram);
+
+	void addTwin(const glm::vec2& position, ShaderProgram& program);
+	void resetTwin();
+
 private:
 	int id;
 
@@ -76,6 +98,11 @@ private:
 	bool hasWeaponOriginal;
 	bool hasAccessCardOriginal;
 	bool hasMealOriginal;
+
+	std::vector<Guard*> guards;
+	std::vector<Roller*> rollers;
+	ArnoldBoss* arnoldBoss = nullptr;
+	Twin* twin = nullptr;
 };
 
 #endif

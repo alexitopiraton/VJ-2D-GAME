@@ -8,4 +8,4 @@ enum GameState
     PAUSED
 };
 
-#endif // _GAME_STATE_INCLUDE#pragma once
+#endif // _GAME_STATE_INCLUDE

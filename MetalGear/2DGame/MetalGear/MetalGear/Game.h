@@ -52,6 +52,7 @@ public:
 	void mouseRelease(int button);
 
 	bool getKey(int key) const;
+	void returnToMenuFromGame();
 
 private:
 	bool bPlay; // Continue to play game?

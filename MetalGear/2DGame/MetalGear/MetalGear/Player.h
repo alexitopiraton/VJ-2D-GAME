@@ -55,6 +55,12 @@ public:
 	void setLevelToGUI();
 	void setHealth(const int& value) { health = value; }
 
+	bool isDead() const { return health <= 0; }
+	void reset();
+	void takeDamage(int dmg);
+	//int getHealth() const { return health; }
+	//void setHealth(int h);
+
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
 	int startY;
