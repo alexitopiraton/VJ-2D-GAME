@@ -9,8 +9,11 @@ public:
 	Weapon();
 
 	void init(ShaderProgram& program) override;
+
+	int getDamage() { return dmg; }
 	
 private:
+	int dmg;
 };
 
 #endif

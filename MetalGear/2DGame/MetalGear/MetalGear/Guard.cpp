@@ -71,38 +71,41 @@ void Guard::shootAtPlayer(Player& player)
     if (timeSinceLastShot < fireCooldown)
         return; // aún no puede disparar
 
-    timeSinceLastShot = 0; // reinicia cooldown
+    if (alive)
+    {
+        timeSinceLastShot = 0; // reinicia cooldown
 
-    // === ACTIVAR ALERTA ===
-    showAlert = true;
-    alertTimer = 0.0f;
-    showZZZ = false;
+        // === ACTIVAR ALERTA ===
+        showAlert = true;
+        alertTimer = 0.0f;
+        showZZZ = false;
 
-    glm::vec2 playerPos = player.getPosition();
-    glm::vec2 direction = glm::normalize(playerPos - posGuard);
+        glm::vec2 playerPos = player.getPosition();
+        glm::vec2 direction = glm::normalize(playerPos - posGuard);
 
-    // Crear la bala
-    Bullet* bullet = new Bullet(posGuard + glm::vec2(16, 16), direction, shaderProgram, BulletType::GUARD);
-    bullet->setAlive(true);
-    bullets.push_back(bullet);
+        // Crear la bala
+        Bullet* bullet = new Bullet(posGuard + glm::vec2(16, 16), direction, shaderProgram, BulletType::GUARD);
+        bullet->setAlive(true);
+        bullets.push_back(bullet);
 
-    if (direction.x < 0)
-        sprite->changeAnimation(STAND_LEFT);
-    else
-        sprite->changeAnimation(STAND_RIGHT);
+        if (direction.x < 0)
+            sprite->changeAnimation(STAND_LEFT);
+        else
+            sprite->changeAnimation(STAND_RIGHT);
 
 
-    std::cout << "[Guard] Disparo hacia el jugador! dirección=("
-        << direction.x << ", " << direction.y << ")" << std::endl;
+        std::cout << "[Guard] Disparo hacia el jugador! dirección=("
+            << direction.x << ", " << direction.y << ")" << std::endl;
 
-    std::cout << "[DEBUG] bullets.size() = " << bullets.size() << std::endl;
+        std::cout << "[DEBUG] bullets.size() = " << bullets.size() << std::endl;
+    }
 }
 
 
 void Guard::AIControl(TileMap& tilemap, Player& player, int deltaTime)
 {
     timeSinceLastShot += deltaTime;
-    cout << "[Guard] AIControl called. timeSinceLastShot=" << timeSinceLastShot << endl;
+   // cout << "[Guard] AIControl called. timeSinceLastShot=" << timeSinceLastShot << endl;
 
     this->map = &tilemap;
 
@@ -111,12 +114,12 @@ void Guard::AIControl(TileMap& tilemap, Player& player, int deltaTime)
 
     float dist = glm::distance(guardPos, playerPos);
     float attackRadiusPixels = 150.0f; // por ejemplo, 150 px
-    cout << "[Guard] Distancia al jugador: " << dist << " tiles." << endl;
+   // cout << "[Guard] Distancia al jugador: " << dist << " tiles." << endl;
 
     // Si el jugador está dentro del radio de ataque
     if (dist <= attackRadiusPixels)
     {
-        cout << "[Guard] Jugador en rango de ataque (" << attackRadiusPixels << " tiles). Disparando!" << endl;
+        //cout << "[Guard] Jugador en rango de ataque (" << attackRadiusPixels << " tiles). Disparando!" << endl;
         shootAtPlayer(player);
         showZZZ = false;
     }
@@ -185,54 +188,60 @@ bool Guard::moveTowardsTile(const glm::ivec2& nextTile, TileMap& tilemap, int de
 
 void Guard::update(int deltaTime)
 {
-    sprite->update(deltaTime);
-
-    static float t = 0.f;
-    t += deltaTime / 1000.f;
-    if (spriteZZZ && showZZZ) {
-        float offsetY = sin(t * 2.f) * 2.f;
-        spriteZZZ->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 16 + offsetY));
-    }
-
-    // === ALERTA ===
-    if (spriteAlert && showAlert)
+    if (alive)
     {
-        alertTimer += deltaTime;
+        sprite->update(deltaTime);
 
-        // Pequeño rebote visual
-        float bounce = sin(t * 10.f) * 3.f;
-        spriteAlert->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 32 + bounce));
-
-        // Si pasa 1 segundo, desaparece el icono
-        if (alertTimer >= ALERT_DURATION)
-            showAlert = false;
-    }
-
-
-    // Actualizar balas
-    for (auto it = bullets.begin(); it != bullets.end(); )
-    {
-        (*it)->update(deltaTime, map);
-        if (!(*it)->isAlive()) {
-            delete* it;
-            it = bullets.erase(it);
+        static float t = 0.f;
+        t += deltaTime / 1000.f;
+        if (spriteZZZ && showZZZ) {
+            float offsetY = sin(t * 2.f) * 2.f;
+            spriteZZZ->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 16 + offsetY));
         }
-        else ++it;
+
+        // === ALERTA ===
+        if (spriteAlert && showAlert)
+        {
+            alertTimer += deltaTime;
+
+            // Pequeño rebote visual
+            float bounce = sin(t * 10.f) * 3.f;
+            spriteAlert->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 32 + bounce));
+
+            // Si pasa 1 segundo, desaparece el icono
+            if (alertTimer >= ALERT_DURATION)
+                showAlert = false;
+        }
+
+
+        // Actualizar balas
+        for (auto it = bullets.begin(); it != bullets.end(); )
+        {
+            (*it)->update(deltaTime, map);
+            if (!(*it)->isAlive()) {
+                delete* it;
+                it = bullets.erase(it);
+            }
+            else ++it;
+        }
     }
 }
 
 void Guard::render()
 {
-    sprite->render();
+    if (alive)
+    {
+        sprite->render();
 
-    if (showZZZ && spriteZZZ)
-        spriteZZZ->render();
+        if (showZZZ && spriteZZZ)
+            spriteZZZ->render();
 
-    if (showAlert && spriteAlert)
-        spriteAlert->render();
+        if (showAlert && spriteAlert)
+            spriteAlert->render();
 
-    for (Bullet* b : bullets)
-        b->render();
+        for (Bullet* b : bullets)
+            b->render();
+    }
 }
 
 void Guard::setPosition(const glm::vec2& pos)
@@ -254,6 +263,7 @@ void Guard::takeDamage(int dmg)
 
     if (health <= 0)
     {
+        alive = false;
         std::cout << "[Guard] Muerto!" << std::endl;
         // Aquí podrías eliminar el sprite, desactivar el guardia, etc.
     }

@@ -78,6 +78,9 @@ void Player::init(ShaderProgram& shaderProgram)
 	activeObject = -1;
 	cooldownKey = 0.f;
 	collectAllItems = false;
+	godMode = false;
+	fireCooldown = 200;
+	program = shaderProgram;
 }
 
 /* WASDMovementControl INFO
@@ -163,6 +166,39 @@ std::vector<string> Player::getActiveObjectName() const
 	return properties;
 }
 
+glm::vec2 Player::directionConversor()
+{
+	if (direction == 'R')
+		return glm::vec2(1.0f, 0.0f);
+	else if (direction == 'L')
+		return glm::vec2(-1.0f, 0.0f);
+	else if (direction == 'U')
+		return glm::vec2(0.0f, -1.0f);
+	else if (direction == 'D')
+		return glm::vec2(0.0f, 1.0f);
+
+}
+
+void Player::shoot()
+{
+	if (timeSinceLastShot < fireCooldown)
+		return;
+
+	timeSinceLastShot = 0;
+
+	// Disparar hacia el jugador (con objetivo)
+	glm::vec2 dir = directionConversor();
+
+
+	glm::vec2 spawnOffset = dir * 20.0f; // 20 píxeles delante
+	glm::vec2 bulletPos = glm::vec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT / 2) + spawnOffset;
+
+	// Crear la bala
+	Bullet* bullet = new Bullet(bulletPos, dir, &program, BulletType::GUARD);
+	bullet->setAlive(true);
+	bullets.push_back(bullet);
+}
+
 /* update INFO:
 * bool WASDpressed -> indicates whether a movement key (W, A, S or D) is already pressed. If true and another movement key is pressed, stops moving.
 * movementControl -> (0,1,2,3) = (W,A,S,D)
@@ -172,6 +208,35 @@ void Player::update(int deltaTime)
 {
 	if (!pause)
 	{
+		timeSinceLastShot += deltaTime;
+		// ? Actualizar y limpiar balas de forma más eficiente
+		for (auto it = bullets.begin(); it != bullets.end(); )
+		{
+			Bullet* bullet = *it;
+			bullet->update(deltaTime, map);
+
+			// Eliminar balas que ya no están vivas O que salieron muy lejos de la pantalla
+			if (!bullet->isAlive())
+			{
+				delete bullet;
+				it = bullets.erase(it);
+			}
+			else
+			{
+				++it;
+			}
+		}
+
+		// ? Limitar el número máximo de balas activas
+		const int MAX_BULLETS = 20;
+		while (bullets.size() > MAX_BULLETS)
+		{
+			Bullet* oldest = bullets.front();
+			delete oldest;
+			bullets.pop_front();
+			std::cout << "[Twin] Límite de balas alcanzado, eliminando la más antigua" << std::endl;
+		}
+
 		sprite->update(deltaTime);
 		int lvl = level->getId();
 
@@ -319,7 +384,8 @@ void Player::update(int deltaTime)
 		if (Game::instance().getKey(GLFW_KEY_X) && cooldownKey <= 0.f && objects.size() > 0)
 		{
 			// ACCESS CARD USE
-			if (dynamic_cast<AccessCard*>(objects[activeObject]) != NULL) {
+			if (dynamic_cast<AccessCard*>(objects[activeObject]) != NULL) 
+			{
 				AccessCard* card = dynamic_cast<AccessCard*>(objects[activeObject]);
 				glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
 				glm::vec2 tileCoords;
@@ -328,12 +394,19 @@ void Player::update(int deltaTime)
 					level->setDoorOpen(true);
 			}
 			// MEAL USE
-			else if (dynamic_cast<Meal*>(objects[activeObject]) != NULL) {
+			else if (dynamic_cast<Meal*>(objects[activeObject]) != NULL)
+			{
 				Meal* meal = dynamic_cast<Meal*>(objects[activeObject]);
 
 				gui->updateHealth(meal->getHealthRestored());
 				health += meal->getHealthRestored();
 				erased = true;
+			}
+
+			// GUN USE
+			else if (dynamic_cast<Weapon*>(objects[activeObject]) != NULL)
+			{
+				shoot();
 			}
 
 			if (erased)
@@ -388,6 +461,7 @@ void Player::update(int deltaTime)
 		// KEY G -> GOD MODE | PLAYER IS INVULNERABLE | TOGGLE TO EXIT GOD MODE
 		if (Game::instance().getKey(GLFW_KEY_G) && cooldownKey <= 0.f)
 		{
+			godMode = !godMode;
 			cooldownKey = 300.f;
 		}
 
@@ -441,6 +515,10 @@ glm::ivec2 Player::getPosition()
 void Player::render()
 {
 	sprite->render();
+	for (Bullet* b : bullets)
+	{
+		b->render();
+	}
 }
 
 void Player::setTileMap(TileMap* tileMap)
@@ -540,8 +618,12 @@ int Player::getObjectCount() const
 
 void Player::takeDamage(int dmg)
 {
-	health -= dmg;
-	gui->updateHealth(-dmg);
+	if (!godMode)
+	{
+		health -= dmg;
+		gui->updateHealth(-dmg);
+	}
+
 	if (health < 0) health = 0;
 
 	std::cout << "[Player] Recibió daño! Vida actual: " << health << std::endl;
@@ -553,8 +635,44 @@ void Player::takeDamage(int dmg)
 	}
 }
 
+void Player::clearBullets()
+{
+	for (Bullet* b : bullets) {
+		delete b;
+	}
+	bullets.clear();
+}
+
 void Player::reset()
 {
+	std::cout << "[Player] Reseteando jugador..." << std::endl;
+
+	// Reset player
 	health = gui->getMaxHealth();
+	pause = false;
+	direction = 'R';
+	cooldownKey = 0.f;
+	godMode = false;
+	timeSinceLastShot = 0;
+
+	// Limpiar balas
+	clearBullets();
+
+	// Reset GUI
 	gui->updateHealth(health);
+	clearAllObjects();
+
+	// Reset objects
+	activeObject = -1;
+	collectAllItems = false;
+	erased = false;
+
+	std::cout << "[Player] Jugador reseteado" << std::endl;
 }
+
+int Player::getWeaponDamage()
+{
+	Weapon* weapon = dynamic_cast<Weapon*>(objects[activeObject]);
+	return weapon->getDamage();
+}
+

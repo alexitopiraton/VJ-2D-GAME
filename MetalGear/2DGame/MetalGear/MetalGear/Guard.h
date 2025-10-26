@@ -41,6 +41,8 @@ public:
 	void clearBullets();
 	void reset();
 
+	glm::vec2 getPosition() { return posGuard; }
+
 
 private:
 	glm::ivec2 tileMapDispl;

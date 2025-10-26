@@ -74,16 +74,15 @@ void Scene::update(int deltaTime)
 	{
 		static float deathTimer = 0.f;
 		deathTimer += deltaTime;
+
 		if (deathTimer > 3000.f) { // 3 segundos
-			resetBullets();
-			player->reset();
-			resetAll();
-			for (Level* level : levels) {
-				level->resetGuards();
-				level->clearRollers();
-			}
-			Game::instance().returnToMenuFromGame();
+			std::cout << "[Scene] Game Over - Volviendo al menú" << std::endl;
+
+			// Resetear timer
 			deathTimer = 0.f;
+
+			// Llamar al reset del juego desde Game
+			Game::instance().returnToMenuFromGame();
 		}
 		return;
 	}
@@ -96,7 +95,6 @@ void Scene::update(int deltaTime)
 			changingLevel = false;
 			levelChangeDelay = 0.f;
 			stop_pause();
-			cout << "Cooldown terminado" << endl;
 		}
 	}
 
@@ -105,6 +103,7 @@ void Scene::update(int deltaTime)
 		currentTime += gameTime;
 
 		player->update(deltaTime);
+		activeLevel->update(deltaTime, player);
 
 		if (player->getCollectAllItems())
 		{
@@ -162,28 +161,8 @@ void Scene::update(int deltaTime)
 			
 
 			// Types of transitions
-			// level03 -> level04 PATH
-			if (levelNum == 4 && previousLevel == 3)
-			{
-				posX = map->getTileSize();
-				posY = playerPos.y - 14 * map->getTileSize();
-
-				player->setPosition(glm::vec2(posX, posY));
-				player->lookRight();
-				cout << "level03 -> level04 PATH" << endl;
-			}
-			// level04 -> level03 PATH
-			else if (levelNum == 3 && previousLevel == 4)
-			{
-				posX = 30 * map->getTileSize();
-				posY = playerPos.y + 14 * map->getTileSize();
-
-				player->setPosition(glm::vec2(posX,posY));
-				player->lookLeft();
-				cout << "level04 -> level03 PATH" << endl;
-			}
 			// level04 -> level05 DOOR
-			else if (levelNum == 5 && previousLevel == 4)
+			if (levelNum == 5 && previousLevel == 4)
 			{
 				if (doorOpen)
 				{
@@ -320,8 +299,6 @@ void Scene::update(int deltaTime)
 			changingLevel = true;
 
 			pause();
-			cout << "TILE TYPE " << tileType << " Direction: " << direction << endl;
-			cout << "Cooldown activado - cambiando a nivel " << levelNum << endl;
 		}
 	}
 }
@@ -363,7 +340,7 @@ void Scene::initialise_levels()
 	int numObjects;
 	int iterator = 0;
 	glm::vec2 screensPosition;
-	std:vector<int> accessCardNumbers;
+	std::vector<int> accessCardNumbers;
 
 	fin.open(screensPositionFile.c_str());
 	if (!fin.is_open())
@@ -380,7 +357,9 @@ void Scene::initialise_levels()
 		getline(fin, line);
 		stringstream ss(line);
 		ss >> numObjects;
+		cout << numObjects << endl;
 
+		// READING OBJECTS
 		for (int j = 0; j < numObjects; j++)
 		{
 			string type; 
@@ -395,27 +374,96 @@ void Scene::initialise_levels()
 				stringstream ss001(line);
 				ss001 >> num;
 				accessCardNumbers.push_back(num);
+				cout << num << endl;
 			}
 
 			std::pair<int, int> position;
 			getline(fin, line);
 			stringstream ss01(line);
 			ss01 >> position.first >> position.second;
+			cout << position.first << " " << position.second << endl;
 
-			cout << "level -> " << i << " | type -> " << type << " | position x -> " << position.first / 20 << " | position y -> " << position.second / 20 << endl;
 			objectTypes.push_back(type);
 			objectPositions.push_back(position);
 		}
 
+		// READING GUARDS
+		int guardsNum;
+		std::vector<glm::vec2> guardsPositions;
+		getline(fin, line);
+		stringstream ss1(line);
+		ss1 >> guardsNum;
+		cout << guardsNum << endl;
+
+		for (int j = 0; j < guardsNum; j++)
+		{
+			glm::vec2 position;
+			getline(fin, line);
+			stringstream ss10(line);
+			ss10 >> position.x >> position.y;
+			cout << position.x << " " << position.y << endl;
+			guardsPositions.push_back(position);
+		}
+
+
+		// READING ROLLERS
+		int rollersNum;
+		std::vector<glm::vec2> rollersPositions;
+		getline(fin, line);
+		stringstream ss2(line);
+		ss2 >> rollersNum;
+		cout << rollersNum << endl;
+
+		for (int j = 0; j < rollersNum; j++)
+		{
+			glm::vec2 position;
+			getline(fin, line);
+			stringstream ss20(line);
+			ss20 >> position.x >> position.y;
+			cout << position.x << " " << position.y << endl;
+			rollersPositions.push_back(position);
+		}
+
+		// READING BOSSES
+		bool arnoldBoss, twin;
+		glm::vec2 arnoldPos;
+		glm::vec2 twinPos;
+		getline(fin, line);
+		stringstream ss3(line);
+		ss3 >> arnoldBoss;
+		cout << arnoldBoss << endl;
+
+		if (arnoldBoss)
+		{
+			getline(fin, line);
+			stringstream ss30(line);
+			ss30 >> arnoldPos.x >> arnoldPos.y;
+		}
+
+		getline(fin, line);
+		stringstream ss4(line);
+		ss4 >> twin;
+		cout << twin << endl;
+
+		if (twin)
+		{
+			getline(fin, line);
+			stringstream ss40(line);
+			ss40 >> twinPos.x >> twinPos.y;
+		}
+
+		// INITIALISING LEVELS
 		Level* level = new Level();
 
 		getline(fin, line);
-		stringstream ss1(line);
-		ss1 >> screenLevel;
+		stringstream ss5(line);
+		ss5 >> screenLevel;
+		cout << screenLevel << endl;
 
 		getline(fin, line);
-		stringstream ss2(line);
-		ss2 >> screensPosition[0] >> screensPosition[1];
+		stringstream ss6(line);
+		ss6 >> screensPosition[0] >> screensPosition[1];
+		cout << screensPosition[0] << " " << screensPosition[1] << endl;
 
 		if (i < 5)
 		{
@@ -437,51 +485,32 @@ void Scene::initialise_levels()
 		}
 
 		levels.push_back(level);
+
+		// ADDING ENEMIES
+		// GUARDS
+		cout << "AÑADIENDO " << guardsNum << " guardias al nivel " << i << endl;
+		for (int j = 0; j < guardsNum; ++j) 
+		{
+			cout << "  Añadiendo guardia en: " << guardsPositions[j].x << " " << guardsPositions[j].y << endl;
+			level->addGuard(guardsPositions[j], texProgram);
+		}
+
+		// ROLLERS
+		for (int j = 0; j < rollersNum; ++j)
+			level->addRoller(rollersPositions[j], texProgram, true);
+
+		// ARNOLD BOSS
+		if (arnoldBoss)
+			level->addArnoldBoss(arnoldPos, texProgram);
+
+		// TWIN BOSS
+		if (twin)
+			level->addTwin(twinPos, texProgram);
 	}
 
 	fin.close();
 	levelNum = 0;
 	activeLevel = levels[levelNum];
-
-	if (levels.size() > 2)
-	{
-		TileMap* map = levels[0]->get_tile_map();
-
-		glm::vec2 arnoldPos((map->getMapSize().x - 3) * map->getTileSize(), (map->getMapSize().y - 8) * map->getTileSize());
-		levels[0]->addArnoldBoss(arnoldPos, texProgram);
-
-		map = levels[2]->get_tile_map();
-
-
-		// CAMBIA ESTAS COORDENADAS (10, 8) A DONDE QUIERAS EL GUARDIA
-		glm::vec2 guardPos(10 * map->getTileSize(), 8 * map->getTileSize());
-		levels[2]->addGuard(guardPos, texProgram);
-
-		glm::vec2 guardPos2(15 * map->getTileSize(), 20 * map->getTileSize());
-		levels[2]->addGuard(guardPos2, texProgram);
-
-		cout << "Guardia agregado en level02 en posición tile (10, 8)" << endl;
-
-		map = levels[3]->get_tile_map();
-
-		glm::vec2 rollerPos((map->getMapSize().x - 1) * map->getTileSize(), (map->getMapSize().y - 6) * map->getTileSize());
-		levels[3]->addRoller(rollerPos, texProgram, true);
-
-		map = levels[4]->get_tile_map();
-
-		glm::vec2 twinPos((map->getMapSize().x - 2.5) * map->getTileSize(), (map->getMapSize().y - 8) * map->getTileSize());
-		levels[4]->addTwin(twinPos, texProgram);
-
-
-
-
-		// Si quieres más guardias en el mismo nivel:
-		// levels[2]->addGuard(glm::vec2(15 * map->getTileSize(), 12 * map->getTileSize()), texProgram);
-
-		// Si quieres guardias en otros niveles:
-		// TileMap* map3 = levels[3]->get_tile_map();
-		// levels[3]->addGuard(glm::vec2(8 * map3->getTileSize(), 10 * map3->getTileSize()), texProgram);
-	}
 }
 
 void Scene::pause()
@@ -619,20 +648,42 @@ void Scene::resetBullets()
 	}
 }
 
-void Scene::resetAll()
+void Scene::reset()
 {
-	// Reset jugador
-	TileMap* map = levels[0]->get_tile_map();
-	player->reset();
+	std::cout << "[Scene] Reseteando escena..." << std::endl;
 
-	// Reset guardias y balas en TODOS los niveles
-	for (Level* level : levels)
-	{
-		level->resetGuards();
+	// 1. Resetear jugador
+	if (player) {
+		TileMap* map = levels[3]->get_tile_map(); // Nivel inicial
+		player->setTileMap(map);
+		player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(),
+			INIT_PLAYER_Y_TILES * map->getTileSize()));
+		player->clearBullets(); // Limpiar balas del jugador
+		player->reset();
 	}
 
-	// Reset variables de la escena
+	// 2. Resetear todos los niveles
+	for (Level* level : levels) {
+		level->reset(); // Nueva función en Level
+	}
+
+	// 3. Volver al nivel inicial
+	levelNum = 0;
+	activeLevel = levels[levelNum];
+
+	if (player) {
+		TileMap* map = activeLevel->get_tile_map();
+		player->setTileMap(map);
+		player->setLevel(activeLevel);
+	}
+
+	// 4. Resetear variables de estado
 	changingLevel = false;
 	levelChangeDelay = 0.f;
 	currentTime = 0.f;
+	pauseGame = false;
+	doorOpen = false;
+	gameTime = 0.f;
+
+	std::cout << "[Scene] Escena reseteada" << std::endl;
 }

@@ -55,7 +55,7 @@ public:
 	void addGuard(const glm::vec2& position, ShaderProgram& program);
 	void update(int deltaTime, Player* player);
 	const vector<Guard*>& getGuards() const { return guards; }
-	void resetGuards();
+	void resetEnemies();
 
 	void addRoller(const glm::vec2& pos, ShaderProgram& shaderProgram, bool moveRight);
 	void updateRollers(int deltaTime, Player* player);
@@ -66,6 +66,8 @@ public:
 
 	void addTwin(const glm::vec2& position, ShaderProgram& program);
 	void resetTwin();
+
+	void reset();
 
 private:
 	int id;

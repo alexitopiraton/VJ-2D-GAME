@@ -45,12 +45,17 @@ void Roller::init(const glm::vec2& mapDispl, ShaderProgram& shaderProgram, bool 
     sprite->addKeyframe(ROLL_RIGHT, glm::vec2(0.0f, 0.0f));
 
     sprite->changeAnimation(moveRight ? ROLL_RIGHT : ROLL_LEFT);
+
+    this->movingRight = moveRight;
+    this->initialMovingRight = moveRight; // Guardar estado inicial
+    this->active = true;
 }
 
 
 void Roller::setPosition(const glm::vec2& pos)
 {
     this->pos = glm::ivec2(pos);
+    this->initialPos = pos; // Guardar posición inicial
     sprite->setPosition(glm::vec2(float(pos.x), float(pos.y)));
 }
 
@@ -95,7 +100,8 @@ void Roller::update(int deltaTime, TileMap* map, Player* player)
     if (collisionX && collisionY)
     {
         std::cout << "[Roller] Jugador aplastado!" << std::endl;
-        player->takeDamage(100);
+        if (!player->getGodMode())
+            player->takeDamage(100);
         active = false;
     }
 }
@@ -105,4 +111,20 @@ void Roller::render()
 {
     if (active && sprite)
         sprite->render();
+}
+
+void Roller::reset()
+{
+    std::cout << "[Roller] Reseteando..." << std::endl;
+
+    // Volver a posición inicial
+    pos = initialPos;
+    sprite->setPosition(glm::vec2(float(initialPos.x), float(initialPos.y)));
+
+    // Volver a dirección inicial
+    movingRight = initialMovingRight;
+    sprite->changeAnimation(movingRight ? ROLL_RIGHT : ROLL_LEFT);
+
+    // Reactivar
+    active = true;
 }

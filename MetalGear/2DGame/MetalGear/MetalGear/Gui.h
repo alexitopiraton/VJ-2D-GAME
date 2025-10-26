@@ -27,6 +27,8 @@ public:
     void updateHealth(const int& healthValue);
     void renderLifeBar();
 
+    void reset();
+
 private:
     Texture guiTexture, heartTexture;
     Sprite* guiSprite;

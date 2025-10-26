@@ -23,6 +23,9 @@ void ArnoldBoss::init(ShaderProgram& shaderProgram)
 
     sprite->changeAnimation(MOVE_RIGHT);
     sprite->setPosition(glm::vec2(posBoss.x, posBoss.y));
+    initialPosBoss = posBoss;
+
+    isDead = false;
 
     cout << "[ArnoldBoss] ¡Arnold inicializado!" << endl;
 }
@@ -76,7 +79,7 @@ void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
         sprite->update(deltaTime);
 
         // Comprobar colisión
-        if (distToPlayer < 32.f) {
+        if (distToPlayer < 32.f && !player.getGodMode()) {
             player.takeDamage(100);
         }
         return; // Salir sin usar pathfinding
@@ -154,7 +157,7 @@ void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
     // -------------------
     // 6?? Comprobar colisión con jugador
     // -------------------
-    if (distToPlayer < 32.f) {
+    if (distToPlayer < 32.f && !player.getGodMode()) {
         player.takeDamage(100);
     }
 
@@ -250,7 +253,8 @@ glm::ivec2 ArnoldBoss::findClosestWalkableTile(TileMap& tilemap, const glm::ivec
 
 void ArnoldBoss::render()
 {
-    sprite->render();
+    if(!isDead)
+        sprite->render();
 }
 
 void ArnoldBoss::setPosition(const glm::vec2& pos)
@@ -267,9 +271,21 @@ void ArnoldBoss::takeDamage(int dmg)
 {
     health -= dmg;
     if (health <= 0) {
+        isDead = true;
         std::cout << "[ArnoldBoss] ¡Derrotado!" << std::endl;
     }
     else {
         std::cout << "[ArnoldBoss] Vida restante: " << health << std::endl;
     }
+}
+
+void ArnoldBoss::reset()
+{
+    posBoss = initialPosBoss;
+    currentPath.clear();
+    currentPathIndex = 0;
+    lastPlayerTile = { -1, -1 };
+    timeSinceLastPath = 0;
+    health = 300;
+    isDead = false;
 }

@@ -23,7 +23,11 @@ public:
     bool isActive() const { return active; }
     void deactivate() { active = false; }
 
+    void reset();
+
 private:
+    glm::vec2 initialPos;
+    bool initialMovingRight;
     glm::ivec2 pos;
     glm::vec2 speed;
     glm::vec2 mapDispl;

@@ -5,7 +5,9 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Level.h"
+#include "Bullet.h"
 #include "Gui.h"
+#include <list>
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
 #define SPRITE_WIDTH 16*2
@@ -44,6 +46,7 @@ public:
 	int getObjectCount() const;
 	std::vector<string> getActiveObjectName() const;
 	bool getCollectAllItems() const { return collectAllItems; }
+	bool getGodMode() const { return godMode; }
 
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2& pos);
@@ -58,8 +61,12 @@ public:
 	bool isDead() const { return health <= 0; }
 	void reset();
 	void takeDamage(int dmg);
-	//int getHealth() const { return health; }
-	//void setHealth(int h);
+
+	void shoot();
+	glm::vec2 directionConversor();
+	list<Bullet*> getBullets() { return bullets; }
+	int getWeaponDamage();
+	void clearBullets();
 
 private:
 	glm::ivec2 tileMapDispl, posPlayer;
@@ -78,11 +85,17 @@ private:
 	Weapon* punch;
 
 	Level* level;
-	bool pause, erased, collectAllItems;
+	bool pause, erased, collectAllItems, godMode;
 	int health;
 
 	bool changeMap;
 	int mapToChange;
+
+	list<Bullet*> bullets;
+	int fireCooldown = 200;
+	int timeSinceLastShot = 0;
+
+	ShaderProgram program;
 };
 
 

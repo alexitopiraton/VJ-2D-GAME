@@ -19,6 +19,8 @@ public:
     void setShaderProgram(ShaderProgram* program);
     glm::ivec2 findClosestWalkableTile(TileMap& tilemap, const glm::ivec2& tile);
 
+    glm::vec2 getPosition() { return posBoss; }
+    void reset();
 
 private:
     bool moveTowardsTile(const glm::ivec2& nextTile, TileMap& tilemap, int deltaTime);
@@ -26,6 +28,7 @@ private:
 private:
     Texture spritesheet;
     Sprite* sprite;
+    glm::vec2 initialPosBoss;
     glm::vec2 posBoss;
     std::vector<glm::ivec2> currentPath;
     int currentPathIndex = 0;
@@ -35,5 +38,6 @@ private:
     int health = 300; // mucha vida
     float speed = 120.f; // más lento pero constante
     ShaderProgram* shaderProgram;
+    bool isDead;
 };
 #endif

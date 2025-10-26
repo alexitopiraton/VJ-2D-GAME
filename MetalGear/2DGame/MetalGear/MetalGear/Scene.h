@@ -45,6 +45,7 @@ public:
 	void initGameOver();
 	void resetBullets();
 	void resetAll();
+	void reset();
 
 private:
 	void initShaders();

@@ -1,53 +1,117 @@
 SPRITESHEET POSITION
 0												-- Number of objects in level 0
+0												-- Number of guards in level 0
+0												-- Number of rollers in level 0
+0												-- Is arnoldBoss in level 0?
+0												-- Is twin Boss in level 0?
 levels/level00.txt										-- level 0 tileMap
 0 0 												-- Outisde screen 1 (level 0)
 0												-- Number of objects in level 1
+1												-- Number of guards in level 1
+480 280
+0												-- Number of rollers in level 1
+0												-- Is arnoldBoss in level 1?
+0												-- Is twin Boss in level 1?
 levels/level01.txt										-- level 1 tileMap
 0.5 0 												-- Outisde screen 2 (level 1)
 1												-- Number of objects in level 2
 WEAPON
 120 80
+0												-- Number of guards in level 2
+0												-- Number of rollers in level 2
+0												-- Is arnoldBoss in level 2?
+0												-- Is twin Boss in level 2?
 levels/level02.txt										-- level 2 tileMap
 0.5 0.33333333333333333333333333333333 								-- Outisde screen 3 (level 2)
 1												-- Number of objects in level 3
 ACCESS_CARD
 4
 20 430
+2												-- Number of guards in level 3
+160 240
+460 160
+1												-- Number of rollers in level 3
+600 360
+0												-- Is arnoldBoss in level 3?
+0												-- Is twin Boss in level 3?
 levels/level03.txt										-- level 3 tileMap
 0.5 0.66666666666666666666666666666667 								-- Outisde screen 4 (level 3)
 1												-- Number of objects in level 4
 MEAL
 360 360
+0												-- Number of guards in level 4
+0												-- Number of rollers in level 4
+0												-- Is arnoldBoss in level 4?
+1												-- Is twin Boss in level 4?
+600 360
 levels/level04.txt										-- level 4 tileMap	
 0 0.33333333333333333333333333333333 	  							-- Outisde screen 5 (level 4)
 0												-- Number of objects in level 5
+0												-- Number of guards in level 5
+0												-- Number of rollers in level 5
+0												-- Is arnoldBoss in level 5?
+0												-- Is twin Boss in level 5?
 levels/level05.txt										-- level 5 tileMap
 0.66666666666666666666666666666667 0.66666666666666666666666666666667 				-- Indoor screen 1 (level 5)
 0												-- Number of objects in level 6
+2												-- Number of guards in level 6
+240 200
+400 60
+0												-- Number of rollers in level 6
+0												-- Is arnoldBoss in level 6?
+0												-- Is twin Boss in level 6?
 levels/level06.txt										-- level 6 tileMap
 0.66666666666666666666666666666667 0.33333333333333333333333333333333 				-- Indoor screen 2 (level 6)
 1												-- Number of objects in level 7
 ACCESS_CARD
 11
 180 80
+0												-- Number of guards in level 7
+0												-- Number of rollers in level 7
+0												-- Is arnoldBoss in level 7?
+0												-- Is twin Boss in level 7?
 levels/level07.txt										-- level 7 tileMap
 0 0.66666666666666666666666666666667 								-- Indoor screen 3 (level 7)
 0												-- Number of objects in level 8
+0												-- Number of guards in level 8
+0												-- Number of rollers in level 8
+0												-- Is arnoldBoss in level 8?
+0												-- Is twin Boss in level 8?
 levels/level08.txt										-- level 8 tileMap
 0.33333333333333333333333333333333 0.33333333333333333333333333333333 				-- Indoor screen 4 (level 8)
 0												-- Number of objects in level 9
+0												-- Number of guards in level 9
+0												-- Number of rollers in level 9
+0												-- Is arnoldBoss in level 9?
+0												-- Is twin Boss in level 9?
 levels/level09.txt										-- level 9 tileMap
 0 0.33333333333333333333333333333333 								-- Indoor screen 5 (level 9)
 0												-- Number of objects in level 10
+2												-- Number of guards in level 10
+180 320
+340 80
+0												-- Number of rollers in level 10
+0												-- Is arnoldBoss in level 10?
+0												-- Is twin Boss in level 10?
 levels/level10.txt										-- level 10 tileMap
 0 0 												-- Indoor screen 6 (level 10)
 1												-- Number of objects in level 11
 ACCESS_CARD
 6
 160 320
+1												-- Number of guards in level 11
+560 360
+1												-- Number of rollers in level 11
+600 160
+0												-- Is arnoldBoss in level 11?
+0												-- Is twin Boss in level 11?
 levels/level11.txt										-- level 11 tileMap
 0.33333333333333333333333333333333 0 								-- Indoor screen 7 (level 11)
 0												-- Number of objects in level 12
+0												-- Number of guards in level 12
+0												-- Number of rollers in level 12
+1												-- Is arnoldBoss in level 12?
+560 360
+0												-- Is twin Boss in level 12?
 levels/level12.txt										-- level 12 tileMap
 0.66666666666666666666666666666667 0 								-- Indoor screen 8 (level 12)

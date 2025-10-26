@@ -172,3 +172,23 @@ void Gui::updateHealth(const int& healthValue)
     if (currentHealth > maxHealth)
         currentHealth = maxHealth;
 }
+
+void Gui::reset()
+{
+    std::cout << "[GUI] Reseteando..." << std::endl;
+
+    // Resetear vida
+    currentHealth = maxHealth;
+
+    // Limpiar textos de objetos
+    characters->updateText("active_object", " ");
+    characters->updateText("active object property 1", " ");
+    characters->updateText("active object property 2", " ");
+    characters->hideText("active object property 1");
+    characters->hideText("active object property 2");
+
+    // Resetear nivel mostrado
+    characters->updateText("level", "LEVEL 3");
+
+    std::cout << "[GUI] GUI reseteada" << std::endl;
+}

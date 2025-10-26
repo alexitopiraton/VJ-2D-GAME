@@ -53,6 +53,7 @@ public:
 
 	bool getKey(int key) const;
 	void returnToMenuFromGame();
+	void resetGame();
 
 private:
 	bool bPlay; // Continue to play game?

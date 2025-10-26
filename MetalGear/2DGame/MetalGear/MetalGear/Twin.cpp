@@ -52,21 +52,24 @@ void Twin::shootAtPlayer(Player& player)
     if (timeSinceLastShot < fireCooldown)
         return;
 
-    timeSinceLastShot = 0;
+    if (alive)
+    {
+        timeSinceLastShot = 0;
 
-    // Disparar hacia el jugador (con objetivo)
-    glm::vec2 playerPos = player.getPosition();
-    glm::vec2 direction = glm::normalize(playerPos - posTwin);
+        // Disparar hacia el jugador (con objetivo)
+        glm::vec2 playerPos = player.getPosition();
+        glm::vec2 direction = glm::normalize(playerPos - posTwin);
 
-    // Crear la bala
-    Bullet* bullet = new Bullet(posTwin + glm::vec2(16, 16), direction, shaderProgram, BulletType::TWIN);
-    bullet->setAlive(true);
-    bullets.push_back(bullet);
+        // Crear la bala
+        Bullet* bullet = new Bullet(posTwin + glm::vec2(16, 16), direction, shaderProgram, BulletType::TWIN);
+        bullet->setAlive(true);
+        bullets.push_back(bullet);
 
-    // ? NO cambiar animación al disparar, dejar que se alterne sola
+        // ? NO cambiar animación al disparar, dejar que se alterne sola
 
-    std::cout << "[Twin] Disparo hacia el jugador! dirección=("
-        << direction.x << ", " << direction.y << ")" << std::endl;
+        std::cout << "[Twin] Disparo hacia el jugador! dirección=("
+            << direction.x << ", " << direction.y << ")" << std::endl;
+    }
 }
 
 void Twin::AIControl(TileMap& tilemap, Player& player, int deltaTime)
@@ -121,64 +124,72 @@ void Twin::updateVerticalMovement(int deltaTime, TileMap& tilemap)
 
 void Twin::update(int deltaTime)
 {
-    // Actualizar movimiento vertical
-    if (map)
-        updateVerticalMovement(deltaTime, *map);
-
-    // Actualizar sprite
-    sprite->update(deltaTime);
-
-    // ? Actualizar y limpiar balas de forma más eficiente
-    for (auto it = bullets.begin(); it != bullets.end(); )
+    if (alive)
     {
-        Bullet* bullet = *it;
-        bullet->update(deltaTime, map);
+        // Actualizar movimiento vertical
+        if (map)
+            updateVerticalMovement(deltaTime, *map);
 
-        // Eliminar balas que ya no están vivas O que salieron muy lejos de la pantalla
-        if (!bullet->isAlive())
-        {
-            delete bullet;
-            it = bullets.erase(it);
-        }
-        else
-        {
-            // ? IMPORTANTE: Eliminar balas que se fueron muy lejos
-            glm::vec2 bulletPos = bullet->getPosition();
-            float distanceFromTwin = glm::length(bulletPos - posTwin);
+        // Actualizar sprite
+        sprite->update(deltaTime);
 
-            // Si la bala está a más de 800 píxeles, eliminarla
-            if (distanceFromTwin > 800.0f)
+        // ? Actualizar y limpiar balas de forma más eficiente
+        for (auto it = bullets.begin(); it != bullets.end(); )
+        {
+            Bullet* bullet = *it;
+            bullet->update(deltaTime, map);
+
+            // Eliminar balas que ya no están vivas O que salieron muy lejos de la pantalla
+            if (!bullet->isAlive())
             {
-                std::cout << "[Twin] Bala eliminada por distancia" << std::endl;
-                bullet->setAlive(false);
                 delete bullet;
                 it = bullets.erase(it);
             }
             else
             {
-                ++it;
+                // ? IMPORTANTE: Eliminar balas que se fueron muy lejos
+                glm::vec2 bulletPos = bullet->getPosition();
+                float distanceFromTwin = glm::length(bulletPos - posTwin);
+
+                // Si la bala está a más de 800 píxeles, eliminarla
+                if (distanceFromTwin > 800.0f)
+                {
+                    std::cout << "[Twin] Bala eliminada por distancia" << std::endl;
+                    bullet->setAlive(false);
+                    delete bullet;
+                    it = bullets.erase(it);
+                }
+                else
+                {
+                    ++it;
+                }
             }
         }
-    }
 
-    // ? Limitar el número máximo de balas activas
-    const int MAX_BULLETS = 20;
-    while (bullets.size() > MAX_BULLETS)
-    {
-        Bullet* oldest = bullets.front();
-        delete oldest;
-        bullets.pop_front();
-        std::cout << "[Twin] Límite de balas alcanzado, eliminando la más antigua" << std::endl;
+        // ? Limitar el número máximo de balas activas
+        const int MAX_BULLETS = 20;
+        while (bullets.size() > MAX_BULLETS)
+        {
+            Bullet* oldest = bullets.front();
+            delete oldest;
+            bullets.pop_front();
+            std::cout << "[Twin] Límite de balas alcanzado, eliminando la más antigua" << std::endl;
+        }
     }
 }
 
 void Twin::render()
 {
-    sprite->render();
+    if (alive) 
+    {
+        sprite->render();
 
-    // Renderizar balas
-    for (Bullet* b : bullets)
-        b->render();
+        // Renderizar balas
+        for (Bullet* b : bullets)
+        {
+            b->render();
+        }
+    }
 }
 
 void Twin::setPosition(const glm::vec2& pos)

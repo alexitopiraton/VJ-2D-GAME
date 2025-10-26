@@ -313,13 +313,13 @@ void Level::update(int deltaTime, Player* player)
 	if (arnoldBoss)
 		arnoldBoss->update(deltaTime, *map, *player);
 
-
+	// === ACTUALIZAR TWIN Y SUS BALAS ===
 	if (twin) {
 		twin->AIControl(*map, *player, deltaTime);
 		twin->update(deltaTime);
-		const std::list<Bullet*>& bullets = twin->getBullets();
+		const std::list<Bullet*>& twinBullets = twin->getBullets();
 
-		for (Bullet* b : bullets)
+		for (Bullet* b : twinBullets)
 		{
 			if (b->isAlive()) {
 				glm::vec2 bulletPos = b->getPosition();
@@ -331,29 +331,95 @@ void Level::update(int deltaTime, Player* player)
 				bool collisionY = bulletPos.y + bulletSize.y >= player->getPosition().y &&
 					player->getPosition().y + playerSize.y >= bulletPos.y;
 
-				if (collisionX && collisionY) // radio de colisión
+				if (collisionX && collisionY)
 				{
 					player->takeDamage(20);
 					b->setAlive(false);
 				}
 			}
 		}
-
-
 	}
 
-	// Actualizar todos los guardias
+	// === COLISIONES DE BALAS DEL JUGADOR CON ENEMIGOS ===
+	std::list<Bullet*>& bulletsPlayer = player->getBullets();
+
+	for (Bullet* b : bulletsPlayer)
+	{
+		if (!b->isAlive()) continue;
+
+		glm::vec2 bulletPos = b->getPosition();
+		glm::ivec2 bulletSize(16, 16);
+		glm::ivec2 enemySize(SPRITE_WIDTH + 10, SPRITE_HEIGHT + 10);
+
+		bool bulletHit = false; // Flag para saber si la bala ya impactó
+
+		// 1. Verificar colisión con Twin
+		if (twin != nullptr && !bulletHit)
+		{
+			glm::vec2 twinPos = twin->getPosition();
+			bool collisionX = bulletPos.x + bulletSize.x >= twinPos.x &&
+				twinPos.x + enemySize.x >= bulletPos.x;
+			bool collisionY = bulletPos.y + bulletSize.y >= twinPos.y &&
+				twinPos.y + enemySize.y >= bulletPos.y;
+
+			if (collisionX && collisionY)
+			{
+				twin->takeDamage(player->getWeaponDamage());
+				b->setAlive(false);
+				bulletHit = true;
+			}
+		}
+
+		// 2. Verificar colisión con ArnoldBoss
+		if (arnoldBoss != nullptr && !bulletHit)
+		{
+			glm::vec2 arnoldPos = arnoldBoss->getPosition();
+			bool collisionX = bulletPos.x + bulletSize.x >= arnoldPos.x &&
+				arnoldPos.x + enemySize.x >= bulletPos.x;
+			bool collisionY = bulletPos.y + bulletSize.y >= arnoldPos.y &&
+				arnoldPos.y + enemySize.y >= bulletPos.y;
+
+			if (collisionX && collisionY)
+			{
+				arnoldBoss->takeDamage(player->getWeaponDamage());
+				b->setAlive(false);
+				bulletHit = true;
+			}
+		}
+
+		// 3. Verificar colisión con TODOS los Guards
+		if (!bulletHit)
+		{
+			for (Guard* g : guards)
+			{
+				if (g == nullptr) continue;
+
+				glm::vec2 guardPos = g->getPosition();
+				bool collisionX = bulletPos.x + bulletSize.x >= guardPos.x &&
+					guardPos.x + enemySize.x >= bulletPos.x;
+				bool collisionY = bulletPos.y + bulletSize.y >= guardPos.y &&
+					guardPos.y + enemySize.y >= bulletPos.y;
+
+				if (collisionX && collisionY)
+				{
+					g->takeDamage(player->getWeaponDamage());
+					b->setAlive(false);
+					bulletHit = true;
+					break; // Salir del loop de guards, ya impactó
+				}
+			}
+		}
+	}
+
+	// === ACTUALIZAR GUARDIAS Y SUS BALAS ===
 	for (Guard* guard : guards)
 	{
 		guard->AIControl(*map, *player, deltaTime);
 		guard->update(deltaTime);
 
-		// --- Comprobar colisiones de balas del guardia con el jugador ---
-		const std::list<Bullet*>& bullets = guard->getBullets();
+		const std::list<Bullet*>& guardBullets = guard->getBullets();
 
-
-
-		for (Bullet* b : bullets)
+		for (Bullet* b : guardBullets)
 		{
 			if (b->isAlive()) {
 				glm::vec2 bulletPos = b->getPosition();
@@ -365,7 +431,7 @@ void Level::update(int deltaTime, Player* player)
 				bool collisionY = bulletPos.y + bulletSize.y >= player->getPosition().y &&
 					player->getPosition().y + playerSize.y >= bulletPos.y;
 
-				if (collisionX && collisionY) // radio de colisión
+				if (collisionX && collisionY)
 				{
 					player->takeDamage(20);
 					b->setAlive(false);
@@ -384,7 +450,7 @@ void Level::addGuard(const glm::vec2& position, ShaderProgram& program)
 	guards.push_back(guard);
 }
 
-void Level::resetGuards()
+void Level::resetEnemies()
 {
 	for (Guard* guard : guards)
 	{
@@ -440,10 +506,47 @@ void Level::addTwin(const glm::vec2& position, ShaderProgram& program)
 	twin->setPosition(position);
 }
 
-void Level::resetTwin()
+void Level::reset()
 {
-	twin->clearBullets();
-	twin->reset();
-	delete twin;
-	twin = nullptr;
+	std::cout << "[Level " << id << "] Reseteando nivel..." << std::endl;
+
+	// 1. Resetear guardias
+	for (Guard* guard : guards) {
+		guard->clearBullets();
+		guard->reset();
+	}
+
+	// 2. Resetear rollers
+	for (Roller* r : rollers) {
+		r->reset(); // Necesitas añadir Roller::reset()
+	}
+
+	// 3. Resetear Twin
+	if (twin) {
+		twin->clearBullets();
+		twin->reset();
+	}
+
+	// 4. Resetear Arnold Boss
+	if (arnoldBoss) {
+		arnoldBoss->reset();
+	}
+
+	// 5. Regenerar objetos (meal, weapon, access card)
+	// NO usar program aquí, debe pasarse desde Scene
+	// regenerateWeapon(program);
+	// regenerateAccessCard(program);
+	// regenerateMeal(program);
+
+	// 6. Resetear puertas
+	if (id == 4 || id == 6 || id == 11) {
+		doorOpened = false;
+		map->setDoorOpen(false);
+	}
+	else {
+		doorOpened = true;
+		map->setDoorOpen(true);
+	}
+
+	std::cout << "[Level " << id << "] Nivel reseteado" << std::endl;
 }

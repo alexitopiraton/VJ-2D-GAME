@@ -28,6 +28,8 @@ public:
     void clearBullets();
     void reset();
 
+    glm::vec2 getPosition() { return posTwin; }
+
 private:
     glm::ivec2 tileMapDispl;
     glm::vec2 posTwin;

@@ -15,8 +15,8 @@ void Game::init()
 	
 	scene.getPlayer()->setGui(&gui);
 	gui.setMaxHealth(100);
-	gui.updateHealth(75);
-	scene.getPlayer()->setHealth(75);
+	gui.updateHealth(100);
+	scene.getPlayer()->setHealth(100);
 }
 
 bool Game::update(int deltaTime)
@@ -90,11 +90,27 @@ void Game::keyPressed(int key)
 	keys[key] = true;
 }
 
-void Game::returnToMenuFromGame()
+void Game::resetGame()
 {
-	init(); // Reiniciar el juego
-	//currentState = MENU;
-	//menu.resetStartPressed();  // para evitar reinicios automáticos
+	std::cout << "[Game] Reseteando juego completo..." << std::endl;
+
+	gui.reset();
+	scene.reset();
+
+	scene.getPlayer()->setGui(&gui);
+	gui.updateHealth(100);
+	gui.updateHealth(100);
+	scene.getPlayer()->setHealth(100);
+
+	std::cout << "[Game] Juego reseteado correctamente" << std::endl;
+}
+
+void Game::returnToMenuFromGame()
+{	
+
+	resetGame();
+	currentState = MENU;
+	menu.resetStartPressed();
 }
 
 void Game::keyReleased(int key)
