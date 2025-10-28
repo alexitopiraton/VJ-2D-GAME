@@ -38,6 +38,9 @@ public:
 	Weapon* getWeapon() { return weapon; }
 	AccessCard* getAccessCard() { return accessCard; }
 	Meal* getMeal() { return meal; }
+	std::vector<Guard*>& getGuards() { return guards; }
+	Twin* getTwin() { return twin; }
+	ArnoldBoss* getArnoldBoss() { return arnoldBoss; }
 
 	bool isDoorOpen() { return map->isDoorOpen(); }
 
@@ -65,9 +68,9 @@ public:
 	void addArnoldBoss(const glm::vec2& pos, ShaderProgram& shaderProgram);
 
 	void addTwin(const glm::vec2& position, ShaderProgram& program);
-	void resetTwin();
 
 	void reset();
+	bool arnoldIsDead();
 
 private:
 	int id;

@@ -16,6 +16,7 @@
     <ClInclude Include="ArnoldBoss.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Characters.h" />
+    <ClInclude Include="Credits.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Guard.h" />
@@ -25,7 +26,6 @@
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Twin.h" />
     <ClInclude Include="Weapon.h" />
-    <ClInclude Include="ImageRenderer.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="Meal.h" />
     <ClInclude Include="Menu.h" />
@@ -43,6 +43,7 @@
     <ClCompile Include="ArnoldBoss.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Characters.cpp" />
+    <ClCompile Include="Credits.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Guard.cpp" />
     <ClCompile Include="Gui.cpp" />
@@ -51,7 +52,6 @@
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Twin.cpp" />
     <ClCompile Include="Weapon.cpp" />
-    <ClCompile Include="ImageRenderer.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Meal.cpp" />

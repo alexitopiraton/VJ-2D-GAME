@@ -19,18 +19,17 @@ bool SoundManager::init()
 
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
     {
-        std::cout << "Error SDL_Init: " << SDL_GetError() << std::endl;
+        std::cout << "error SDL_Init: " << SDL_GetError() << std::endl;
         return false;
     }
 
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
-        std::cout << "Error Mix_OpenAudio: " << Mix_GetError() << std::endl;
+        std::cout << "error Mix_OpenAudio: " << Mix_GetError() << std::endl;
         return false;
     }
 
     initialized = true;
-    std::cout << "SoundManager inicializado correctamente" << std::endl;
     return true;
 }
 
@@ -57,11 +56,10 @@ bool SoundManager::loadMusic(const std::string& filename)
     currentMusic = Mix_LoadMUS(filename.c_str());
     if (currentMusic == nullptr)
     {
-        std::cout << "Error cargando música: " << Mix_GetError() << std::endl;
+        std::cout << "uploading music error: " << Mix_GetError() << std::endl;
         return false;
     }
 
-    std::cout << "Música cargada: " << filename << std::endl;
     return true;
 }
 
@@ -71,7 +69,7 @@ void SoundManager::playMusic(int loops)
     {
         if (Mix_PlayMusic(currentMusic, loops) == -1)
         {
-            std::cout << "Error reproduciendo música: " << Mix_GetError() << std::endl;
+            std::cout << "reproducing music error: " << Mix_GetError() << std::endl;
         }
     }
 }
@@ -101,7 +99,7 @@ Mix_Chunk* SoundManager::loadSound(const std::string& filename)
     Mix_Chunk* sound = Mix_LoadWAV(filename.c_str());
     if (sound == nullptr)
     {
-        std::cout << "Error cargando sonido: " << Mix_GetError() << std::endl;
+        std::cout << "uploading sound error: " << Mix_GetError() << std::endl;
     }
     return sound;
 }

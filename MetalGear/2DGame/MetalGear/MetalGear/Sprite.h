@@ -32,6 +32,9 @@ public:
 	void addKeyframe(int animId, const glm::vec2 &frame);
 	void changeAnimation(int animId);
 	int animation() const;
+
+	int getCurrentKeyframe() const { return currentKeyframe; }
+	void changeAnimationWithKeyframe(int animId, int keyframe);
 	
 	void setPosition(const glm::vec2 &pos);
 	ShaderProgram* getShaderProgram() { return shaderProgram; }

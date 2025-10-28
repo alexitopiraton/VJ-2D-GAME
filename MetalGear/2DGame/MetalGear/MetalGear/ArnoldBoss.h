@@ -20,6 +20,7 @@ public:
     glm::ivec2 findClosestWalkableTile(TileMap& tilemap, const glm::ivec2& tile);
 
     glm::vec2 getPosition() { return posBoss; }
+    bool getIsDead() const { return isDead; }
     void reset();
 
 private:

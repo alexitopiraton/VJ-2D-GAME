@@ -16,5 +16,5 @@ void Weapon::init(ShaderProgram& program)
 	sprite->addKeyframe(0, glm::vec2(0.f, 0.f));
 	sprite->changeAnimation(0);
 
-	dmg = 10;
+	dmg = 20;
 }

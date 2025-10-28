@@ -31,24 +31,22 @@ void Twin::init(ShaderProgram& shaderProgram)
     sprite->changeAnimation(STAND_RIGHT);
     sprite->setPosition(glm::vec2(float(posTwin.x), float(posTwin.y)));
 
-    // Movimiento vertical MÁS RÁPIDO
     movingDown = true;
     verticalSpeed = 120.0f;
 
-    // Alternar animaciones cada 300ms
     animationTimer = 0;
     animationSwitchTime = 300;
 
-    // ? Disparo más lento para mejor rendimiento (de 200ms a 400ms)
-    fireCooldown = 200; // 2.5 disparos por segundo en vez de 5
+    fireCooldown = 200; 
 
-    // Inicializar semilla aleatoria
+    sound = SoundManager::instance().loadSound("sounds/bullet_sound.wav");
+
     srand(static_cast<unsigned int>(time(nullptr)));
 }
 
 void Twin::shootAtPlayer(Player& player)
 {
-    if (player.isDead()) return;
+    if (player.getIsDead()) return;
     if (timeSinceLastShot < fireCooldown)
         return;
 
@@ -56,19 +54,13 @@ void Twin::shootAtPlayer(Player& player)
     {
         timeSinceLastShot = 0;
 
-        // Disparar hacia el jugador (con objetivo)
         glm::vec2 playerPos = player.getPosition();
         glm::vec2 direction = glm::normalize(playerPos - posTwin);
 
-        // Crear la bala
         Bullet* bullet = new Bullet(posTwin + glm::vec2(16, 16), direction, shaderProgram, BulletType::TWIN);
         bullet->setAlive(true);
         bullets.push_back(bullet);
-
-        // ? NO cambiar animación al disparar, dejar que se alterne sola
-
-        std::cout << "[Twin] Disparo hacia el jugador! dirección=("
-            << direction.x << ", " << direction.y << ")" << std::endl;
+        SoundManager::instance().playSound(sound, 0);
     }
 }
 
@@ -79,7 +71,6 @@ void Twin::AIControl(TileMap& tilemap, Player& player, int deltaTime)
 
     this->targetPlayer = &player;
 
-    // ? Disparar al jugador con rango ilimitado
     shootAtPlayer(player);
 }
 
@@ -154,7 +145,6 @@ void Twin::update(int deltaTime)
                 // Si la bala está a más de 800 píxeles, eliminarla
                 if (distanceFromTwin > 800.0f)
                 {
-                    std::cout << "[Twin] Bala eliminada por distancia" << std::endl;
                     bullet->setAlive(false);
                     delete bullet;
                     it = bullets.erase(it);
@@ -173,7 +163,6 @@ void Twin::update(int deltaTime)
             Bullet* oldest = bullets.front();
             delete oldest;
             bullets.pop_front();
-            std::cout << "[Twin] Límite de balas alcanzado, eliminando la más antigua" << std::endl;
         }
     }
 }
@@ -207,11 +196,8 @@ void Twin::takeDamage(int dmg)
     health -= dmg;
     if (health < 0) health = 0;
 
-    std::cout << "[Twin] Recibió daño! Vida actual: " << health << std::endl;
-
     if (health <= 0)
     {
-        std::cout << "[Twin] Muerto!" << std::endl;
         alive = false;
     }
 }

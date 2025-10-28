@@ -63,23 +63,56 @@ void Roller::update(int deltaTime, TileMap* map, Player* player)
 {
     if (!active) return;
 
-    // Movimiento lateral
-    float delta = (movingRight ? 1.0f : -1.0f) * ROLLER_SPEED * (deltaTime / 1000.0f);
-    pos.x += delta;
-
     int tileSize = map->getTileSize();
+
+    // Calcular nueva posición
+    float delta = (movingRight ? 1.0f : -1.0f) * ROLLER_SPEED * (deltaTime / 1000.0f);
+    glm::ivec2 newPos = pos;
+    newPos.x += delta;
+
+    // --- Verificar colisión con paredes usando isWalkable ---
+
+    // Calcular los tiles que ocuparía en la nueva posición
+    glm::ivec2 frontTile;
+
+    if (movingRight)
+    {
+        // Verificar tile del borde derecho
+        frontTile = map->worldToTileCoords(glm::vec2(newPos.x + ROLLER_WIDTH, newPos.y + ROLLER_HEIGHT / 2));
+    }
+    else
+    {
+        // Verificar tile del borde izquierdo
+        frontTile = map->worldToTileCoords(glm::vec2(newPos.x, newPos.y + ROLLER_HEIGHT / 2));
+    }
+
+    // Si el tile frontal NO es caminable, rebotar
+    if (!map->isWalkable(frontTile.x, frontTile.y))
+    {
+        // Cambiar dirección
+        movingRight = !movingRight;
+        sprite->changeAnimation(movingRight ? ROLL_RIGHT : ROLL_LEFT);
+
+        // No actualizar posición (mantener la actual)
+    }
+    else
+    {
+        // Si es caminable, actualizar posición
+        pos = newPos;
+    }
+
+    // --- Verificar también los bordes del mapa como seguridad ---
     int mapWidth = map->getMapSize().x * tileSize;
 
-    // --- Rebote con bordes ---
     if (pos.x <= tileSize)
     {
-        pos.x = tileSize; // corrige posición
+        pos.x = tileSize;
         movingRight = true;
         sprite->changeAnimation(ROLL_RIGHT);
     }
     else if (pos.x + ROLLER_WIDTH >= mapWidth - tileSize)
     {
-        pos.x = mapWidth - tileSize - ROLLER_WIDTH; // corrige posición
+        pos.x = mapWidth - tileSize - ROLLER_WIDTH;
         movingRight = false;
         sprite->changeAnimation(ROLL_LEFT);
     }
@@ -99,9 +132,7 @@ void Roller::update(int deltaTime, TileMap* map, Player* player)
 
     if (collisionX && collisionY)
     {
-        std::cout << "[Roller] Jugador aplastado!" << std::endl;
-        if (!player->getGodMode())
-            player->takeDamage(100);
+        player->takeDamage(100);
         active = false;
     }
 }
@@ -115,8 +146,6 @@ void Roller::render()
 
 void Roller::reset()
 {
-    std::cout << "[Roller] Reseteando..." << std::endl;
-
     // Volver a posición inicial
     pos = initialPos;
     sprite->setPosition(glm::vec2(float(initialPos.x), float(initialPos.y)));

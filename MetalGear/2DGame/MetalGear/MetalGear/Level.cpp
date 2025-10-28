@@ -1,9 +1,9 @@
 #include "Level.h"
-#include "Guard.h"      // <-- INCLUYE AQUÍ
-#include "Player.h"     // <-- INCLUYE AQUÍ
-#include "Roller.h"     // <-- INCLUYE AQUÍ
-#include "ArnoldBoss.h" // <-- INCLUYE AQUÍ
-#include "Twin.h"       // <-- INCLUYE AQUÍ
+#include "Guard.h"      
+#include "Player.h"     
+#include "Roller.h"     
+#include "ArnoldBoss.h" 
+#include "Twin.h"       
 
 
 Level::Level()
@@ -464,7 +464,7 @@ void Level::resetEnemies()
 void Level::addRoller(const glm::vec2& pos, ShaderProgram& shaderProgram, bool moveRight)
 {
 	Roller* roller = new Roller();
-	roller->init(glm::vec2(0, 0), shaderProgram, moveRight, map->getTileSize()); // sin desplazamiento
+	roller->init(glm::vec2(0, 0), shaderProgram, moveRight, map->getTileSize());
 	roller->setPosition(pos);
 	rollers.push_back(roller);
 }
@@ -493,9 +493,6 @@ void Level::addArnoldBoss(const glm::vec2& pos, ShaderProgram& shaderProgram)
 	arnoldBoss->init(shaderProgram);
 	arnoldBoss->setShaderProgram(&shaderProgram);
 	arnoldBoss->setPosition(pos);
-
-	std::cout << "[Level] ArnoldBoss creado correctamente en posición "
-		<< pos.x << ", " << pos.y << std::endl;
 }
 
 void Level::addTwin(const glm::vec2& position, ShaderProgram& program)
@@ -508,20 +505,15 @@ void Level::addTwin(const glm::vec2& position, ShaderProgram& program)
 
 void Level::reset()
 {
-	std::cout << "[Level " << id << "] Reseteando nivel..." << std::endl;
-
-	// 1. Resetear guardias
 	for (Guard* guard : guards) {
 		guard->clearBullets();
 		guard->reset();
 	}
 
-	// 2. Resetear rollers
 	for (Roller* r : rollers) {
-		r->reset(); // Necesitas añadir Roller::reset()
+		r->reset();
 	}
 
-	// 3. Resetear Twin
 	if (twin) {
 		twin->clearBullets();
 		twin->reset();
@@ -531,12 +523,6 @@ void Level::reset()
 	if (arnoldBoss) {
 		arnoldBoss->reset();
 	}
-
-	// 5. Regenerar objetos (meal, weapon, access card)
-	// NO usar program aquí, debe pasarse desde Scene
-	// regenerateWeapon(program);
-	// regenerateAccessCard(program);
-	// regenerateMeal(program);
 
 	// 6. Resetear puertas
 	if (id == 4 || id == 6 || id == 11) {
@@ -548,5 +534,9 @@ void Level::reset()
 		map->setDoorOpen(true);
 	}
 
-	std::cout << "[Level " << id << "] Nivel reseteado" << std::endl;
+}
+
+bool Level::arnoldIsDead() {
+	if (arnoldBoss != NULL)
+		return arnoldBoss->getIsDead();
 }

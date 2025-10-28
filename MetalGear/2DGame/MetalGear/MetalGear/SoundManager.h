@@ -1,6 +1,7 @@
 #ifndef _SOUND_MANAGER_INCLUDE
 #define _SOUND_MANAGER_INCLUDE
 
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <string>

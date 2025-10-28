@@ -6,24 +6,29 @@
 #include "Pathfinder.h"
 #include "Bullet.h"
 #include "Player.h"
+#include <cstdlib>
+#include <ctime>
 
-
+#define PATROL_SPEED 50.0f      // ? ra 30.0f)
+#define IDLE_TIME_MIN 500       // ? Menos tiempo parado (era 1000)
+#define IDLE_TIME_MAX 1500      // ? Menos tiempo parado (era 3000)
+#define PATROL_TIME_MIN 800     // ? Menos tiempo caminando (era 1500)
+#define PATROL_TIME_MAX 2000    // ? Menos tiempo caminando (era 4000)
+#define SHOOT_COOLDOWN 800      // ?)
+#define DETECTION_RANGE 500.0f  
 
 enum GuardAnims
 {
-    STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT
+    STAND_LEFT, STAND_RIGHT, STAND_UP, STAND_DOWN, MOVE_LEFT, MOVE_RIGHT, MOVE_UP, MOVE_DOWN
 };
 
 void Guard::init(ShaderProgram& shaderProgram)
 {
-
     this->shaderProgram = &shaderProgram;
-    // Usa el mismo spritesheet que el jugador temporalmente para probar
     spritesheet.loadFromFile("images/enemies/guard.png", TEXTURE_PIXEL_FORMAT_RGBA);
 
-    // Usar las mismas dimensiones y animaciones que el jugador por ahora
     sprite = Sprite::createSprite(glm::ivec2(SPRITE_WIDTH + 10, SPRITE_HEIGHT + 10), glm::vec2(0.25f, 0.5f), &spritesheet, &shaderProgram);
-    sprite->setNumberAnimations(4);
+    sprite->setNumberAnimations(8);
 
     sprite->setAnimationSpeed(STAND_LEFT, 8);
     sprite->addKeyframe(STAND_LEFT, glm::vec2(0.f, 0.5f));
@@ -31,24 +36,30 @@ void Guard::init(ShaderProgram& shaderProgram)
     sprite->setAnimationSpeed(STAND_RIGHT, 8);
     sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.5f));
 
-    sprite->setAnimationSpeed(MOVE_LEFT, 5);
-    sprite->addKeyframe(MOVE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 0, 0.5f));
-    sprite->addKeyframe(MOVE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 2, 0.5f));
+    sprite->setAnimationSpeed(STAND_UP, 8);
+    sprite->addKeyframe(STAND_UP, glm::vec2(0.25f, 0.0f));
 
-    sprite->setAnimationSpeed(MOVE_RIGHT, 5);
-    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 1, 0.5f));
-    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 3, 0.5f));
+    sprite->setAnimationSpeed(STAND_DOWN, 8);
+    sprite->addKeyframe(STAND_DOWN, glm::vec2(0.0f, 0.0f));
+
+    sprite->setAnimationSpeed(MOVE_LEFT, 6);
+    sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.5f));
+    sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.5f));
+
+    sprite->setAnimationSpeed(MOVE_RIGHT, 6);
+    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.5f));
+    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.75f, 0.5f));
+
+    sprite->setAnimationSpeed(MOVE_UP, 6);
+    sprite->addKeyframe(MOVE_UP, glm::vec2(0.25f, 0.0f));
+    sprite->addKeyframe(MOVE_UP, glm::vec2(0.75f, 0.0f));
+
+    sprite->setAnimationSpeed(MOVE_DOWN, 6);
+    sprite->addKeyframe(MOVE_DOWN, glm::vec2(0.0f, 0.0f));
+    sprite->addKeyframe(MOVE_DOWN, glm::vec2(0.5f, 0.0f));
 
     sprite->changeAnimation(STAND_RIGHT);
     sprite->setPosition(glm::vec2(float(posGuard.x), float(posGuard.y)));
-
-    spritesheetZZZ.loadFromFile("images/zzz.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    spriteZZZ = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &spritesheetZZZ, &shaderProgram);
-    spriteZZZ->setNumberAnimations(1);
-    spriteZZZ->setAnimationSpeed(0, 1);
-    spriteZZZ->addKeyframe(0, glm::vec2(0.f, 0.f));
-    spriteZZZ->changeAnimation(0);
-    spriteZZZ->setPosition(posGuard + glm::vec2(64, -64)); // encima de la cabeza
 
     alertTexture.loadFromFile("images/alert.png", TEXTURE_PIXEL_FORMAT_RGBA);
     spriteAlert = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(1.0f, 1.0f), &alertTexture, &shaderProgram);
@@ -56,35 +67,195 @@ void Guard::init(ShaderProgram& shaderProgram)
     spriteAlert->setAnimationSpeed(0, 1);
     spriteAlert->addKeyframe(0, glm::vec2(0.f, 0.f));
     spriteAlert->changeAnimation(0);
-    spriteAlert->setPosition(posGuard + glm::vec2(8, -32));
+
+    state = GUARD_IDLE;
+    currentDirection = NONE;
+    facingDirection = RIGHT;
+    moveSpeed = PATROL_SPEED;
+
+    idleTimer = 0;
+    patrolTimer = 0;
+    directionChangeTimer = 500;
+
+    showAlert = false;
+    playerDetected = false;
+
+    map = nullptr;
+    targetPlayer = nullptr;
+
+    srand(static_cast<unsigned int>(time(nullptr)));
+}
 
 
-    // Inicializar variables de pathfinding
-    currentPathIndex = 0;
-    lastPlayerTile = glm::ivec2(-1, -1);
-    timeSinceLastPath = 0;
+void Guard::AIControl(TileMap& tilemap, Player& player, int deltaTime)
+{
+    this->map = &tilemap;
+    this->targetPlayer = &player;
+
+    timeSinceLastShot += deltaTime;
+
+    bool canSee = canSeePlayer(player, tilemap);
+
+    switch (state)
+    {
+    case GUARD_IDLE:
+        idleTimer += deltaTime;
+        showZZZ = true;
+
+        if (canSee)
+        {
+            state = GUARD_ALERT;
+            playerDetected = true;
+            showZZZ = false;
+            showAlert = true;
+            alertTimer = 0.0f;
+        }
+        else if (idleTimer >= directionChangeTimer)
+        {
+            state = GUARD_PATROL;
+            idleTimer = 0;
+            showZZZ = false;
+            chooseRandomDirection();
+            patrolTimer = 0;
+            directionChangeTimer = rand() % (PATROL_TIME_MAX - PATROL_TIME_MIN) + PATROL_TIME_MIN;
+        }
+        break;
+
+    case GUARD_PATROL:
+        updatePatrol(deltaTime, tilemap);
+        showZZZ = false;
+
+        if (canSee)
+        {
+            state = GUARD_ALERT;
+            currentDirection = NONE;
+            playerDetected = true;
+            showAlert = true;
+            alertTimer = 0.0f;
+        }
+        break;
+
+    case GUARD_ALERT:
+        updateAlert(deltaTime, player);
+        showZZZ = false;
+
+        if (canSee)
+        {
+            state = GUARD_SHOOTING;
+        }
+        else
+        {
+            state = GUARD_IDLE;
+            playerDetected = false;
+            showAlert = false;
+            showZZZ = true;
+            idleTimer = 0;
+            directionChangeTimer = rand() % (IDLE_TIME_MAX - IDLE_TIME_MIN) + IDLE_TIME_MIN;
+        }
+        break;
+
+    case GUARD_SHOOTING:
+        updateShooting(deltaTime, player);
+        showZZZ = false;
+
+        if (!canSee)
+        {
+            state = GUARD_IDLE;
+            playerDetected = false;
+            showAlert = false;
+            showZZZ = true;
+        }
+        break;
+    }
+}
+
+void Guard::updatePatrol(int deltaTime, TileMap& tilemap)
+{
+    patrolTimer += deltaTime;
+
+    if (currentDirection != NONE)
+    {
+        moveInDirection(deltaTime, tilemap);
+
+        int anim = sprite->animation();
+        switch (currentDirection)
+        {
+        case LEFT:
+            if (anim != MOVE_LEFT) sprite->changeAnimation(MOVE_LEFT);
+            break;
+        case RIGHT:
+            if (anim != MOVE_RIGHT) sprite->changeAnimation(MOVE_RIGHT);
+            break;
+        case UP:
+            if (anim != MOVE_UP) sprite->changeAnimation(MOVE_UP);
+            break;
+        case DOWN:
+            if (anim != MOVE_DOWN) sprite->changeAnimation(MOVE_DOWN);
+            break;
+        default:
+            break;
+        }
+    }
+
+
+    if (patrolTimer >= directionChangeTimer)
+    {
+        patrolTimer = 0;
+        chooseRandomDirection();
+        directionChangeTimer = rand() % (PATROL_TIME_MAX - PATROL_TIME_MIN) + PATROL_TIME_MIN;
+    }
+}
+
+
+void Guard::updateAlert(int deltaTime, Player& player)
+{
+    glm::vec2 playerPos = player.getPosition();
+    glm::vec2 dirToPlayer = playerPos - glm::vec2(posGuard);
+
+    facingDirection = (dirToPlayer.x > 0) ? RIGHT : LEFT;
+
+    if (facingDirection == LEFT)
+        sprite->changeAnimation(STAND_LEFT);
+    else
+        sprite->changeAnimation(STAND_RIGHT);
+
+}
+
+void Guard::updateShooting(int deltaTime, Player& player)
+{
+    glm::vec2 playerPos = player.getPosition();
+    glm::vec2 dirToPlayer = playerPos - glm::vec2(posGuard);
+
+    facingDirection = (dirToPlayer.x > 0) ? RIGHT : LEFT;
+
+    if (timeSinceLastShot >= fireCooldown)
+    {
+        shootAtPlayer(player);
+    }
+
+    if (facingDirection == LEFT)
+        sprite->changeAnimation(STAND_LEFT);
+    else
+        sprite->changeAnimation(STAND_RIGHT);
 }
 
 void Guard::shootAtPlayer(Player& player)
 {
-    if (player.isDead()) return;
-    if (timeSinceLastShot < fireCooldown)
-        return; // aún no puede disparar
+    if (player.getIsDead()) return;
+    if (timeSinceLastShot < fireCooldown) return;
 
     if (alive)
     {
-        timeSinceLastShot = 0; // reinicia cooldown
+        timeSinceLastShot = 0;
 
-        // === ACTIVAR ALERTA ===
         showAlert = true;
         alertTimer = 0.0f;
         showZZZ = false;
 
         glm::vec2 playerPos = player.getPosition();
-        glm::vec2 direction = glm::normalize(playerPos - posGuard);
+        glm::vec2 direction = glm::normalize(playerPos - glm::vec2(posGuard));
 
-        // Crear la bala
-        Bullet* bullet = new Bullet(posGuard + glm::vec2(16, 16), direction, shaderProgram, BulletType::GUARD);
+        Bullet* bullet = new Bullet(glm::vec2(posGuard) + glm::vec2(16, 16), direction, shaderProgram, BulletType::GUARD);
         bullet->setAlive(true);
         bullets.push_back(bullet);
 
@@ -92,83 +263,189 @@ void Guard::shootAtPlayer(Player& player)
             sprite->changeAnimation(STAND_LEFT);
         else
             sprite->changeAnimation(STAND_RIGHT);
-
-
-        std::cout << "[Guard] Disparo hacia el jugador! dirección=("
-            << direction.x << ", " << direction.y << ")" << std::endl;
-
-        std::cout << "[DEBUG] bullets.size() = " << bullets.size() << std::endl;
     }
 }
 
-
-void Guard::AIControl(TileMap& tilemap, Player& player, int deltaTime)
+bool Guard::canSeePlayer(Player& player, TileMap& tilemap)
 {
-    timeSinceLastShot += deltaTime;
-   // cout << "[Guard] AIControl called. timeSinceLastShot=" << timeSinceLastShot << endl;
+    if (player.getIsDead()) return false;
 
-    this->map = &tilemap;
+    glm::vec2 playerPos = player.getPosition();
+    glm::vec2 guardPos = glm::vec2(posGuard);
 
-    glm::vec2 guardPos = posGuard + glm::vec2(16, 16);
-    glm::vec2 playerPos = glm::vec2(player.getPosition()) + glm::vec2(16, 16);
+    float distance = glm::length(playerPos - guardPos);
 
-    float dist = glm::distance(guardPos, playerPos);
-    float attackRadiusPixels = 150.0f; // por ejemplo, 150 px
-   // cout << "[Guard] Distancia al jugador: " << dist << " tiles." << endl;
-
-    // Si el jugador está dentro del radio de ataque
-    if (dist <= attackRadiusPixels)
+    if (distance > detectionRange)
     {
-        //cout << "[Guard] Jugador en rango de ataque (" << attackRadiusPixels << " tiles). Disparando!" << endl;
-        shootAtPlayer(player);
-        showZZZ = false;
+        return false;
+    }
+
+    bool canSee = isPlayerInLineOfSight(playerPos, tilemap);
+
+    return canSee;
+}
+
+bool Guard::isPlayerInLineOfSight(const glm::vec2& playerPos, TileMap& tilemap)
+{
+    glm::vec2 guardPos = glm::vec2(posGuard) + glm::vec2(SPRITE_WIDTH / 2, SPRITE_HEIGHT / 2);
+    glm::vec2 playerCenter = playerPos + glm::vec2(16, 26);
+    glm::vec2 diff = playerCenter - guardPos;
+
+    int tileSize = tilemap.getTileSize();
+    float tolerance = tileSize * 2.0f;
+
+    bool sameRow = abs(diff.y) < tolerance;
+    bool sameCol = abs(diff.x) < tolerance;
+
+    if (!sameRow && !sameCol)
+    {
+        return false;
+    }
+
+    glm::vec2 direction = glm::normalize(diff);
+    float distance = glm::length(diff);
+
+    for (float d = tileSize; d < distance; d += tileSize / 2.0f)
+    {
+        glm::vec2 checkPos = guardPos + direction * d;
+        glm::ivec2 tile = tilemap.worldToTileCoords(checkPos);
+
+        if (!tilemap.isWalkable(tile.x, tile.y))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void Guard::moveInDirection(int deltaTime, TileMap& tilemap)
+{
+    if (currentDirection == NONE)
+    {
+        return;
+    }
+
+    glm::vec2 newPos = posGuard;
+    float delta = moveSpeed * (deltaTime / 1000.0f);
+
+    switch (currentDirection)
+    {
+    case LEFT:
+        newPos.x -= delta;
+        break;
+    case RIGHT:
+        newPos.x += delta;
+        break;
+    case UP:
+        newPos.y -= delta;
+        break;
+    case DOWN:
+        newPos.y += delta;
+        break;
+    }
+
+    if (canMove(newPos, tilemap))
+    {
+        posGuard = newPos;
+        sprite->setPosition(posGuard);
+        facingDirection = currentDirection;
+
+        static int debugCounter = 0;
+        debugCounter += deltaTime;
+        if (debugCounter > 500) {
+            debugCounter = 0;
+        }
     }
     else
     {
-        showZZZ = true;
+
+        switch (currentDirection)
+        {
+        case LEFT:  currentDirection = RIGHT; break;
+        case RIGHT: currentDirection = LEFT; break;
+        case UP:    currentDirection = DOWN; break;
+        case DOWN:  currentDirection = UP; break;
+        default:    break;
+        }
+
+        facingDirection = currentDirection;
+
+        switch (currentDirection)
+        {
+        case LEFT:  sprite->changeAnimation(MOVE_LEFT);  break;
+        case RIGHT: sprite->changeAnimation(MOVE_RIGHT); break;
+        case UP:    sprite->changeAnimation(MOVE_UP);    break;
+        case DOWN:  sprite->changeAnimation(MOVE_DOWN);  break;
+        }
     }
+
+}
+
+bool Guard::canMove(const glm::vec2& newPos, TileMap& tilemap)
+{
+    int tileSize = tilemap.getTileSize();
+
+    glm::vec2 topLeft = newPos + glm::vec2(2, 2);
+    glm::vec2 topRight = newPos + glm::vec2(SPRITE_WIDTH - 2, 2);
+    glm::vec2 bottomLeft = newPos + glm::vec2(2, SPRITE_HEIGHT - 2);
+    glm::vec2 bottomRight = newPos + glm::vec2(SPRITE_WIDTH - 2, SPRITE_HEIGHT - 2);
+
+    auto check = [&](glm::vec2 p) {
+        glm::ivec2 tile = tilemap.worldToTileCoords(p);
+        return tilemap.isWalkable(tile.x, tile.y);
+        };
+
+    return check(topLeft) && check(topRight) && check(bottomLeft) && check(bottomRight);
+}
+
+
+void Guard::chooseRandomDirection()
+{
+    int choice = rand() % 4;
+    switch (choice)
+    {
+    case 0: currentDirection = LEFT; break;
+    case 1: currentDirection = RIGHT; break;
+    case 2: currentDirection = UP; break;
+    case 3: currentDirection = DOWN; break;
+    }
+
+    switch (currentDirection)
+    {
+    case LEFT:  sprite->changeAnimation(MOVE_LEFT);  break;
+    case RIGHT: sprite->changeAnimation(MOVE_RIGHT); break;
+    case UP:    sprite->changeAnimation(MOVE_UP);    break;
+    case DOWN:  sprite->changeAnimation(MOVE_DOWN);  break;
+    }
+
+    facingDirection = currentDirection;
 }
 
 
 bool Guard::moveTowardsTile(const glm::ivec2& nextTile, TileMap& tilemap, int deltaTime)
 {
     const float speedPixelsPerSecond = 60.0f;
-    const float threshold = 2.0f; // Píxeles de tolerancia para considerar que llegó
+    const float threshold = 2.0f;
 
-    // Calcular posición objetivo en píxeles (centro del tile)
     glm::vec2 targetWorld = tilemap.tileToWorldCoords(nextTile);
-
-    // Centrar el sprite en el tile
     float offsetX = (tilemap.getTileSize() - 32) * 0.5f;
-    float offsetY = (tilemap.getTileSize() - 62) * 0.5f; // Altura del sprite ajustada
+    float offsetY = (tilemap.getTileSize() - 62) * 0.5f;
     targetWorld += glm::vec2(offsetX, offsetY);
 
-    std::cout << "[moveTowardsTile] posGuard=(" << posGuard.x << "," << posGuard.y
-        << ") target=(" << targetWorld.x << "," << targetWorld.y << ")" << std::endl;
-
-    // Calcular dirección y distancia
     glm::vec2 dir = targetWorld - glm::vec2(posGuard);
     float dist = sqrt(dir.x * dir.x + dir.y * dir.y);
 
-    std::cout << "[moveTowardsTile] distancia=" << dist << " threshold=" << threshold << std::endl;
-
-    // Si ya llegó al tile
     if (dist < threshold)
     {
-        std::cout << "[moveTowardsTile] LLEGÓ AL TILE!" << std::endl;
         posGuard = glm::ivec2(targetWorld);
         sprite->setPosition(glm::vec2(posGuard));
         return true;
     }
 
-    // Calcular movimiento
     float step = speedPixelsPerSecond * (deltaTime / 1000.0f);
     glm::vec2 movement = (dist <= step) ? dir : (dir / dist) * step;
 
-    std::cout << "[moveTowardsTile] step=" << step << " movement=("
-        << movement.x << "," << movement.y << ")" << std::endl;
-
-    // Actualizar animación según la dirección
     if (abs(movement.x) > abs(movement.y))
     {
         if (movement.x > 0)
@@ -177,11 +454,8 @@ bool Guard::moveTowardsTile(const glm::ivec2& nextTile, TileMap& tilemap, int de
             sprite->changeAnimation(MOVE_LEFT);
     }
 
-    // Mover el guardia
     posGuard += glm::ivec2(movement);
     sprite->setPosition(glm::vec2(posGuard));
-
-    std::cout << "[moveTowardsTile] nueva pos=(" << posGuard.x << "," << posGuard.y << ")" << std::endl;
 
     return false;
 }
@@ -194,27 +468,17 @@ void Guard::update(int deltaTime)
 
         static float t = 0.f;
         t += deltaTime / 1000.f;
-        if (spriteZZZ && showZZZ) {
-            float offsetY = sin(t * 2.f) * 2.f;
-            spriteZZZ->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 16 + offsetY));
-        }
 
-        // === ALERTA ===
         if (spriteAlert && showAlert)
         {
             alertTimer += deltaTime;
-
-            // Pequeño rebote visual
             float bounce = sin(t * 10.f) * 3.f;
             spriteAlert->setPosition(glm::vec2(posGuard.x + 8, posGuard.y - 32 + bounce));
 
-            // Si pasa 1 segundo, desaparece el icono
             if (alertTimer >= ALERT_DURATION)
                 showAlert = false;
         }
 
-
-        // Actualizar balas
         for (auto it = bullets.begin(); it != bullets.end(); )
         {
             (*it)->update(deltaTime, map);
@@ -227,14 +491,11 @@ void Guard::update(int deltaTime)
     }
 }
 
+
 void Guard::render()
 {
-    if (alive)
-    {
+    if (alive) {
         sprite->render();
-
-        if (showZZZ && spriteZZZ)
-            spriteZZZ->render();
 
         if (showAlert && spriteAlert)
             spriteAlert->render();
@@ -244,10 +505,11 @@ void Guard::render()
     }
 }
 
+
 void Guard::setPosition(const glm::vec2& pos)
 {
-    posGuard = glm::ivec2(pos);
-    sprite->setPosition(glm::vec2(float(posGuard.x), float(posGuard.y)));
+    posGuard = pos; 
+    sprite->setPosition(pos);
 }
 
 void Guard::setShaderProgram(ShaderProgram* program) {
@@ -259,20 +521,16 @@ void Guard::takeDamage(int dmg)
     health -= dmg;
     if (health < 0) health = 0;
 
-    std::cout << "[Guard] Recibió daño! Vida actual: " << health << std::endl;
-
     if (health <= 0)
     {
         alive = false;
-        std::cout << "[Guard] Muerto!" << std::endl;
-        // Aquí podrías eliminar el sprite, desactivar el guardia, etc.
     }
 }
 
 void Guard::clearBullets()
 {
     for (Bullet* b : bullets)
-        delete b; // liberar memoria si las balas se crean con new
+        delete b;
     bullets.clear();
 }
 
@@ -285,6 +543,15 @@ void Guard::reset()
     currentPathIndex = 0;
     lastPlayerTile = glm::ivec2(-1, -1);
     timeSinceLastPath = 0;
-    timeSinceLastShot = fireCooldown; // puede disparar inmediatamente
+    timeSinceLastShot = fireCooldown;
     sprite->changeAnimation(STAND_RIGHT);
+
+    state = GUARD_IDLE;
+    currentDirection = NONE;
+    facingDirection = RIGHT;
+    showZZZ = true;
+    showAlert = false;
+    idleTimer = 0;
+    patrolTimer = 0;
+    directionChangeTimer = rand() % (IDLE_TIME_MAX - IDLE_TIME_MIN) + IDLE_TIME_MIN;
 }

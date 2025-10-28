@@ -1,0 +1,61 @@
+﻿  ArnoldBoss.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ArnoldBoss.cpp(100,65): warning C4018: '>=': no coinciden signed/unsigned
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\ArnoldBoss.cpp(128,50): warning C4018: '<': no coinciden signed/unsigned
+  Game.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(83,40): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(83,20): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(90,42): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(90,30): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(93,21): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(98,41): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(98,21): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(112,39): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Game.cpp(112,19): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+  Guard.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Guard.cpp(308,18): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+  Gui.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Gui.cpp(105,16): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Gui.cpp(123,23): warning C4018: '<': no coinciden signed/unsigned
+  Menu.cpp
+  Player.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Player.cpp(317,40): warning C4018: '<': no coinciden signed/unsigned
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Player.cpp(834,27): warning C4018: '>=': no coinciden signed/unsigned
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Player.cpp(1092,20): warning C4018: '<': no coinciden signed/unsigned
+  Scene.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(59,40): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(59,28): warning C4244: 'argumento': conversión de 'double' a 'GLsizei'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Scene.cpp(562,20): warning C4018: '<': no coinciden signed/unsigned
+  TileMap.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(154,9): warning C4101: 'y0': variable local sin referencia
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(174,9): warning C4101: 'y0': variable local sin referencia
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(309,8): warning C4244: 'inicializando': conversión de 'const T' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(309,8): warning C4244:         with
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(309,8): warning C4244:         [
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(309,8): warning C4244:             T=float
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(309,8): warning C4244:         ]
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(310,8): warning C4244: 'inicializando': conversión de 'const T' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(310,8): warning C4244:         with
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(310,8): warning C4244:         [
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(310,8): warning C4244:             T=float
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(310,8): warning C4244:         ]
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(318,12): warning C4244: 'inicializando': conversión de 'T' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(318,12): warning C4244:         with
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(318,12): warning C4244:         [
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(318,12): warning C4244:             T=float
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(318,12): warning C4244:         ]
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(319,12): warning C4244: 'inicializando': conversión de 'T' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(319,12): warning C4244:         with
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(319,12): warning C4244:         [
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(319,12): warning C4244:             T=float
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(319,12): warning C4244:         ]
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(374,15): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\TileMap.cpp(375,15): warning C4244: 'inicializando': conversión de 'int' a 'float'; posible pérdida de datos
+  Twin.cpp
+  main.cpp
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\main.cpp(42,48): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\main.cpp(42,28): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\main.cpp(52,11): warning C4244: 'inicializando': conversión de 'double' a 'int'; posible pérdida de datos
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\main.cpp(53,11): warning C4244: 'inicializando': conversión de 'double' a 'int'; posible pérdida de datos
+  Generando código...
+C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\MetalGear\Player.cpp(358,1): warning C4715: 'Player::directionConversor': no todas las rutas de acceso de control devuelven un valor
+  MetalGear.vcxproj -> C:\FIB\VJ\VJ-2D-GAME\MetalGear\2DGame\MetalGear\Debug\MetalGear.exe

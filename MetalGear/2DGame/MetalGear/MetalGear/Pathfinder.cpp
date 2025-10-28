@@ -41,11 +41,6 @@ bool Pathfinder::findPath(const glm::ivec2& start, const glm::ivec2& goal, std::
             path.push_back(start);
             std::reverse(path.begin(), path.end());
 
-            std::cout << "Camino encontrado (" << path.size() << " pasos):\n";
-            for (auto& p : path) {
-                std::cout << "(" << p.x << ", " << p.y << ")\n";
-            }
-
             return true;
         }
 
@@ -60,7 +55,5 @@ bool Pathfinder::findPath(const glm::ivec2& start, const glm::ivec2& goal, std::
             q.push({ nx, ny });
         }
     }
-    std::cout << "No se encontró un camino entre (" << start.x << ", " << start.y
-        << ") y (" << goal.x << ", " << goal.y << ").\n";
     return false; // no hay camino
 }

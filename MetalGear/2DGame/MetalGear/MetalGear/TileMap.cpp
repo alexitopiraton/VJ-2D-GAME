@@ -329,7 +329,6 @@ void TileMap::changeTile(const glm::vec2& tileCoords, const int& tile)
 
 void TileMap::printMap()
 {
-	cout << "=== TILEMAP DEBUG ===" << endl;
 	cout << "Map Size: " << mapSize.x << "x" << mapSize.y << endl;
 	cout << "Tile Size: " << tileSize << endl;
 	cout << endl;
@@ -343,7 +342,6 @@ void TileMap::printMap()
 		}
 		cout << endl;
 	}
-	cout << "====================" << endl;
 }
 
 void TileMap::setDoorOpen(const bool& open)
@@ -388,13 +386,10 @@ int TileMap::getHeight() const {
 
 bool TileMap::isWalkable(int x, int y) const
 {
-	// Verifica que esté dentro de los límites del mapa
 	if (x < 0 || y < 0 || x >= mapSize.x || y >= mapSize.y)
 		return false;
 
 	int tile = map[y * mapSize.x + x];
 
-	// 0 = vacío, 2 = puerta ? caminables
-	// 1 = pared ? bloqueado
 	return (tile == 0 || tile == 2);
 }

@@ -26,33 +26,9 @@ void Menu::init(ShaderProgram& shaderProgram)
 {
     this->shaderProgram = &shaderProgram;
 
-    std::cout << "Inicializando menú..." << std::endl;
-
-    // ? Verificar que el shader está correctamente linkeado
-    if (!shaderProgram.isLinked()) {
-        std::cout << "ERROR: ShaderProgram no está linkeado correctamente" << std::endl;
-        return;
-    }
-
-    // ====== CARGAR IMAGEN DEL MENÚ ======
-    std::cout << "Cargando menu.png..." << std::endl;
-    if (!menuTexture.loadFromFile("images/Menus/menu.png", TEXTURE_PIXEL_FORMAT_RGBA)) {
-        std::cout << "ERROR: No se pudo cargar images/menu.png" << std::endl;
-        return;
-    }
-    std::cout << "Menu.png cargado: " << menuTexture.width() << "x" << menuTexture.height() << std::endl;
-
-    menuSprite = Sprite::createSprite(
-        glm::ivec2(SCREEN_WIDTH, SCREEN_HEIGHT),
-        glm::vec2(1.0f, 1.0f),
-        &menuTexture,
-        this->shaderProgram
-    );
-
-    if (!menuSprite) {
-        std::cout << "ERROR: No se pudo crear menuSprite" << std::endl;
-        return;
-    }
+    menuTexture.loadFromFile("images/Menus/menu.png", TEXTURE_PIXEL_FORMAT_RGBA);
+   
+    menuSprite = Sprite::createSprite(glm::ivec2(SCREEN_WIDTH, SCREEN_HEIGHT), glm::vec2(1.0f, 1.0f), &menuTexture, this->shaderProgram);
 
     menuSprite->setNumberAnimations(1);
     menuSprite->setAnimationSpeed(0, 1);
@@ -60,17 +36,11 @@ void Menu::init(ShaderProgram& shaderProgram)
     menuSprite->changeAnimation(0);
     menuSprite->setPosition(glm::vec2(0.f, 0.f));
 
-    std::cout << "Menu sprite creado correctamente" << std::endl;
 
-    // ====== CARGAR SPRITE DEL CURSOR (PISTOLA) ======
-    std::cout << "Cargando cursor.png..." << std::endl;
     if (!cursorTexture.loadFromFile("images/menuGun.png", TEXTURE_PIXEL_FORMAT_RGBA)) {
-        std::cout << "ADVERTENCIA: No se pudo cargar images/cursor.png" << std::endl;
-        std::cout << "El menú funcionará sin cursor" << std::endl;
         cursorSprite = nullptr; // Continuar sin cursor
     }
     else {
-        std::cout << "Cursor.png cargado: " << cursorTexture.width() << "x" << cursorTexture.height() << std::endl;
 
         // Tamaño del cursor escalado
         int cursorSize = 32; // Aumentado para que se vea mejor
@@ -92,7 +62,6 @@ void Menu::init(ShaderProgram& shaderProgram)
             continuePosition = glm::vec2(210.f, 300.f); // Ajusta estas posiciones
 
             updateCursorPosition();
-            std::cout << "Cursor inicializado correctamente" << std::endl;
         }
     }
 
@@ -104,7 +73,6 @@ void Menu::init(ShaderProgram& shaderProgram)
     blinkInterval = 500.f;
     cursorVisible = true;
 
-    std::cout << "Menu inicializado completamente" << std::endl;
 }
 
 void Menu::update(int deltaTime)

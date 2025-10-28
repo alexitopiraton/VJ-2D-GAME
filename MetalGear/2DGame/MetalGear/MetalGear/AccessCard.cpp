@@ -4,7 +4,6 @@ AccessCard::AccessCard(int id, int level)
 {
 	accessLevelId = level;
 	num = id;
-	cout << "ACCESS CARD NUM -> " << id << endl;
 }
 
 void AccessCard::init(ShaderProgram& program)

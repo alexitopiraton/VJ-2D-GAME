@@ -5,7 +5,9 @@ enum GameState
 {
     MENU,
     PLAYING,
-    PAUSED
+    PAUSED,
+    GAME_OVER,
+    CREDITS
 };
 
 #endif // _GAME_STATE_INCLUDE

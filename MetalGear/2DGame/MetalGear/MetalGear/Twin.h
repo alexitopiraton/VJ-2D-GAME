@@ -3,6 +3,7 @@
 #include "Sprite.h"
 #include "TileMap.h"
 #include "Bullet.h"
+#include "SoundManager.h"
 #include <list>
 
 #define SPRITESHEET_OFFSET 0.16666666666666666666666666666667
@@ -29,6 +30,7 @@ public:
     void reset();
 
     glm::vec2 getPosition() { return posTwin; }
+    bool isAlive() const { return alive; }
 
 private:
     glm::ivec2 tileMapDispl;
@@ -55,6 +57,8 @@ private:
     bool alive = true;
 
     Player* targetPlayer = nullptr;
+    
+    Mix_Chunk* sound;
 };
 
 #endif // _TWIN_INCLUDE

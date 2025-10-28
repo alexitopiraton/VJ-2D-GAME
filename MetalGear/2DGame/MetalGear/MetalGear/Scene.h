@@ -44,7 +44,6 @@ public:
 	void renderGameOver();
 	void initGameOver();
 	void resetBullets();
-	void resetAll();
 	void reset();
 
 private:
@@ -69,6 +68,7 @@ private:
 	bool doorOpen;
 
 	float deathTimer = 0.f;
+	bool endGame;
 	Sprite* gameOverSprite = nullptr;
 	Texture gameOverTexture;
 };

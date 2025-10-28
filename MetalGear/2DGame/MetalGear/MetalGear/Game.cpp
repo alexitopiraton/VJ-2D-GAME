@@ -5,18 +5,28 @@
 void Game::init()
 {
 	bPlay = true;
-	currentState = MENU; // Empezar en el menú
+	currentState = MENU;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 
-	// Inicializar el menú y la escena del juego
+	SoundManager::instance().init();
+
 	scene.init();
-	menu.init(scene.getTexProgram()); // Necesitaremos modificar Scene para obtener el shader program
+	menu.init(scene.getTexProgram());
 	gui.init(scene.getTexProgram());
+	credits.init(scene.getTexProgram());
 	
 	scene.getPlayer()->setGui(&gui);
 	gui.setMaxHealth(100);
 	gui.updateHealth(100);
 	scene.getPlayer()->setHealth(100);
+
+	arnoldDead = false;
+
+	if (SoundManager::instance().loadMusic("sounds/menu_music.mp3"))
+	{
+		SoundManager::instance().setMusicVolume(64);
+		SoundManager::instance().playMusic(-1);
+	}
 }
 
 bool Game::update(int deltaTime)
@@ -29,19 +39,39 @@ bool Game::update(int deltaTime)
 		{
 			currentState = PLAYING;
 			menu.resetStartPressed();
+
+			SoundManager::instance().stopMusic();
+			if (SoundManager::instance().loadMusic("sounds/game_jungle_music.mp3"))
+			{
+				SoundManager::instance().playMusic(-1);
+			}
+
 		}
 		break;
 
 	case PLAYING:
 		scene.update(deltaTime);
 		gui.update(deltaTime);
-		// Puedes agregar lógica para volver al menú si se presiona ESC
 		break;
 
-	}
+	case CREDITS:
+		credits.update(deltaTime);
 
+		if (credits.isFinished())
+		{
+			returnToMenuFromGame();
+			currentState = MENU;
+			SoundManager::instance().stopMusic();
+			if (SoundManager::instance().loadMusic("sounds/menu_music.mp3"))
+			{
+				SoundManager::instance().playMusic(-1);
+			}	
+		}
+		break;
+	}
 	return bPlay;
 }
+
 
 void Game::render()
 {
@@ -68,23 +98,40 @@ void Game::render()
 			glViewport(0, 0, SCREEN_FINAL_WIDTH, SCREEN_FINAL_HEIGHT);
 			scene.render();
 		}
+		break;
 
+	case CREDITS:
+		credits.render();
 		break;
 
 	}
 }
 
+void Game::winGame()
+{
+	glViewport(0, 0, SCREEN_FINAL_WIDTH, SCREEN_FINAL_HEIGHT);
+	currentState = CREDITS;
+	credits.reset();
+
+}
+
 void Game::keyPressed(int key)
 {
-	if (key == GLFW_KEY_ESCAPE) // Escape code
+	if (key == GLFW_KEY_ESCAPE)
 	{
 		if (currentState == PLAYING)
 		{
-			currentState = MENU; // Volver al menú desde el juego
+			currentState = MENU; 
+			
+			SoundManager::instance().stopMusic();
+			if (SoundManager::instance().loadMusic("sounds/menu_music.mp3"))
+			{
+				SoundManager::instance().playMusic(-1);
+			}
 		}
 		else
 		{
-			bPlay = false; // Salir del juego desde el menú
+			bPlay = false;
 		}
 	}
 	keys[key] = true;
@@ -92,8 +139,6 @@ void Game::keyPressed(int key)
 
 void Game::resetGame()
 {
-	std::cout << "[Game] Reseteando juego completo..." << std::endl;
-
 	gui.reset();
 	scene.reset();
 
@@ -101,15 +146,17 @@ void Game::resetGame()
 	gui.updateHealth(100);
 	gui.updateHealth(100);
 	scene.getPlayer()->setHealth(100);
-
-	std::cout << "[Game] Juego reseteado correctamente" << std::endl;
 }
 
 void Game::returnToMenuFromGame()
 {	
-
 	resetGame();
 	currentState = MENU;
+	SoundManager::instance().stopMusic();
+	if (SoundManager::instance().loadMusic("sounds/menu_music.mp3"))
+	{
+		SoundManager::instance().playMusic(-1);
+	}
 	menu.resetStartPressed();
 }
 

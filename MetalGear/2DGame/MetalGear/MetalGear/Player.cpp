@@ -3,13 +3,27 @@
 #include <GL/glew.h>
 #include "Player.h"
 #include "Game.h"
+#include "Level.h"      
+#include "Guard.h"      
+#include "Twin.h"       
+#include "ArnoldBoss.h" 
+
 
 
 enum PlayerAnims
 {
 	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN, 
-	WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN, 
+	WALK_LEFT, WALK_RIGHT, WALK_UP, WALK_DOWN,
+	PUNCH_LEFT, PUNCH_RIGHT, PUNCH_UP, PUNCH_DOWN,
+	DEATH,
 	ARMED_IDLE_LEFT, ARMED_IDLE_RIGHT, ARMED_IDLE_UP, ARMED_IDLE_DOWN,
+	ARMED_WALK_LEFT, ARMED_WALK_RIGHT, ARMED_WALK_UP, ARMED_WALK_DOWN,
+	DAMAGED_IDLE_LEFT, DAMAGED_IDLE_RIGHT, DAMAGED_IDLE_UP, DAMAGED_IDLE_DOWN,
+	DAMAGED_WALK_LEFT, DAMAGED_WALK_RIGHT, DAMAGED_WALK_UP, DAMAGED_WALK_DOWN,
+	DAMAGED_PUNCH_LEFT, DAMAGED_PUNCH_RIGHT, DAMAGED_PUNCH_UP, DAMAGED_PUNCH_DOWN,
+	DAMAGED_DEATH,
+	DAMAGED_ARMED_IDLE_LEFT, DAMAGED_ARMED_IDLE_RIGHT, DAMAGED_ARMED_IDLE_UP, DAMAGED_ARMED_IDLE_DOWN,
+	DAMAGED_ARMED_WALK_LEFT, DAMAGED_ARMED_WALK_RIGHT, DAMAGED_ARMED_WALK_UP, DAMAGED_ARMED_WALK_DOWN
 };
 
 
@@ -19,55 +33,174 @@ enum PlayerAnims
 * Sets 8 animations (4 facing directions + direction animation movement). 
 * Spritesheet horizontal offset = 0.167 aprox (distance between sprites in spritesheet, between 0 and 1)
 * To know exactly where the sprite is, we calculate offset * spritesheetColumnNum. There are 6 columns and 2 rows.
-* Movement animation has 2 sprites in each direction.
+* Walk & Death animations has 2 sprites in each direction.
 */
+
+#define SPRITESHEET_OFFSET_X 0.11111111111111111111111111111111
+#define SPRITESHEET_OFFSET_Y 0.14285714285714285714285714285714
 
 void Player::init(ShaderProgram& shaderProgram)
 {
-	spritesheet.loadFromFile("images/Solid Snake Sprites/Solid Snake Basic Animations.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	sprite = Sprite::createSprite(glm::ivec2(SPRITE_WIDTH+10, SPRITE_HEIGHT+10), glm::vec2(SPRITESHEET_OFFSET, 0.5), &spritesheet, &shaderProgram);
-	sprite->setNumberAnimations(8);
+	spritesheet.loadFromFile("images/Solid Snake Sprites/Solid Snake Sprites.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	sprite = Sprite::createSprite(glm::ivec2(SPRITE_WIDTH+10, SPRITE_HEIGHT+10), glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y), &spritesheet, &shaderProgram);
+	sprite->setNumberAnimations(42);
 	
+		// IDLE ANIMATIONS
 		sprite->setAnimationSpeed(IDLE_LEFT, 8);
-		sprite->addKeyframe(IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 4, 0.5f));
+		sprite->addKeyframe(IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 4, SPRITESHEET_OFFSET_Y));
 		
 		sprite->setAnimationSpeed(IDLE_RIGHT, 8);
-		sprite->addKeyframe(IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 5, 0.5f));
+		sprite->addKeyframe(IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 5, SPRITESHEET_OFFSET_Y));
 
 		sprite->setAnimationSpeed(IDLE_UP, 8);
-		sprite->addKeyframe(IDLE_UP, glm::vec2(SPRITESHEET_OFFSET * 5, 0.f));
+		sprite->addKeyframe(IDLE_UP, glm::vec2(SPRITESHEET_OFFSET_X * 5, 0.f));
 
 		sprite->setAnimationSpeed(IDLE_DOWN, 8);
-		sprite->addKeyframe(IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET * 4, 0.f));
-		
-		sprite->setAnimationSpeed(WALK_LEFT, 5);
-		sprite->addKeyframe(WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET * 0, 0.5f));
-		sprite->addKeyframe(WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET * 2, 0.5f));
+		sprite->addKeyframe(IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 4, 0.f));
 
+		// WALK ANIMATIONS
+		sprite->setAnimationSpeed(WALK_LEFT, 5);
+		sprite->addKeyframe(WALK_LEFT, glm::vec2(0.f, SPRITESHEET_OFFSET_Y));
+		sprite->addKeyframe(WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 2, SPRITESHEET_OFFSET_Y));
 		
 		sprite->setAnimationSpeed(WALK_RIGHT, 5);
-		sprite->addKeyframe(WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 1, 0.5f));
-		sprite->addKeyframe(WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 3, 0.5f));
+		sprite->addKeyframe(WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y));
+		sprite->addKeyframe(WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 3, SPRITESHEET_OFFSET_Y));
 
 		sprite->setAnimationSpeed(WALK_UP, 5);
-		sprite->addKeyframe(WALK_UP, glm::vec2(SPRITESHEET_OFFSET * 1, 0.f));
-		sprite->addKeyframe(WALK_UP, glm::vec2(SPRITESHEET_OFFSET * 3, 0.f));
+		sprite->addKeyframe(WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X, 0.f));
+		sprite->addKeyframe(WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X * 3, 0.f));
 
 		sprite->setAnimationSpeed(WALK_DOWN, 5);
-		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 0, 0.f));
-		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET * 2, 0.f));
+		sprite->addKeyframe(WALK_DOWN, glm::vec2(0.f, 0.f));
+		sprite->addKeyframe(WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 2, 0.f));
+	
+		// PUNCH ANIMATIONS
+		sprite->setAnimationSpeed(PUNCH_LEFT, 8);
+		sprite->addKeyframe(PUNCH_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 6, SPRITESHEET_OFFSET_Y));
 
-		//sprite->setAnimationSpeed(ARMED_IDLE_LEFT, 5);
-		//sprite->addKeyframe(ARMED_IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET * 6, 0.5f));
+		sprite->setAnimationSpeed(PUNCH_RIGHT, 8);
+		sprite->addKeyframe(PUNCH_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 7, SPRITESHEET_OFFSET_Y));
 
-		//sprite->setAnimationSpeed(ARMED_IDLE_RIGHT, 5);
-		//sprite->addKeyframe(ARMED_IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET * 7, 0.5f));
+		sprite->setAnimationSpeed(PUNCH_UP, 8);
+		sprite->addKeyframe(PUNCH_UP, glm::vec2(SPRITESHEET_OFFSET_X * 7, 0.f));
 
-		//sprite->setAnimationSpeed(ARMED_IDLE_UP, 5);
-		//sprite->addKeyframe(ARMED_IDLE_UP, glm::vec2(SPRITESHEET_OFFSET * 6, 0.f));
+		sprite->setAnimationSpeed(PUNCH_DOWN, 8);
+		sprite->addKeyframe(PUNCH_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 6, 0.f));
 
-		//sprite->setAnimationSpeed(ARMED_IDLE_DOWN, 5);
-		//sprite->addKeyframe(ARMED_IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET * 7, 0.f));
+		// DEATH ANIMATIONS
+		sprite->setAnimationSpeed(DEATH, 4);
+		sprite->addKeyframe(DEATH, glm::vec2(SPRITESHEET_OFFSET_X * 8, 0.f));
+		sprite->addKeyframe(DEATH, glm::vec2(SPRITESHEET_OFFSET_X * 8, SPRITESHEET_OFFSET_Y));
+
+		// ARMED IDLE ANIMATION
+		sprite->setAnimationSpeed(ARMED_IDLE_LEFT, 8);
+		sprite->addKeyframe(ARMED_IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 2, SPRITESHEET_OFFSET_Y * 5));
+
+		sprite->setAnimationSpeed(ARMED_IDLE_RIGHT, 8);
+		sprite->addKeyframe(ARMED_IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 3, SPRITESHEET_OFFSET_Y * 5));
+
+		sprite->setAnimationSpeed(ARMED_IDLE_UP, 8);
+		sprite->addKeyframe(ARMED_IDLE_UP, glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y * 5));
+
+		sprite->setAnimationSpeed(ARMED_IDLE_DOWN, 8);
+		sprite->addKeyframe(ARMED_IDLE_DOWN, glm::vec2(0.f, SPRITESHEET_OFFSET_Y * 5));
+
+		// ARMED WALK ANIMATION
+		sprite->setAnimationSpeed(ARMED_WALK_LEFT, 5);
+		sprite->addKeyframe(ARMED_WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 4, SPRITESHEET_OFFSET_Y * 2));
+		sprite->addKeyframe(ARMED_WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 6, SPRITESHEET_OFFSET_Y * 2));
+
+		sprite->setAnimationSpeed(ARMED_WALK_RIGHT, 5);
+		sprite->addKeyframe(ARMED_WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 5, SPRITESHEET_OFFSET_Y * 2));
+		sprite->addKeyframe(ARMED_WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 7, SPRITESHEET_OFFSET_Y * 2));
+
+		sprite->setAnimationSpeed(ARMED_WALK_UP, 5);
+		sprite->addKeyframe(ARMED_WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y * 2));
+		sprite->addKeyframe(ARMED_WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X * 3, SPRITESHEET_OFFSET_Y * 2));
+
+		sprite->setAnimationSpeed(ARMED_WALK_DOWN, 5);
+		sprite->addKeyframe(ARMED_WALK_DOWN, glm::vec2(0.f, SPRITESHEET_OFFSET_Y * 2));
+		sprite->addKeyframe(ARMED_WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 2, SPRITESHEET_OFFSET_Y * 2));
+
+		// DAMAGED IDLE ANIMATION
+		sprite->setAnimationSpeed(DAMAGED_IDLE_LEFT, 8);
+		sprite->addKeyframe(DAMAGED_IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 2, SPRITESHEET_OFFSET_Y * 6));
+
+		sprite->setAnimationSpeed(DAMAGED_IDLE_RIGHT, 8);
+		sprite->addKeyframe(DAMAGED_IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 3, SPRITESHEET_OFFSET_Y * 6));
+
+		sprite->setAnimationSpeed(DAMAGED_IDLE_UP, 8);
+		sprite->addKeyframe(DAMAGED_IDLE_UP, glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y * 6));
+
+		sprite->setAnimationSpeed(DAMAGED_IDLE_DOWN, 8);
+		sprite->addKeyframe(DAMAGED_IDLE_DOWN, glm::vec2(0.f, SPRITESHEET_OFFSET_Y * 6));
+
+		// DAMAGED WALK ANIMATION
+		sprite->setAnimationSpeed(DAMAGED_WALK_LEFT, 5);
+		sprite->addKeyframe(DAMAGED_WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 4, SPRITESHEET_OFFSET_Y * 3));
+		sprite->addKeyframe(DAMAGED_WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 6, SPRITESHEET_OFFSET_Y * 3));
+
+		sprite->setAnimationSpeed(DAMAGED_WALK_RIGHT, 5);
+		sprite->addKeyframe(DAMAGED_WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 5, SPRITESHEET_OFFSET_Y * 3));
+		sprite->addKeyframe(DAMAGED_WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 7, SPRITESHEET_OFFSET_Y * 3));
+
+		sprite->setAnimationSpeed(DAMAGED_WALK_UP, 5);
+		sprite->addKeyframe(DAMAGED_WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y * 3));
+		sprite->addKeyframe(DAMAGED_WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X * 3, SPRITESHEET_OFFSET_Y * 3));
+
+		sprite->setAnimationSpeed(DAMAGED_WALK_DOWN, 5);
+		sprite->addKeyframe(DAMAGED_WALK_DOWN, glm::vec2(0.f, SPRITESHEET_OFFSET_Y * 3));
+		sprite->addKeyframe(DAMAGED_WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 2, SPRITESHEET_OFFSET_Y * 3));
+
+		// DAMAGED PUNCH ANIMATION
+		sprite->setAnimationSpeed(DAMAGED_PUNCH_LEFT, 8);
+		sprite->addKeyframe(DAMAGED_PUNCH_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 6, SPRITESHEET_OFFSET_Y * 6));
+
+		sprite->setAnimationSpeed(DAMAGED_PUNCH_RIGHT, 8);
+		sprite->addKeyframe(DAMAGED_PUNCH_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 7, SPRITESHEET_OFFSET_Y * 6));
+
+		sprite->setAnimationSpeed(DAMAGED_PUNCH_UP, 8);
+		sprite->addKeyframe(DAMAGED_PUNCH_UP, glm::vec2(SPRITESHEET_OFFSET_X * 5, SPRITESHEET_OFFSET_Y * 6));
+
+		sprite->setAnimationSpeed(DAMAGED_PUNCH_DOWN, 8);
+		sprite->addKeyframe(DAMAGED_PUNCH_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 4, SPRITESHEET_OFFSET_Y * 6));
+
+		// DAMAGED DEATH ANIMATION
+		sprite->setAnimationSpeed(DAMAGED_DEATH, 4);
+		sprite->addKeyframe(DAMAGED_DEATH, glm::vec2(SPRITESHEET_OFFSET_X * 8, SPRITESHEET_OFFSET_Y * 2));
+		sprite->addKeyframe(DAMAGED_DEATH, glm::vec2(SPRITESHEET_OFFSET_X * 8, SPRITESHEET_OFFSET_Y * 3));
+
+		// DAMAGED ARMED IDLE ANIMATION
+		sprite->setAnimationSpeed(DAMAGED_ARMED_IDLE_LEFT, 8);
+		sprite->addKeyframe(DAMAGED_ARMED_IDLE_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 6, SPRITESHEET_OFFSET_Y * 5));
+
+		sprite->setAnimationSpeed(DAMAGED_ARMED_IDLE_RIGHT, 8);
+		sprite->addKeyframe(DAMAGED_ARMED_IDLE_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 7, SPRITESHEET_OFFSET_Y * 5));
+
+		sprite->setAnimationSpeed(DAMAGED_ARMED_IDLE_UP, 8);
+		sprite->addKeyframe(DAMAGED_ARMED_IDLE_UP, glm::vec2(SPRITESHEET_OFFSET_X * 5, SPRITESHEET_OFFSET_Y * 5));
+
+		sprite->setAnimationSpeed(DAMAGED_ARMED_IDLE_DOWN, 8);
+		sprite->addKeyframe(DAMAGED_ARMED_IDLE_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 4, SPRITESHEET_OFFSET_Y * 5));
+
+		// DAMAGED ARMED WALK ANIMATION
+		sprite->setAnimationSpeed(DAMAGED_ARMED_WALK_LEFT, 5);
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 4, SPRITESHEET_OFFSET_Y * 4));
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_LEFT, glm::vec2(SPRITESHEET_OFFSET_X * 6, SPRITESHEET_OFFSET_Y * 4));
+
+		sprite->setAnimationSpeed(DAMAGED_ARMED_WALK_RIGHT, 5);
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 5, SPRITESHEET_OFFSET_Y * 4));
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_RIGHT, glm::vec2(SPRITESHEET_OFFSET_X * 7, SPRITESHEET_OFFSET_Y * 4));
+
+		sprite->setAnimationSpeed(DAMAGED_ARMED_WALK_UP, 5);
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X, SPRITESHEET_OFFSET_Y * 4));
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_UP, glm::vec2(SPRITESHEET_OFFSET_X * 3, SPRITESHEET_OFFSET_Y * 4));
+
+		sprite->setAnimationSpeed(DAMAGED_ARMED_WALK_DOWN, 5);
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_DOWN, glm::vec2(0.f, SPRITESHEET_OFFSET_Y * 4));
+		sprite->addKeyframe(DAMAGED_ARMED_WALK_DOWN, glm::vec2(SPRITESHEET_OFFSET_X * 2, SPRITESHEET_OFFSET_Y * 4));
+
 		
 	sprite->changeAnimation(0);
 	sprite->setPosition(glm::vec2(float(SCREEN_WIDTH/2), float(SCREEN_HEIGHT/2)));
@@ -80,6 +213,16 @@ void Player::init(ShaderProgram& shaderProgram)
 	collectAllItems = false;
 	godMode = false;
 	fireCooldown = 200;
+	isPunching = false;
+	punchCooldown = 0.0f;
+	punchAnimationTimer = 0.0f;
+	hasWeapon = false;
+	isDead = false;
+	deathAnimationTimer = 0.f;
+	isDamaged = false;
+	damageAnimationFlashTimer = 0.f;
+	damageAnimationFlashCounter = 0.f;
+	showDamagedSprite = false;
 	program = shaderProgram;
 }
 
@@ -93,22 +236,22 @@ bool Player::WASDMovementControl()
 {
 	movementControl = glm::bvec4(false, false, false, false);
 
-	if (Game::instance().getKey(GLFW_KEY_W))
+	if (Game::instance().getKey(GLFW_KEY_W) || Game::instance().getKey(GLFW_KEY_UP))
 		movementControl[0] = true;
 
-	if (Game::instance().getKey(GLFW_KEY_A)) {
+	if (Game::instance().getKey(GLFW_KEY_A) || Game::instance().getKey(GLFW_KEY_LEFT)) {
 		movementControl[1] = true;
 		if (movementControl[0])
 			return true;
 	}
 
-	if (Game::instance().getKey(GLFW_KEY_S)) {
+	if (Game::instance().getKey(GLFW_KEY_S) || Game::instance().getKey(GLFW_KEY_DOWN)) {
 		movementControl[2] = true;
 		if (movementControl[0] || movementControl[1])
 			return true;
 
 	}
-	if (Game::instance().getKey(GLFW_KEY_D)) {
+	if (Game::instance().getKey(GLFW_KEY_D) || Game::instance().getKey(GLFW_KEY_RIGHT)) {
 		movementControl[3] = true;
 		if (movementControl[0] || movementControl[1] || movementControl[2])
 			return true;
@@ -166,6 +309,41 @@ std::vector<string> Player::getActiveObjectName() const
 	return properties;
 }
 
+void Player::updateHasWeapon()
+{
+	bool wasArmed = hasWeapon;
+	hasWeapon = false;
+
+	if (activeObject >= 0 && activeObject < objects.size())
+	{
+		if (dynamic_cast<Weapon*>(objects[activeObject]) != NULL)
+			hasWeapon = true;
+	}
+
+	if (wasArmed != hasWeapon && !isPunching && !isDead)
+	{
+		int currentAnim = sprite->animation();
+		int currentKeyframe = sprite->getCurrentKeyframe();
+		int newAnim = currentAnim;
+
+		if (currentAnim == WALK_LEFT || currentAnim == ARMED_WALK_LEFT ||
+			currentAnim == DAMAGED_WALK_LEFT || currentAnim == DAMAGED_ARMED_WALK_LEFT)
+			newAnim = whichWalkLeftAnimation();
+		else if (currentAnim == WALK_RIGHT || currentAnim == ARMED_WALK_RIGHT ||
+			currentAnim == DAMAGED_WALK_RIGHT || currentAnim == DAMAGED_ARMED_WALK_RIGHT)
+			newAnim = whichWalkRightAnimation();
+		else if (currentAnim == WALK_UP || currentAnim == ARMED_WALK_UP ||
+			currentAnim == DAMAGED_WALK_UP || currentAnim == DAMAGED_ARMED_WALK_UP)
+			newAnim = whichWalkUpAnimation();
+		else if (currentAnim == WALK_DOWN || currentAnim == ARMED_WALK_DOWN ||
+			currentAnim == DAMAGED_WALK_DOWN || currentAnim == DAMAGED_ARMED_WALK_DOWN)
+			newAnim = whichWalkDownAnimation();
+
+		if (newAnim != currentAnim)
+			sprite->changeAnimationWithKeyframe(newAnim, currentKeyframe);
+	}
+}
+
 glm::vec2 Player::directionConversor()
 {
 	if (direction == 'R')
@@ -186,17 +364,180 @@ void Player::shoot()
 
 	timeSinceLastShot = 0;
 
-	// Disparar hacia el jugador (con objetivo)
 	glm::vec2 dir = directionConversor();
 
 
-	glm::vec2 spawnOffset = dir * 20.0f; // 20 píxeles delante
+	glm::vec2 spawnOffset = dir * 20.0f;
 	glm::vec2 bulletPos = glm::vec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT / 2) + spawnOffset;
 
-	// Crear la bala
 	Bullet* bullet = new Bullet(bulletPos, dir, &program, BulletType::GUARD);
 	bullet->setAlive(true);
 	bullets.push_back(bullet);
+}
+
+int Player::whichIdleLeftAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_IDLE_LEFT;
+		return DAMAGED_IDLE_LEFT;
+	}
+
+	if (hasWeapon)
+		return ARMED_IDLE_LEFT;
+	return IDLE_LEFT;
+}
+
+int Player::whichIdleRightAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_IDLE_RIGHT;
+		return DAMAGED_IDLE_RIGHT;
+	}
+
+	if (hasWeapon)
+		return ARMED_IDLE_RIGHT;
+	return IDLE_RIGHT;
+}
+
+int Player::whichIdleUpAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_IDLE_UP;
+		return DAMAGED_IDLE_UP;
+	}
+
+	if (hasWeapon)
+		return ARMED_IDLE_UP;
+	return IDLE_UP;
+}
+
+int Player::whichIdleDownAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_IDLE_DOWN;
+		return DAMAGED_IDLE_DOWN;
+	}
+
+	if (hasWeapon)
+		return ARMED_IDLE_DOWN;
+	return IDLE_DOWN;
+}
+
+int Player::whichWalkLeftAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_WALK_LEFT;
+		return DAMAGED_WALK_LEFT;
+	}
+
+	if (hasWeapon)
+		return ARMED_WALK_LEFT;
+
+	return WALK_LEFT;
+}
+
+int Player::whichWalkRightAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_WALK_RIGHT;
+		return DAMAGED_WALK_RIGHT;
+	}
+
+	if (hasWeapon)
+		return ARMED_WALK_RIGHT;
+
+	return WALK_RIGHT;
+}
+
+int Player::whichWalkUpAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_WALK_UP;
+		return DAMAGED_WALK_UP;
+	}
+
+	if (hasWeapon)
+		return ARMED_WALK_UP;
+
+	return WALK_UP;
+}
+
+int Player::whichWalkDownAnimation()
+{
+	if (isDamaged && showDamagedSprite)
+	{
+		if (hasWeapon)
+			return DAMAGED_ARMED_WALK_DOWN;
+		return DAMAGED_WALK_DOWN;
+	}
+
+	if (hasWeapon)
+		return ARMED_WALK_DOWN;
+
+	return WALK_DOWN;
+}
+
+void Player::updateDamageAnimation()
+{
+	if (!isDamaged) return;
+
+	int currentAnim = sprite->animation();
+	int newAnim = currentAnim;
+
+	bool isWalkLeft = (currentAnim == WALK_LEFT || currentAnim == DAMAGED_WALK_LEFT ||
+		currentAnim == ARMED_WALK_LEFT || currentAnim == DAMAGED_ARMED_WALK_LEFT);
+	bool isWalkRight = (currentAnim == WALK_RIGHT || currentAnim == DAMAGED_WALK_RIGHT ||
+		currentAnim == ARMED_WALK_RIGHT || currentAnim == DAMAGED_ARMED_WALK_RIGHT);
+	bool isWalkUp = (currentAnim == WALK_UP || currentAnim == DAMAGED_WALK_UP ||
+		currentAnim == ARMED_WALK_UP || currentAnim == DAMAGED_ARMED_WALK_UP);
+	bool isWalkDown = (currentAnim == WALK_DOWN || currentAnim == DAMAGED_WALK_DOWN ||
+		currentAnim == ARMED_WALK_DOWN || currentAnim == DAMAGED_ARMED_WALK_DOWN);
+
+	bool isIdleLeft = (currentAnim == IDLE_LEFT || currentAnim == DAMAGED_IDLE_LEFT ||
+		currentAnim == ARMED_IDLE_LEFT || currentAnim == DAMAGED_ARMED_IDLE_LEFT);
+	bool isIdleRight = (currentAnim == IDLE_RIGHT || currentAnim == DAMAGED_IDLE_RIGHT ||
+		currentAnim == ARMED_IDLE_RIGHT || currentAnim == DAMAGED_ARMED_IDLE_RIGHT);
+	bool isIdleUp = (currentAnim == IDLE_UP || currentAnim == DAMAGED_IDLE_UP ||
+		currentAnim == ARMED_IDLE_UP || currentAnim == DAMAGED_ARMED_IDLE_UP);
+	bool isIdleDown = (currentAnim == IDLE_DOWN || currentAnim == DAMAGED_IDLE_DOWN ||
+		currentAnim == ARMED_IDLE_DOWN || currentAnim == DAMAGED_ARMED_IDLE_DOWN);
+
+	if (isWalkLeft)
+		newAnim = whichWalkLeftAnimation();
+	else if (isWalkRight)
+		newAnim = whichWalkRightAnimation();
+	else if (isWalkUp)
+		newAnim = whichWalkUpAnimation();
+	else if (isWalkDown)
+		newAnim = whichWalkDownAnimation();
+	else if (isIdleLeft)
+		newAnim = whichIdleLeftAnimation();
+	else if (isIdleRight)
+		newAnim = whichIdleRightAnimation();
+	else if (isIdleUp)
+		newAnim = whichIdleUpAnimation();
+	else if (isIdleDown)
+		newAnim = whichIdleDownAnimation();
+
+	if (newAnim != currentAnim)
+	{
+		int currentKeyframe = sprite->getCurrentKeyframe();
+		sprite->changeAnimationWithKeyframe(newAnim, currentKeyframe);
+	}
 }
 
 /* update INFO:
@@ -206,16 +547,73 @@ void Player::shoot()
 
 void Player::update(int deltaTime)
 {
+	if (isDead)
+	{
+		deathAnimationTimer += deltaTime;
+		sprite->update(deltaTime);
+		return;
+	}
+
 	if (!pause)
 	{
+		if (isDamaged)
+		{
+			damageAnimationFlashTimer += deltaTime;
+			damageAnimationFlashCounter += deltaTime;
+
+			if (damageAnimationFlashCounter >= DAMAGE_ANIMATION_FLASH_INTERVAL)
+			{
+				damageAnimationFlashCounter = 0.0f;
+				showDamagedSprite = !showDamagedSprite;
+
+				updateDamageAnimation();
+			}
+
+			if (damageAnimationFlashTimer >= DAMAGE_ANIMATION_FLASH_DURATION)
+			{
+				isDamaged = false;
+				damageAnimationFlashTimer = 0.0f;
+				damageAnimationFlashCounter = 0.0f;
+				showDamagedSprite = false;
+
+				updateDamageAnimation();
+			}
+		}
+
+		if (punchCooldown > 0)
+			punchCooldown -= deltaTime;
+
+		if (isPunching)
+		{
+			punchAnimationTimer += deltaTime;
+			if (punchAnimationTimer >= PUNCH_ANIMATION_DURATION)
+			{
+				isPunching = false;
+				punchAnimationTimer = 0;
+
+				int idleLeft = whichIdleLeftAnimation();
+				int idleRight = whichIdleRightAnimation();
+				int idleUp = whichIdleUpAnimation();
+				int idleDown = whichIdleDownAnimation();
+
+				if (direction == 'L')
+					sprite->changeAnimation(idleLeft);
+				else if (direction == 'R')
+					sprite->changeAnimation(idleRight);
+				else if (direction == 'U')
+					sprite->changeAnimation(idleUp);
+				else if (direction == 'D')
+					sprite->changeAnimation(idleDown);
+			}
+		}
+
 		timeSinceLastShot += deltaTime;
-		// ? Actualizar y limpiar balas de forma más eficiente
+
 		for (auto it = bullets.begin(); it != bullets.end(); )
 		{
 			Bullet* bullet = *it;
 			bullet->update(deltaTime, map);
 
-			// Eliminar balas que ya no están vivas O que salieron muy lejos de la pantalla
 			if (!bullet->isAlive())
 			{
 				delete bullet;
@@ -227,14 +625,12 @@ void Player::update(int deltaTime)
 			}
 		}
 
-		// ? Limitar el número máximo de balas activas
 		const int MAX_BULLETS = 20;
 		while (bullets.size() > MAX_BULLETS)
 		{
 			Bullet* oldest = bullets.front();
 			delete oldest;
 			bullets.pop_front();
-			std::cout << "[Twin] Límite de balas alcanzado, eliminando la más antigua" << std::endl;
 		}
 
 		sprite->update(deltaTime);
@@ -243,75 +639,98 @@ void Player::update(int deltaTime)
 		if (cooldownKey > 0)
 			cooldownKey -= deltaTime;
 
+		if (isPunching)
+		{
+			sprite->setPosition(glm::vec2(float(posPlayer.x), float(posPlayer.y)));
+			return;
+		}
+
 		bool WASDpressed = WASDMovementControl();
+
+		updateHasWeapon();
+
+		int idleLeft = whichIdleLeftAnimation();
+		int walkLeft = whichWalkLeftAnimation();
+
+		int idleRight = whichIdleRightAnimation();
+		int walkRight = whichWalkRightAnimation();
+
+		int idleUp = whichIdleUpAnimation();
+		int walkUp = whichWalkUpAnimation();
+
+		int idleDown = whichIdleDownAnimation();
+		int walkDown = whichWalkDownAnimation();
+
 
 		if (movementControl[1] && !WASDpressed)
 		{
-			if (sprite->animation() != WALK_LEFT)
-				sprite->changeAnimation(WALK_LEFT);
+			
+
+			if (sprite->animation() != walkLeft)
+				sprite->changeAnimation(walkLeft);
 
 			posPlayer.x -= 3;
 
 			if (map->collisionMoveLeft(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.x += 3;
-				sprite->changeAnimation(IDLE_LEFT);
+				sprite->changeAnimation(idleLeft);
 			}
 			direction = 'L';
 
 		}
 		else if (movementControl[3] && !WASDpressed)
 		{
-			if (sprite->animation() != WALK_RIGHT)
-				sprite->changeAnimation(WALK_RIGHT);
+			if (sprite->animation() != walkRight)
+				sprite->changeAnimation(walkRight);
 
 			posPlayer.x += 3;
 
 			if (map->collisionMoveRight(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.x -= 3;
-				sprite->changeAnimation(IDLE_RIGHT);
+				sprite->changeAnimation(idleRight);
 			}
 			direction = 'R';
 		}
 		else if (movementControl[0] && !WASDpressed)
 		{
-			if (sprite->animation() != WALK_UP)
-				sprite->changeAnimation(WALK_UP);
+			if (sprite->animation() != walkUp)
+				sprite->changeAnimation(walkUp);
 
 			posPlayer.y -= 3;
 
 			if (map->collisionMoveUp(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.y += 3;
-				sprite->changeAnimation(IDLE_UP);
+				sprite->changeAnimation(idleUp);
 			}
 			direction = 'U';
 		}
 		else if (movementControl[2] && !WASDpressed)
 		{
-			if (sprite->animation() != WALK_DOWN)
-				sprite->changeAnimation(WALK_DOWN);
+			if (sprite->animation() != walkDown)
+				sprite->changeAnimation(walkDown);
 
 			posPlayer.y += 3;
 
 			if (map->collisionMoveDown(posPlayer, glm::ivec2(SPRITE_WIDTH, SPRITE_HEIGHT), lvl))
 			{
 				posPlayer.y -= 3;
-				sprite->changeAnimation(IDLE_DOWN);
+				sprite->changeAnimation(idleDown);
 			}
 			direction = 'D';
 		}
 		else
 		{
-			if (sprite->animation() == WALK_LEFT)
-				sprite->changeAnimation(IDLE_LEFT);
-			else if (sprite->animation() == WALK_RIGHT)
-				sprite->changeAnimation(IDLE_RIGHT);
-			else if (sprite->animation() == WALK_UP)
-				sprite->changeAnimation(IDLE_UP);
-			else if (sprite->animation() == WALK_DOWN)
-				sprite->changeAnimation(IDLE_DOWN);
+			if (sprite->animation() == walkLeft)
+				sprite->changeAnimation(idleLeft);
+			else if (sprite->animation() == walkRight)
+				sprite->changeAnimation(idleRight);
+			else if (sprite->animation() == walkUp)
+				sprite->changeAnimation(idleUp);
+			else if (sprite->animation() == walkDown)
+				sprite->changeAnimation(idleDown);
 
 		}
 
@@ -321,12 +740,9 @@ void Player::update(int deltaTime)
 		// KEY E -> GRABS ITMES
 		if (Game::instance().getKey(GLFW_KEY_E) && cooldownKey <= 0)
 		{
-			cout << "TECLA E DETECTADA" << endl;
-			cout << "DIRECCION -> " << direction << endl;
 			glm::ivec2 centerPos = glm::ivec2(posPlayer.x + SPRITE_WIDTH / 2, posPlayer.y + SPRITE_HEIGHT - 1);
 			glm::vec2 tileCoords;
 			int tile = map->whichFacingTile(centerPos, direction, tileCoords);
-			cout << "TILE -> " << tile << endl;
 			string hide;
 
 			if (tile == 6)
@@ -350,7 +766,6 @@ void Player::update(int deltaTime)
 
 			}
 
-			cout << "VARIABLE HIDE -> " << hide << endl;
 			if (!hide.empty())
 			{
 				level->spriteToHide(hide, tileCoords, tile);
@@ -374,6 +789,7 @@ void Player::update(int deltaTime)
 			{
 				activeObject = (activeObject + 1) % objects.size();
 				std::vector<string> properties = getActiveObjectName();
+				
 				gui->setActiveObjectName(properties[0], properties[1]);
 				gui->setActiveObjectProperties(properties, properties[0]);
 				cooldownKey = 300.f;
@@ -458,7 +874,7 @@ void Player::update(int deltaTime)
 			cooldownKey = 300.f;
 		}
 
-		// KEY G -> GOD MODE | PLAYER IS INVULNERABLE | TOGGLE TO EXIT GOD MODE
+		// KEY G -> GOD MODE
 		if (Game::instance().getKey(GLFW_KEY_G) && cooldownKey <= 0.f)
 		{
 			godMode = !godMode;
@@ -466,11 +882,106 @@ void Player::update(int deltaTime)
 		}
 
 		// KEY Z -> PUNCH
-		if (Game::instance().getKey(GLFW_KEY_Z) && cooldownKey <= 0.f)
+		if (Game::instance().getKey(GLFW_KEY_Z) && punchCooldown <= 0.f && !isPunching)
 		{
-			cooldownKey = 300.f;
+			performPunch();
 		}
 
+	}
+}
+
+void Player::performPunch()
+{
+	isPunching = true;
+	punchAnimationTimer = 0;
+	punchCooldown = PUNCH_COOLDOWN_TIME;
+
+	if (direction == 'L')
+		sprite->changeAnimation(PUNCH_LEFT);
+	else if (direction == 'R')
+		sprite->changeAnimation(PUNCH_RIGHT);
+	else if (direction == 'U')
+		sprite->changeAnimation(PUNCH_UP);
+	else if (direction == 'D')
+		sprite->changeAnimation(PUNCH_DOWN);
+
+	glm::ivec2 punchHitbox = getPunchHitbox();
+
+	checkPunchCollisions(punchHitbox);
+}
+
+glm::ivec2 Player::getPunchHitbox()
+{
+	const int PUNCH_RANGE = 40;
+	glm::ivec2 hitboxPos = posPlayer;
+
+	if (direction == 'L')
+		hitboxPos.x -= PUNCH_RANGE;
+	else if (direction == 'R')
+		hitboxPos.x += SPRITE_WIDTH;
+	else if (direction == 'U')
+		hitboxPos.y -= PUNCH_RANGE;
+	else if (direction == 'D')
+		hitboxPos.y += SPRITE_HEIGHT;
+
+	return hitboxPos;
+}
+
+void Player::checkPunchCollisions(const glm::ivec2& punchPos)
+{
+	const int PUNCH_RANGE = 40;
+	const int PUNCH_DAMAGE = 10;
+
+	glm::ivec2 punchSize(PUNCH_RANGE, PUNCH_RANGE);
+
+	for (Guard* guard : level->getGuards())
+	{
+		if (guard == nullptr || !guard->isAlive()) continue;
+
+		glm::vec2 guardPos = guard->getPosition();
+		glm::ivec2 guardSize(SPRITE_WIDTH + 10, SPRITE_HEIGHT + 10);
+
+		bool collisionX = punchPos.x + punchSize.x >= guardPos.x &&
+			guardPos.x + guardSize.x >= punchPos.x;
+		bool collisionY = punchPos.y + punchSize.y >= guardPos.y &&
+			guardPos.y + guardSize.y >= punchPos.y;
+
+		if (collisionX && collisionY)
+		{
+			guard->takeDamage(PUNCH_DAMAGE);
+		}
+	}
+
+	if (level->getTwin() != nullptr && level->getTwin()->isAlive())
+	{
+		glm::vec2 twinPos = level->getTwin()->getPosition();
+		glm::ivec2 twinSize(SPRITE_WIDTH + 30, SPRITE_HEIGHT + 10);
+
+		bool collisionX = punchPos.x + punchSize.x >= twinPos.x &&
+			twinPos.x + twinSize.x >= punchPos.x;
+		bool collisionY = punchPos.y + punchSize.y >= twinPos.y &&
+			twinPos.y + twinSize.y >= punchPos.y;
+
+		if (collisionX && collisionY)
+		{
+			level->getTwin()->takeDamage(PUNCH_DAMAGE);
+		}
+	}
+
+	if (level->getArnoldBoss() != nullptr && !level->getArnoldBoss()->getIsDead())
+	{
+		glm::vec2 arnoldPos = level->getArnoldBoss()->getPosition();
+		glm::ivec2 arnoldSize(64, 64);
+
+		bool collisionX = punchPos.x + punchSize.x >= arnoldPos.x &&
+			arnoldPos.x + arnoldSize.x >= punchPos.x;
+		bool collisionY = punchPos.y + punchSize.y >= arnoldPos.y &&
+			arnoldPos.y + arnoldSize.y >= punchPos.y;
+
+		if (collisionX && collisionY)
+		{
+			level->getArnoldBoss()->takeDamage(PUNCH_DAMAGE);
+		}
 	}
 }
 
@@ -496,7 +1007,7 @@ bool Player::changeMap_tile(int &tileType, char &dir)
 			else if (currentAnim == WALK_DOWN || currentAnim == IDLE_DOWN)
 				dir = 'D';
 			else
-				dir = 'D'; // default direction
+				dir = 'D';
 		}
 
 		if (dir != 'N')
@@ -554,22 +1065,26 @@ void Player::setLevelToGUI()
 
 void Player::lookLeft()
 {
-	sprite->changeAnimation(IDLE_LEFT);
+	int idleLeft = whichIdleLeftAnimation();
+	sprite->changeAnimation(idleLeft);
 }
 
 void Player::lookRight()
 {
-	sprite->changeAnimation(IDLE_RIGHT);
+	int idleRight = whichIdleRightAnimation();
+	sprite->changeAnimation(idleRight);
 }
 
 void Player::lookUp()
 {
-	sprite->changeAnimation(IDLE_UP);
+	int idleUp = whichIdleUpAnimation();
+	sprite->changeAnimation(idleUp);
 }
 
 void Player::lookDown()
 {
-	sprite->changeAnimation(IDLE_DOWN);
+	int idleDown = whichIdleDownAnimation();
+	sprite->changeAnimation(idleDown);
 }
 
 bool Player::hasObject(Object* object) const
@@ -596,6 +1111,7 @@ void Player::setActiveObject()
 		gui->setActiveObjectName(properties[0], properties[1]);
 		gui->setActiveObjectProperties(properties, properties[0]);
 	}
+
 }
 
 void Player::clearAllObjects()
@@ -603,7 +1119,6 @@ void Player::clearAllObjects()
 	objects.clear();
 	activeObject = -1;
 
-	// Limpia la GUI
 	std::vector<string> properties;
 	properties.push_back(" ");
 	properties.push_back(" ");
@@ -618,20 +1133,30 @@ int Player::getObjectCount() const
 
 void Player::takeDamage(int dmg)
 {
-	if (!godMode)
+	if (!godMode && !isDead)
 	{
 		health -= dmg;
 		gui->updateHealth(-dmg);
+
+		isDamaged = true;
+		damageAnimationFlashTimer = 0.0f;
+		damageAnimationFlashCounter = 0.0f;
+		showDamagedSprite = true; 
+
+		updateDamageAnimation();
 	}
 
 	if (health < 0) health = 0;
 
-	std::cout << "[Player] Recibió daño! Vida actual: " << health << std::endl;
 
-	if (health <= 0)
+	if (health <= 0 && !isDead)
 	{
-		std::cout << "[Player] Muerto!" << std::endl;
-		// Aquí podrías reiniciar el nivel o mostrar pantalla de "Game Over".
+		isDead = true;
+		deathAnimationTimer = 0.f;
+		health = 0;
+
+		sprite->changeAnimation(DEATH);
+
 	}
 }
 
@@ -645,8 +1170,6 @@ void Player::clearBullets()
 
 void Player::reset()
 {
-	std::cout << "[Player] Reseteando jugador..." << std::endl;
-
 	// Reset player
 	health = gui->getMaxHealth();
 	pause = false;
@@ -654,8 +1177,21 @@ void Player::reset()
 	cooldownKey = 0.f;
 	godMode = false;
 	timeSinceLastShot = 0;
+	hasWeapon = false;
 
-	// Limpiar balas
+	isPunching = false;
+	punchCooldown = 0.0f;
+	punchAnimationTimer = 0.0f;
+
+	isDead = false;
+	deathAnimationTimer = 0.f;
+
+	isDamaged = false;
+	damageAnimationFlashTimer = 0.0f;
+	damageAnimationFlashCounter = 0.0f;
+	showDamagedSprite = false;
+
+	// Reset bullets
 	clearBullets();
 
 	// Reset GUI
@@ -667,7 +1203,7 @@ void Player::reset()
 	collectAllItems = false;
 	erased = false;
 
-	std::cout << "[Player] Jugador reseteado" << std::endl;
+	sprite->changeAnimation(IDLE_RIGHT);
 }
 
 int Player::getWeaponDamage()

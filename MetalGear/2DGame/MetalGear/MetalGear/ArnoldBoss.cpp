@@ -10,42 +10,35 @@ enum ArnoldAnim {
 void ArnoldBoss::init(ShaderProgram& shaderProgram)
 {
     spritesheet.loadFromFile("images/enemies/arnold.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.5f, 1.0f), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.25f, 1.0f), &spritesheet, &shaderProgram);
     sprite->setNumberAnimations(2);
 
-    sprite->setAnimationSpeed(MOVE_LEFT, 6);
-    sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.f, 0.f));
+    sprite->setAnimationSpeed(MOVE_LEFT, 4);
+    sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.75f, 0.f));
     sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.5f, 0.f));
 
-    sprite->setAnimationSpeed(MOVE_RIGHT, 6);
+    sprite->setAnimationSpeed(MOVE_RIGHT, 4);
     sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.f));
-    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.5f, 0.f));
+    sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.f));
 
     sprite->changeAnimation(MOVE_RIGHT);
     sprite->setPosition(glm::vec2(posBoss.x, posBoss.y));
-    initialPosBoss = posBoss;
 
     isDead = false;
-
-    cout << "[ArnoldBoss] ¡Arnold inicializado!" << endl;
 }
+
 void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
 {
     if (health <= 0) return;
 
     timeSinceLastPath += deltaTime;
 
-    // -------------------
-    // 1?? Obtener posición del jugador (en píxeles)
-    // -------------------
     glm::vec2 playerPos = glm::vec2(player.getPosition());
     float distToPlayer = glm::length(playerPos - posBoss);
 
-    // -------------------
-    // 2?? Si está muy cerca del jugador, ir directo (sin pathfinding)
-    // -------------------
-    if (distToPlayer < tilemap.getTileSize() * 3) { // Menos de 3 tiles
-        // Movimiento directo hacia el jugador
+
+    if (distToPlayer < tilemap.getTileSize() * 3) { 
+
         glm::vec2 dir = playerPos - posBoss;
         float dist = glm::length(dir);
 
@@ -55,13 +48,13 @@ void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
 
             glm::vec2 newPos = posBoss + dir * step;
 
-            // Verificar que la nueva posición sea walkable
-            glm::ivec2 newTile = tilemap.worldToTileCoords(newPos + glm::vec2(32, 32)); // centro del sprite
+     
+            glm::ivec2 newTile = tilemap.worldToTileCoords(newPos + glm::vec2(32, 32)); 
             if (tilemap.isWalkable(newTile.x, newTile.y)) {
                 posBoss = newPos;
                 sprite->setPosition(posBoss);
 
-                // Actualizar animación según dirección
+                
                 if (dir.x > 0.1f) {
                     if (sprite->animation() != MOVE_RIGHT) {
                         sprite->changeAnimation(MOVE_RIGHT);
@@ -75,10 +68,8 @@ void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
             }
         }
 
-        // IMPORTANTE: Actualizar sprite DESPUÉS de mover
         sprite->update(deltaTime);
 
-        // Comprobar colisión
         if (distToPlayer < 32.f && !player.getGodMode()) {
             player.takeDamage(100);
         }
@@ -124,10 +115,8 @@ void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
                 currentPathIndex = 1;
             }
 
-            std::cout << "[Boss] Path encontrado: " << currentPath.size() << " tiles" << std::endl;
         }
         else {
-            std::cout << "[Boss] No hay camino disponible" << std::endl;
             currentPath.clear();
             currentPathIndex = 0;
         }
@@ -141,7 +130,6 @@ void ArnoldBoss::update(int deltaTime, TileMap& tilemap, Player& player)
 
         // Verificar que el tile objetivo sigue siendo válido
         if (!tilemap.isWalkable(targetTile.x, targetTile.y)) {
-            std::cout << "[Boss] Tile bloqueado, recalculando..." << std::endl;
             currentPath.clear();
             currentPathIndex = 0;
             timeSinceLastPath = PATH_RECALC_INTERVAL;
@@ -238,7 +226,6 @@ glm::ivec2 ArnoldBoss::findClosestWalkableTile(TileMap& tilemap, const glm::ivec
                     continue;
 
                 if (tilemap.isWalkable(nx, ny)) {
-                    std::cout << "[Boss] Tile alternativo encontrado: (" << nx << ", " << ny << ")" << std::endl;
                     return glm::ivec2(nx, ny);
                 }
             }
@@ -246,8 +233,6 @@ glm::ivec2 ArnoldBoss::findClosestWalkableTile(TileMap& tilemap, const glm::ivec
     }
 
     // Si no se encuentra nada, devolver el tile original
-    std::cout << "[Boss] ADVERTENCIA: No se encontró tile walkable cerca de ("
-        << tile.x << ", " << tile.y << ")" << std::endl;
     return tile;
 }
 
@@ -272,10 +257,7 @@ void ArnoldBoss::takeDamage(int dmg)
     health -= dmg;
     if (health <= 0) {
         isDead = true;
-        std::cout << "[ArnoldBoss] ¡Derrotado!" << std::endl;
-    }
-    else {
-        std::cout << "[ArnoldBoss] Vida restante: " << health << std::endl;
+        Game::instance().winGame();
     }
 }
 

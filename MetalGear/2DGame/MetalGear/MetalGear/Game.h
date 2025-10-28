@@ -6,6 +6,11 @@
 #include "Menu.h"
 #include "GameState.h"
 #include "Gui.h"
+#include "Credits.h"
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include "SoundManager.h"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -21,7 +26,6 @@
 
 // TOTAL SCREEN DIMENSIONS
 #define SCREEN_FINAL_WIDTH GAME_WIDTH
-//#define SCREEN_FINAL_HEIGHT GAME_HEIGHT
 #define SCREEN_FINAL_HEIGHT (GAME_HEIGHT + GUI_HEIGHT)
 
 
@@ -54,6 +58,7 @@ public:
 	bool getKey(int key) const;
 	void returnToMenuFromGame();
 	void resetGame();
+	void winGame();
 
 private:
 	bool bPlay; // Continue to play game?
@@ -63,6 +68,8 @@ private:
 	Scene scene;
 	Menu menu;
 	Gui gui;
+	Credits credits;
+	bool arnoldDead;
 };
 
 #endif // _GAME_INCLUDE
